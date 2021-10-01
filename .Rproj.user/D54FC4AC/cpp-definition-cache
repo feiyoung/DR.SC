@@ -1,0 +1,32 @@
+[
+    {
+        "definitions" : [
+        ],
+        "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/main_fun.cpp",
+        "file_last_write" : 1626513840.000000
+    },
+    {
+        "definitions" : [
+        ],
+        "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
+        "file_last_write" : 1632037318.000000
+    },
+    {
+        "definitions" : [
+        ],
+        "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
+        "file_last_write" : 1632037252.000000
+    },
+    {
+        "definitions" : [
+        ],
+        "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.hpp",
+        "file_last_write" : 1632037516.000000
+    },
+    {
+        "definitions" : [
+        ],
+        "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/wpca.cpp",
+        "file_last_write" : 1623131963.000000
+    }
+]

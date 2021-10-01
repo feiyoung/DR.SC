@@ -1,0 +1,15 @@
+{
+    "args" : [
+        "-IB:/ProgramFiles/RStudio/resources/libclang/builtin-headers/5.0.2",
+        "-IB:/ProgramFiles/RStudio/resources/libclang/builtin-headers/libc++/5.0.2",
+        "-IB:/ProgramFiles/R/R-4.0.3/library/Rcpp/include",
+        "-IB:/ProgramFiles/R/R-4.0.3/library/RcppArmadillo/include",
+        "-std=gnu++11",
+        "-IB:/ProgramFiles/R/R-4.0.3/include",
+        "-DNDEBUG",
+        "-fopenmp"
+    ],
+    "hash" : "163307904416330790441633079044",
+    "is_cpp" : true,
+    "pch" : "Rcpp"
+}
