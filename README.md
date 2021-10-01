@@ -1,5 +1,5 @@
 # DR.SC
-SC-MEB: spatial clustering with hidden Markov random field using empirical Bayes
+DR.SC: Joint dimension reduction and spatial clustering for single-cell/spatial transcriptomics data 
 
 # Installation
 
@@ -9,9 +9,9 @@ install.packages("devtools")
 
 library(devtools)
 
-install_github("Shufeyangyi2015310117/SC.MEB")
+install_github("feiyoung/DR.SC")
 
 
 # Demonstration
 
-For an example of typical SC.MEB usage, please see our [Package vignette](https://shufeyangyi2015310117.github.io/SC.MEB/index.html) for a demonstration and overview of the functions included in SC.MEB.
+For an example of typical SC.MEB usage, please see our [Package vignette](https://feiyoung.github.io/DR.SC/index.html) for a demonstration and overview of the functions included in SC.MEB.
