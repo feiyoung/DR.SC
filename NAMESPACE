@@ -1,3 +1,11 @@
 useDynLib(DR.SC, .registration=TRUE)
 importFrom(Rcpp, evalCpp)
-exportPattern("^[[:alpha:]]+")
+#exportPattern("^[[:alpha:]]+")
+
+export(DR.SC,DR.SC.fit, gendata_spatial, read10XVisium, getAdj,wpca)
+export(spatialPlotClusters, drscPlot, mbicPlot)
+
+importFrom("Seurat", "RidgePlot", "VlnPlot", "FeaturePlot", "DotPlot", "DoHeatmap")
+
+S3method("DR.SC","Seurat")
+

@@ -3,15 +3,13 @@ DR.SC: Joint dimension reduction and spatial clustering for single-cell/spatial 
 
 # Installation
 
-To install the the packages "SC.MEB", firstly, install the 'devtools' package. Besides, "SC.MEB" depends on the 'Rcpp' and 'RcppArmadillo' package, which also requires appropriate setting of Rtools and Xcode for Windows and Mac OS/X, respectively.
-
-install.packages("devtools")
-
-library(devtools)
-
-install_github("feiyoung/DR.SC")
+To install the the packages "DR.SC", firstly, install the 'remotes' package. Besides, "DR.SC" depends on the 'Rcpp' and 'RcppArmadillo' package, which also requires appropriate setting of Rtools and Xcode for Windows and Mac OS/X, respectively.
+```{Rmd}
+install.packages("remotes")
+remotes::install_github("feiyoung/DR.SC")
+```
 
 
 # Demonstration
 
-For an example of typical SC.MEB usage, please see our [Package vignette](https://feiyoung.github.io/DR.SC/index.html) for a demonstration and overview of the functions included in SC.MEB.
+For an example of typical DR.SC usage, please see our [Package vignette](https://feiyoung.github.io/DR.SC/index.html) for a demonstration and overview of the functions included in DR.SC.

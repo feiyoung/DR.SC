@@ -181,13 +181,13 @@ Rcpp::List runICM_sp (const arma::mat &X,  arma::ivec& y, const arma::mat& W0, c
     
     Energy(iter) = sum(Umin);
     if (Energy(iter) - Energy(iter - 1) > 1e-5) {
-      cout << "diff Energy = " << Energy(iter) - Energy(iter - 1)  << endl;
+      //cout << "diff Energy = " << Energy(iter) - Energy(iter - 1)  << endl;
       break;
     }
     
     if (Energy(iter-1) - Energy(iter) < 1e-5)
     {
-      cout << "ICM Converged at Iteration = " << iter  << endl;
+      //cout << "ICM Converged at Iteration = " << iter  << endl;
       break;
     }
   }

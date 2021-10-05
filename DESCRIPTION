@@ -1,13 +1,22 @@
 Package: DR.SC
 Type: Package
-Title: What the package does (short line)
+Title: Joint dimension reduction and spatial clustering for scRNA-seq and spatial transcriptomics data
 Version: 2.2
 Date: 2021-07-21
 Author: Wei Liu, Jin Liu, Xingjie Shi
 Maintainer: Wei Liu <wei.liu@duke-nus.edu.sg>
-Description: Nothing
+Description: Joint dimension reduction and spatial clustering for scRNA-seq and spatial transcriptomics data
 License: GPL-3 
 Imports: Rcpp (>= 1.0.5)
-Depends: mclust, SingleCellExperiment, MASS,purrr, doSNOW
+Depends: 
+    mclust,
+    Matrix,
+    SingleCellExperiment,
+    MASS,
+    purrr,
+    doSNOW,
+    Seurat,
+    RColorBrewer,
+    ggplot2,
+    R (>= 2.10)
 LinkingTo: Rcpp, RcppArmadillo
-
