@@ -30,12 +30,13 @@ nothing
 }
 \examples{
 ## we generate the spatial transcriptomics data with lattice neighborhood, i.e. ST platform.
-seu <- gendata_spatial(height=30, width=30,p=500, K=4)
+seu <- gendata_RNAExp(height=30, width=30,p=500, K=4)
 library(Seurat)
 seu <- NormalizeData(seu)
-# choose 2000 variable features using Seurat
-seu <- FindVariableFeatures(seu, nfeatures = 2000)
-seu1 <- DR.SC(seu, K=NULL, K_set=2:6,platform = 'ST', verbose=F)
+# choose spatially variable features
+seu <- FindSVGs(seu)
+# use SVGs to fit DR.SC model
+seu1 <- DR.SC(seu, K_set=2:6,platform = 'ST',variable.type = 'SVGs', verbose=F,pen.const=0.5)
 mbicPlot(seu1)
 }
 \keyword{Dimension reduction, spatial clustering and cell type identification.}

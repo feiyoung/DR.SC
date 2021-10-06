@@ -34,11 +34,11 @@ library("DR.SC")
 ### Generating the simulated data
 First, we generate the spatial transcriptomics data with lattice neighborhood, i.e. ST platform.
 ```{r}
-seu <- gendata_spatial(height=30, width=30,p=500, K=4)
+seu <- gendata_RNAExp(height=30, width=30,p=500, K=4)
 head(seu@meta.data)
 ```
 
-### Fitting model by using {DR.SC} function
+### Fitting model by using DR.SC function
 For function DR.SC, users can specify the number of clusters $K$ or set {K=NULL} by using modified BIC(MBIC) to determine $K$. First, we try using user-specified number of clusters. Then we show the version chosen by MBIC.
 ```{r}
 ### Given K
@@ -111,4 +111,9 @@ Single cell heatmap of feature expression
 # standard scaling (no regression)
 seu2 <- ScaleData(seu2)
 DoHeatmap(subset(seu2, downsample = 500), features = genes, size = 5)
+```
+
+## Session information
+```{r}
+sessionInfo()
 ```

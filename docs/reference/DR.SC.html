@@ -95,7 +95,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/DR.SR.Simu.html">SD-SC: installation and simulation</a>
+      <a href="../articles/DR.SC.HCC1.html">DR-SC: HCC1 Data Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/DR.SC.Simu.html">DR-SC: installation and simulation</a>
     </li>
   </ul>
 </li>
@@ -124,88 +127,55 @@
     <p>Joint dimension reduction and spatial clustering for scRNA-seq and spatial transcriptomics data</p>
     </div>
 
-    <pre class="usage"><span class='fu'>DR.SC</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='co'>### S3 method for class "Seurat"</span>
-  <span class='fu'>DR.SC</span><span class='op'>(</span><span class='va'>seu</span>, q<span class='op'>=</span><span class='fl'>15</span>, K<span class='op'>=</span><span class='cn'>NULL</span>, platform<span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Visium"</span>, <span class='st'>"ST"</span>, <span class='st'>'scRNAseq'</span><span class='op'>)</span>,
-                         nfeatures<span class='op'>=</span><span class='fl'>2000</span>,K_set <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>10</span><span class='op'>)</span>, <span class='va'>...</span><span class='op'>)</span>
-                         
-<span class='co'>### S3 method for class "dgCMatrix"</span>
-  <span class='fu'>DR.SC</span><span class='op'>(</span><span class='va'>X</span>,Adj_sp<span class='op'>=</span><span class='cn'>NULL</span>, q<span class='op'>=</span><span class='fl'>15</span>, K<span class='op'>=</span> <span class='cn'>NULL</span>,
-                            error.heter<span class='op'>=</span> <span class='cn'>T</span>, K_set <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>10</span><span class='op'>)</span>, beta_grid<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0.5</span>, <span class='fl'>5</span>, by<span class='op'>=</span><span class='fl'>0.5</span><span class='op'>)</span>,
-                            maxIter<span class='op'>=</span><span class='fl'>30</span>, epsLogLik<span class='op'>=</span><span class='fl'>1e-5</span>, verbose<span class='op'>=</span><span class='cn'>F</span>, maxIter_ICM<span class='op'>=</span><span class='fl'>6</span>,pen.const<span class='op'>=</span><span class='fl'>1</span>,
-                            wpca.int<span class='op'>=</span><span class='cn'>F</span>, parallel<span class='op'>=</span><span class='st'>'doSNOW'</span>, num_core<span class='op'>=</span><span class='fl'>5</span><span class='op'>)</span></pre>
+    <pre class="usage">DR.SC(object, ...)
+### S3 method for class "Seurat"
+DR.SC(seu, q=15, K=NULL, platform= c("Visium", "ST", 'scRNAseq'),
+       nfeatures=2000,K_set = seq(2, 10), variable.type=c("HVGs", "SVGs") ...)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>seu</th>
-      <td><p>an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted. The details of model specification are given under 'Details'.</p></td>
+      <td><p>an object of class "Seurat". The details of this object are given under 'Details'.</p></td>
     </tr>
     <tr>
       <th>q</th>
-      <td><p>an optional data frame, list or environment (or object coercible by as.data.frame to a data frame) containing the variables in the model. If not found in data, the variables are taken from environment(formula), typically the environment from which ilse is called.</p></td>
-    </tr>
-    <tr>
-      <th>bw</th>
-      <td><p>a positive value, specify the bandwidth in estimating missing values, default as NULL. When bw=NULL, it is automatically selected by empirical method.</p></td>
-    </tr>
-    <tr>
-      <th>intercept</th>
-      <td><p>a optional logical value, indicate whether X or data including intercept term (full-one column), default as 'FALSE'.</p></td>
-    </tr>
-    <tr>
-      <th>k.type</th>
-      <td><p>an optional character string, specify the type of kernel used in iterative estimating algorithm and support 'epk', 'biweight', 'triangle', 'guassian', 'triweight', 'tricube', 'cosine', 'uniform' in current version, defualt as 'guassian'.</p></td>
-    </tr>
-    <tr>
-      <th>bw.type</th>
-      <td><p>an optional character string, specify the type of kernel bandwidth, only support 'fix.bw'(fixed bandwidth) in current version, may spport variable bandwidth in future version, defualt as 'fix.bw'.</p></td>
+      <td><p>a positive integer, specify the number of latent features to be extracted, default as 15.</p></td>
     </tr>
     <tr>
       <th>K</th>
-      <td><p>an optional positive integer, specify the sample size used in kernel estimates when choose the variable bandwidth.</p></td>
+      <td><p>a positive  integer, specify the number of clusters, default as <code>NULL</code>. When <code>K=NULL</code>, it is automatically selected by MBIC criteria.</p></td>
     </tr>
     <tr>
-      <th>method</th>
-      <td><p>an optional character string, specify the iterative algorithm, only support 'Par.cond' and 'Full.cond' in current version and will support  'SGD' in future version.</p></td>
+      <th>platform</th>
+      <td><p>a string, specify the platform of the provided data, default as "Visium". There are three platforms to be chosen, including "Visuim", "ST" and "scRNAseq", where the first two means there are spatial coordinates information in the metadata of seu, named "row" and "col" and a Hidden Markov random field is used to model the spatial coordinates, and the last one "scRNAseq" means there is no spatial information in object seu and a multinomial model is used to model the unobserved class labels. The platform helps to calculate the adjoint matrix.</p></td>
     </tr>
     <tr>
-      <th>max.iter</th>
-      <td><p>an optional positive integer, the maximum iterative times, defualt as '50'.</p></td>
+      <th>nfeatures</th>
+      <td><p>a positive integer, means how many highly variable or spatially variable genes used for DR-SC model, default as 2000. If there are less than 2000 features in seu, then all features are used for DR-SC model.</p></td>
     </tr>
     <tr>
-      <th>peps</th>
-      <td><p>an optional positive value, tolerance vlaue of relative variation rate of estimated parametric vector, defualt as '1e-7'.</p></td>
+      <th>K_set</th>
+      <td><p>an optional vector of positive integer, means the candidates of number of clusters used for MBIC.</p></td>
     </tr>
     <tr>
-      <th>feps</th>
-      <td><p>an optional positive vlaue, tolerance vlaue of relative variation rate of objective function value, defualt as '1e-7'.</p></td>
+      <th>variable.type</th>
+      <td><p>an optional string, specify whether use highly variable genes (HVGs) or spatially variable genes (SVGs) to fit DR-SC model, default as "HVGs".</p></td>
     </tr>
     <tr>
-      <th>infor_output</th>
-      <td><p>an optional logical value, indicate whether output the iterative information, default as 'TRUE'.</p></td>
+      <th>...</th>
+      <td><p>Other arguments to pass into <a href='DR.SC.fit.html'>DR.SC.fit</a> function.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Models for ilse are specified symbolically. A typical model has the form response ~ terms where response is the (numeric) response vector and terms is a series of terms which specifies a linear predictor for response. A terms specification of the form first + second indicates all the terms in first together with all the terms in second with duplicates removed. A specification of the form first:second indicates the set of terms obtained by taking the interactions of all terms in first with all terms in second. The specification first*second indicates the cross of first and second. This is the same as first + second + first:second.</p>
+    <p>seu is an object named <code>Seurat</code>, thich can easily created by R package <a href='https://satijalab.org/seurat/reference/Seurat-package.html'>Seurat</a>.
+  If the data is collected by the spatial transcriptomics technologies such as 10X Visium, ST, seqFISH, MERFISH and  Slide-seq, then there are spatial coordinates information in the metadata of seu, named "row" and "col". DR-SC model uses a Hidden Markov random field to model the spatial coordinates.  If the data is collected by the single cell RNA sequencing techonologies which means there is no spatial information in object seu then a multinomial model is used to model the unobserved class labels.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>ilse returns an object of class "NAlm".</p>
-<p>The functions summary and anova are used to obtain and print a summary and analysis of variance table of the results. The generic accessor functions coefficients, effects, fitted.values and residuals extract various useful features of the value returned by lm.</p>
-<p>An object of class "NAlm" is a list containing at least the following components:</p>
-<dt>beta</dt><dd><p>a named vector of coefficients</p></dd>
-<dt>Bmat</dt><dd><p>a named matrix that summary the estimated beta in every iteration.</p></dd>
-<dt>d.fn</dt><dd><p>a nonnegative value, vlaue of relative variation rate of objective function value</p></dd>
-<dt>d.par</dt><dd><p>a nonnegative value, relative variation rate of estimated parametric vector when algorithm stopped.</p></dd>
-<dt>iterations</dt><dd><p>a positive integer, iterative times in total.</p></dd>
-<dt>residuals</dt><dd><p>the residuals, that is response minus fitted values.</p></dd>
-<dt>fitted.values</dt><dd><p>the fitted mean values.</p></dd>
-<dt>inargs</dt><dd><p>a list including all input arguments.</p></dd>
-
+    <p>DR.SC returns a revised  <code>Seurat</code> object. There are two revisions in the seu. 1. the metadata is added a new column named <code>spatial.drsc.cluster</code> that represents the clustering results from DR-SC model. 2. a DimReduc object named <code>dr-sc</code> is added in the slot <code>reductions</code>, which represents the features extracted by DR-SC model.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     
@@ -224,9 +194,62 @@
 </div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>## exmaple one: include missing value</span>
-
-
+    <pre class="examples"><div class='input'><span class='co'>## we generate the spatial transcriptomics data with lattice neighborhood, i.e. ST platform.</span>
+<span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gendata_RNAExp.html'>gendata_RNAExp</a></span><span class='op'>(</span>height<span class='op'>=</span><span class='fl'>30</span>, width<span class='op'>=</span><span class='fl'>30</span>,p<span class='op'>=</span><span class='fl'>500</span>, K<span class='op'>=</span><span class='fl'>4</span>,platform<span class='op'>=</span><span class='st'>"ST"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: The following arguments are not used: row.names</span></div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://satijalab.org/seurat'>Seurat</a></span><span class='op'>)</span>
+<span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://satijalab.org/seurat/reference/NormalizeData.html'>NormalizeData</a></span><span class='op'>(</span><span class='va'>seu</span><span class='op'>)</span>
+<span class='co'># choose 400 spatially variable features</span>
+<span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='FindSVGs.html'>FindSVGs</a></span><span class='op'>(</span><span class='va'>seu</span>, nfeatures <span class='op'>=</span> <span class='fl'>400</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Loading required package: SPARK</span></div><div class='output co'>#&gt; Find the spatially variables genes by SPARK-X...
+#&gt; ## ===== SPARK-X INPUT INFORMATION ==== 
+#&gt; ## number of total samples: 900 
+#&gt; ## number of total genes: 500 
+#&gt; ## Running with single core, may take some time 
+#&gt; ## Testing With Projection Kernel
+#&gt; ## Testing With Gaussian Kernel 1
+#&gt; ## Testing With Gaussian Kernel 2
+#&gt; ## Testing With Gaussian Kernel 3
+#&gt; ## Testing With Gaussian Kernel 4
+#&gt; ## Testing With Gaussian Kernel 5
+#&gt; ## Testing With Cosine Kernel 1
+#&gt; ## Testing With Cosine Kernel 2
+#&gt; ## Testing With Cosine Kernel 3
+#&gt; ## Testing With Cosine Kernel 4
+#&gt; ## Testing With Cosine Kernel 5</div><div class='input'><span class='va'>seu1</span> <span class='op'>&lt;-</span> <span class='fu'>DR.SC</span><span class='op'>(</span><span class='va'>seu</span>, K<span class='op'>=</span><span class='fl'>4</span>, platform <span class='op'>=</span> <span class='st'>'ST'</span>, verbose<span class='op'>=</span><span class='cn'>F</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Neighbors were identified for 900 out of 900 spots.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: nrow(seu) is less than nfeatures, so assign nfeatures with nrow(seu)!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: number of variable genes is less than nfeatures, </span>
+#&gt; <span class='warning'>              so assign nfeatures with number of variable genes!</span></div><div class='output co'>#&gt; <span class='error'>Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 't': 'NA' indices are not (yet?) supported for sparse Matrices</span></div><div class='input'>
+<span class='co'># choose spatially variable features</span>
+<span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='FindSVGs.html'>FindSVGs</a></span><span class='op'>(</span><span class='va'>seu</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Find the spatially variables genes by SPARK-X...
+#&gt; ## ===== SPARK-X INPUT INFORMATION ==== 
+#&gt; ## number of total samples: 900 
+#&gt; ## number of total genes: 500 
+#&gt; ## Running with single core, may take some time 
+#&gt; ## Testing With Projection Kernel
+#&gt; ## Testing With Gaussian Kernel 1
+#&gt; ## Testing With Gaussian Kernel 2
+#&gt; ## Testing With Gaussian Kernel 3
+#&gt; ## Testing With Gaussian Kernel 4
+#&gt; ## Testing With Gaussian Kernel 5
+#&gt; ## Testing With Cosine Kernel 1
+#&gt; ## Testing With Cosine Kernel 2
+#&gt; ## Testing With Cosine Kernel 3
+#&gt; ## Testing With Cosine Kernel 4
+#&gt; ## Testing With Cosine Kernel 5</div><div class='input'><span class='co'># use SVGs to fit DR.SC model</span>
+<span class='va'>seu1</span> <span class='op'>&lt;-</span> <span class='fu'>DR.SC</span><span class='op'>(</span><span class='va'>seu</span>, K<span class='op'>=</span><span class='fl'>4</span>,platform <span class='op'>=</span> <span class='st'>'ST'</span>, variable.type <span class='op'>=</span> <span class='st'>'SVGs'</span>,verbose<span class='op'>=</span><span class='cn'>F</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Neighbors were identified for 900 out of 900 spots.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: nrow(seu) is less than nfeatures, so assign nfeatures with nrow(seu)!</span></div><div class='output co'>#&gt; Using SVGs to fit DR.SC model since variable.type=SVGs...
+#&gt; Fit DR-SC model...
+#&gt; elasped time is : 15.18 1.09 16.22 NA NA 
+#&gt; Finish DR-SC model fitting</div><div class='input'>
+<span class='co'>## genrate the scRNAseq data</span>
+<span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gendata_RNAExp.html'>gendata_RNAExp</a></span><span class='op'>(</span>height<span class='op'>=</span><span class='fl'>30</span>, width<span class='op'>=</span><span class='fl'>30</span>,p<span class='op'>=</span><span class='fl'>500</span>, K<span class='op'>=</span><span class='fl'>4</span>,platform<span class='op'>=</span><span class='st'>"scRNAseq"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: The following arguments are not used: row.names</span></div><div class='input'><span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://satijalab.org/seurat/reference/NormalizeData.html'>NormalizeData</a></span><span class='op'>(</span><span class='va'>seu</span><span class='op'>)</span>
+<span class='co'># choose 400 variable features using Seurat</span>
+<span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://satijalab.org/seurat/reference/FindVariableFeatures.html'>FindVariableFeatures</a></span><span class='op'>(</span><span class='va'>seu</span>, nfeatures <span class='op'>=</span> <span class='fl'>400</span><span class='op'>)</span>
+<span class='va'>seu1</span> <span class='op'>&lt;-</span> <span class='fu'>DR.SC</span><span class='op'>(</span><span class='va'>seu</span>, K<span class='op'>=</span><span class='fl'>4</span>, platform <span class='op'>=</span> <span class='st'>'scRNAseq'</span>,nfeatures<span class='op'>=</span><span class='fl'>400</span>, verbose<span class='op'>=</span><span class='cn'>F</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Fit DR-SC model...
+#&gt; elasped time is : 10.3 0.82 11.25 NA NA 
+#&gt; Finish DR-SC model fitting</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

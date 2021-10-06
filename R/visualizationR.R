@@ -10,7 +10,7 @@ mbicPlot <- function(seu){
   
   
   ggplot(data=icMat,
-         aes(x=K, y=mbic)) + geom_line(size=1) + cowplot::theme_cowplot()
+         aes(x=K, y=mbic)) + geom_line(size=1) + cowplot::theme_cowplot() + ylab("MBIC")
 }
 
 spatialPlotClusters <- function(seu){

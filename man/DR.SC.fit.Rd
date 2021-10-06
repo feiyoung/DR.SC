@@ -55,7 +55,7 @@ nothing
 }
 \examples{
 ## we generate the spatial transcriptomics data with lattice neighborhood, i.e. ST platform.
-seu <- gendata_spatial(height=30, width=30,p=500, K=4)
+seu <- gendata_RNAExp(height=30, width=30,p=500, K=4)
 library(Seurat)
 seu <- NormalizeData(seu)
 # choose 2000 variable features using Seurat

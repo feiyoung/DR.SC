@@ -11,6 +11,18 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// getneighborhood_fast
+arma::sp_umat getneighborhood_fast(const arma::mat x, double cutoff);
+RcppExport SEXP _DR_SC_getneighborhood_fast(SEXP xSEXP, SEXP cutoffSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type cutoff(cutoffSEXP);
+    rcpp_result_gen = Rcpp::wrap(getneighborhood_fast(x, cutoff));
+    return rcpp_result_gen;
+END_RCPP
+}
 // getPairDist
 arma::mat getPairDist(const arma::mat x);
 RcppExport SEXP _DR_SC_getPairDist(SEXP xSEXP) {
@@ -148,6 +160,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_DR_SC_getneighborhood_fast", (DL_FUNC) &_DR_SC_getneighborhood_fast, 2},
     {"_DR_SC_getPairDist", (DL_FUNC) &_DR_SC_getPairDist, 1},
     {"_DR_SC_calYenergy2D_sp", (DL_FUNC) &_DR_SC_calYenergy2D_sp, 5},
     {"_DR_SC_obj_beta", (DL_FUNC) &_DR_SC_obj_beta, 6},

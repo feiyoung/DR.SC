@@ -2,6 +2,12 @@
     {
         "definitions" : [
         ],
+        "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/getNB_fast.cpp",
+        "file_last_write" : 1633441201.000000
+    },
+    {
+        "definitions" : [
+        ],
         "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/main_fun.cpp",
         "file_last_write" : 1626513840.000000
     },

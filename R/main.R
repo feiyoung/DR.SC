@@ -67,10 +67,6 @@ gendata_noSp <- function(n=100, p =100, q=15, K = 8,  alpha=10, sigma2=1, seed=1
   return(list(X=X, Z=Z, cluster=cluster, W=W, Mu=Mu, Sigma=Sigma, Pi=Pi, Lam_vec=Lambda, snr=snr))
 }
 
-
-
-# dat1 <- gendata_noSp()
-# dat1$Mu
 ### Generate data with spatial dependence.
 gendata_sp <- function(height=30, width=30, p =100, q=10, K=7,  G=4, beta=1, sigma2=1, tau=8, seed=1, view=T){
   # height <- 70
@@ -148,7 +144,8 @@ gendata_sp <- function(height=30, width=30, p =100, q=10, K=7,  G=4, beta=1, sig
 
 
 #### Generate Spatial data with ST platform
-gendata_spatial <- function(height=30, width=30, p =100, q=10, K=7,  G=4, beta=1, sigma2=1, tau=8, seed=1, view=F){
+gendata_RNAExp <- function(height=30, width=30, platform="ST", p =100, q=10, K=7, 
+                            G=4,sigma2=1, tau=8, seed=1, view=F){
   
   if(q <2) stop("error:gendata_sp::q must be greater than 2!")
   
@@ -156,7 +153,11 @@ gendata_spatial <- function(height=30, width=30, p =100, q=10, K=7,  G=4, beta=1
   require(MASS)
   n <- height * width # # of cell in each indviduals 
   
-  
+  if(platform=="ST"){
+    beta= 1
+  }else if(platform=='scRNAseq'){
+    beta = 0
+  }
   ## generate deterministic parameters, fixed after generation
   set.seed(1)
   # sigma2 <- 1
@@ -201,34 +202,42 @@ gendata_spatial <- function(height=30, width=30, p =100, q=10, K=7,  G=4, beta=1
   }
   Ez <- colMeans(Z)
   Mu <- Mu - matrix(Ez, K, q, byrow=T) # center Z
-  X <- Z %*% t(W) + MASS::mvrnorm(n, rep(0,p), diag(Lambda))
+  X <- Z %*% t(W) + MASS::mvrnorm(n, mu=rep(0,p), Sigma=diag(Lambda))
   
-  svd_Sig <- svd(cov(Z))
-  W12 <- W %*% svd_Sig$u %*% diag(sqrt(svd_Sig$d))
-  signal <- sum(svd(W12)$d^2)
-  snr <- sum(svd(W12)$d^2) / (sum(svd(W12)$d^2)+ sum(Lambda))
-  
-  cat("SNR=", round(snr,4), '\n')
+  # svd_Sig <- svd(cov(Z))
+  # W12 <- W %*% svd_Sig$u %*% diag(sqrt(svd_Sig$d))
+  # signal <- sum(svd(W12)$d^2)
+  # snr <- sum(svd(W12)$d^2) / (sum(svd(W12)$d^2)+ sum(Lambda))
+  # 
+  # cat("SNR=", round(snr,4), '\n')
   
   # make position
   pos <- cbind(rep(1:height, width), rep(1:height, each=width))
   #  make BayesSpace metadata used in BayesSpace-------------------------------------------------
   counts <- t(X) - min(X)
   p <- ncol(X); n <- nrow(X)
-  rownames(counts) <- paste0("gene_", seq_len(p))
-  colnames(counts) <- paste0("spot_", seq_len(n))
+  rownames(counts) <- paste0("gene-", seq_len(p))
+  colnames(counts) <- paste0("spot-", seq_len(n))
   
   ## Make array coordinates - filled rectangle
-  cdata <- list()
-  cdata$row <- pos[,1]
-  cdata$col <- pos[,2]
-  cdata <- as.data.frame(do.call(cbind, cdata))
-  cdata$imagerow <- cdata$row
-  cdata$imagecol <- cdata$col 
-  row.names(cdata) <- colnames(counts)
-  library(Seurat)
-  ## Make SCE
-  seu <-  CreateSeuratObject(counts= exp(counts)-1, meta.data=cdata)
+  
+  if(platform=="ST"){
+    cdata <- list()
+    cdata$row <- pos[,1]
+    cdata$col <- pos[,2]
+    cdata <- as.data.frame(do.call(cbind, cdata))
+    cdata$imagerow <- cdata$row
+    cdata$imagecol <- cdata$col 
+    row.names(cdata) <- colnames(counts)
+    library(Seurat)
+    ## Make SCE
+    seu <-  CreateSeuratObject(counts= exp(counts)-1, meta.data=cdata)
+  }else if(platform=='scRNAseq'){
+    library(Seurat)
+    ## Make SCE
+    seu <-  CreateSeuratObject(counts= exp(counts)-1)
+  }
+  
   seu$true_clusters <- y
   return(seu)
 }
@@ -286,20 +295,32 @@ read10XVisium <- function (dirname) {
   seu
 }
 
+readscRNAseq <- function(mtx, cells, features, ...){
+  require(Seurat)
+  spMat <- ReadMtx(mtx,cells,features, ...)
+  seu <- CreateSeuratObject(counts = spMat)
+  seu@tools$platform <- "scRNAseq"
+  seu
+}
+
+
 
 # Data prepocessing -------------------------------------------------------
 ## use SPARK to choose spatially variable genes
 FindSVGs <- function(seu, nfeatures=2000,num_core=1, verbose=T){
+  
+  if (!inherits(seu, "Seurat"))
+    stop("method is only for Seurat objects")
   require(SPARK)
   require(Seurat)
   sp_count <- seu@assays$RNA@counts
   if(nrow(sp_count)>5000){
-    seu <- FindVariableFeatures(hcc1, nfeatures = 5000, verbose=verbose)
+    seu <- FindVariableFeatures(seu, nfeatures = 5000, verbose=verbose)
     sp_count <- seu@assays$RNA@counts[seu@assays$RNA@var.features,]
   }
   location <- as.data.frame(cbind(seu$row, seu$col))
   if(verbose){
-    cat("Find the spatially variables genes by SPARK-X...")
+    cat("Find the spatially variables genes by SPARK-X...\n")
   }
   sparkX <- sparkx(sp_count,location,numCores=num_core,option="mixture", verbose=verbose)
   if(nfeatures > nrow(sp_count)) nfeatures <- nrow(sp_count)
@@ -311,6 +332,13 @@ FindSVGs <- function(seu, nfeatures=2000,num_core=1, verbose=T){
   seu
 }
 
+topSVGs <- function(seu, ntop=5){
+  if (!inherits(seu, "Seurat"))
+    stop("method is only for Seurat objects")
+  if(ntop > nrow(seu)) warning(paste0("Only ", nrow(seu), ' SVGs will be returned since the number of genes is less than ', ntop, '\n'))
+  row.names(seu)[seu@assays$RNA@meta.features$is.SVGs][1:ntop]
+  
+}
 # Define DR.SC S3 function ------------------------------------------------
 
 
@@ -323,17 +351,19 @@ DR.SC.fit <- function(X,Adj_sp=NULL, q=15, K= NULL,
   #   stop("X must be dgCMatrix objects or Seurat objects")
   if(is.null(K)){
     cat("Start chooing number of clusters...\n")
-    cat(" The candidate set is: ", K_set, '\n')
+    cat("The candidate set is: ", K_set, '\n')
     icMat <- selectClustNumber(X, Adj_sp, q, K_set= K_set, parallel=parallel, num_core = num_core, pen.const=pen.const)
     K_best <- K_set[which.min(icMat[,"mbic"])]
     cat("The best number of cluster is: ", K_best, '\n')
   }else{
     K_best <- K
   }
+  cat("Fit DR-SC model...\n")
   resList <- simulDRcluster(X,Adj_sp = Adj_sp, q, K_best, error.heter= error.heter, 
                             beta_grid=beta_grid,
                             maxIter=maxIter, epsLogLik=epsLogLik, verbose=verbose, maxIter_ICM=maxIter_ICM,pen.const=pen.const,
                             alpha=F, wpca.int=wpca.int, diagSigmak=FALSE)
+  cat("Finish DR-SC model fitting\n")
   if(is.null(K)){
     resList$K_best <- K_best
     resList$icMat <- icMat
@@ -342,7 +372,7 @@ DR.SC.fit <- function(X,Adj_sp=NULL, q=15, K= NULL,
 }
 
 DR.SC.Seurat <- function(seu, q=15, K=NULL, platform= c("Visium", "ST", 'scRNAseq'),
-                         nfeatures=2000,K_set = seq(2, 10), variable.type=c("HVGs", "SVGs"),...){
+                         nfeatures=2000,K_set = seq(2, 10), variable.type="HVGs",...){
   require(Seurat)
   if (!inherits(seu, "Seurat"))
     stop("method is only for Seurat objects")
@@ -351,17 +381,26 @@ DR.SC.Seurat <- function(seu, q=15, K=NULL, platform= c("Visium", "ST", 'scRNAse
   }else{
     Adj_sp <- getAdj(seu,  platform)
   }
+  if(nfeatures > nrow(seu)){
+    warning('nrow(seu) is less than nfeatures, so assign nfeatures with nrow(seu)!')
+    nfeatures <- nrow(seu)
+  }
+    
   if(variable.type=='HVGs'){
     if(is.null(seu@assays$RNA@var.features)){
       seu <- FindVariableFeatures(seu, nfeatures = nfeatures)
     }
-    var.features <- seu@assays$RNA@var.features
+    if(nfeatures > length(seu@assays$RNA@var.features)){
+      warning('number of variable genes is less than nfeatures, 
+              so assign nfeatures with number of variable genes!')
+      nfeatures <- length(seu@assays$RNA@var.features)
+    }
+    var.features <- seu@assays$RNA@var.features[1:nfeatures]
   
   }else{
-    var.features <- row.names(seu)[seu[["RNA"]]@meta.features$is.SVGs]
+    cat("Using SVGs to fit DR.SC model since variable.type=SVGs...\n")
+    var.features <- row.names(seu)[seu[[DefaultAssay(seu)]]@meta.features$is.SVGs]
   }
-  
- 
   
   X <- Matrix::t(LogNormalize(seu@assays$RNA@counts[var.features,]))
   
@@ -372,7 +411,7 @@ DR.SC.Seurat <- function(seu, q=15, K=NULL, platform= c("Visium", "ST", 'scRNAse
   hZ <-resList$hZ
   row.names(hZ) <- colnames(seu)
   colnames(hZ) <- paste0('DR-SC', 1:q)
-  seu@reductions$"dr-sc" <- CreateDimReducObject(embeddings = hZ, key='DRSC_', assay='RNA')
+  seu@reductions$"dr-sc" <- CreateDimReducObject(embeddings = hZ, key='DRSC_', assay=DefaultAssay(seu))
   seu$spatial.drsc.cluster <- resList$cluster
   Idents(seu) <- factor(paste0("cluster", seu$spatial.drsc.cluster), levels=paste0('cluster',1:K))
   seu@tools <- resList[-c(1,2)]
@@ -527,7 +566,9 @@ find_neighbors <- function(sce, platform='ST') {
   ij
 }
 
-getAdj <- function(seu, platform = c('Visium', 'ST')){
+getAdj <- function(object, ...) UseMethod("getAdj")
+
+getAdj.Seurat <- function(seu, platform = c('Visium', 'ST')){
   
   if (!inherits(seu, "Seurat"))
     stop("method is only for Seurat objects")
@@ -595,6 +636,16 @@ getAdj <- function(seu, platform = c('Visium', 'ST')){
   return(Adj_sp)
 }
 
+getAdj.matrix <- function(pos, radius){
+  if (!inherits(pos, "matrix"))
+    stop("pos must be a matrix object!")
+  if(radius <=0){
+    stop('radius must be a positive real!')
+  }
+  Adj_sp <- getneighborhood_fast(pos, cutoff=radius)
+  return(Adj_sp)
+}
+
 runAdj <- function(X, pos, platform='ST'){
   require(purrr)
   require(SingleCellExperiment)
@@ -621,6 +672,8 @@ runAdj <- function(X, pos, platform='ST'){
   Adj_sp <- sparseMatrix(ij[,1], ij[,2], x = 1)
   return(Adj_sp)
 }
+
+
 
 
 # select cluster number K -------------------------------------------------
@@ -774,4 +827,45 @@ wpca2 <- function(X, q, weighted=T){
     Lam_vec = colSums(dX^2)/ n
   }
   return(list(PCs=PCs, loadings=loadings, Lam_vec=Lam_vec))
+}
+
+RunWPCA <- function(object, ...) UseMethod("RunWPCA")
+
+RunWPCA.Seurat <- function(seu, q=15){
+  
+  if (!inherits(seu, "Seurat"))
+    stop("method is only for Seurat objects")
+  if(length(seu@assays[[DefaultAssay(seu)]]@scale.data) == 0)
+    stop("The slot scale.data is empty! Please use ScaleData function first then use RunWPCA!")
+  scale.data <- seu@assays[[DefaultAssay(seu)]]@scale.data
+  hZ <- wpca(t(scale.data), q=q, weighted = T)$PCs
+  row.names(hZ) <- colnames(seu)
+  colnames(hZ) <- paste0('WPCA', 1:q)
+  seu@reductions$"wpca" <- CreateDimReducObject(embeddings = hZ, key='WPCA_', assay=DefaultAssay(seu))
+  return(seu)
+}
+
+RunWPCA.matrix <- function(X, q=15){
+  if (!inherits(seu, "matrix"))
+    stop("method is only for Seurat objects")
+  hZ <- wpca(t(X), q=q, weighted = T)
+  if(is.null(colnames(X))){
+    warning('colnames(X) is null, so the colnames are assigned with spot 1:ncol(X)!')
+    colnames(X) <- paste0('spot', 1:ncol(X))
+  }
+  row.names(hZ) <- colnames(X)
+  colnames(hZ) <- paste0('WPCA', 1:q)
+  return(hZ)
+}
+RunWPCA.dgCMatrix<- function(X, q=15){
+  if (!inherits(X, "dgCMatrix"))
+    stop("X must be dgCMatrix objects or Seurat objects")
+  hZ <- wpca(Matrix::t(X), q=q, weighted = T)
+  if(is.null(colnames(X))){
+    warning('colnames(X) is null, so the colnames are assigned with spot 1:ncol(X)!')
+    colnames(X) <- paste0('spot', 1:ncol(X))
+  }
+  row.names(hZ) <- colnames(X)
+  colnames(hZ) <- paste0('WPCA', 1:q)
+  return(hZ)
 }
