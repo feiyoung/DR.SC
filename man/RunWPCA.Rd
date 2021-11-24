@@ -5,20 +5,19 @@
   Run a weighted PCA dimensionality reduction
 }
 \usage{
-  RunWPCA(object, ...)
+  RunWPCA(object, q=15)
   ### S3 method for class "Seurat"
-  #RunWPCA(seu, q=15)
+  ## RunWPCA(object, q=15)
   
   ### S3 method for class "matrix"
-  #RunWPCA(X, q=15)
+  ## RunWPCA(object, q=15)
   
   ### S3 method for class "dgCMatrix"
-  #RunWPCA(X, q=15)
+  ## RunWPCA(object, q=15)
 }
 \arguments{
-  \item{seu}{an object of class "Seurat" with slot "scale.data".}
+  \item{object}{an object named "Seurat", "maxtrix" or "dgCMatrix". The object of class "Seurat" must include slot "scale.data".}
   \item{q}{an optional positive integer, specify the number of features to be extracted.}
-  \item{X}{a object of class "matrix" or "dgCMatrix" whose row is gene and column is spot/cell.}
 }
 \details{
   Nothing
@@ -37,15 +36,16 @@ covariance matrices. Journal of Econometrics, 200(1):59–78.
   nothing
 }
 \seealso{
-  
+  None
 }
 \examples{
+\dontrun{
   library(Seurat)
-  seu <- gendata_RNAExp(height=40, width=40,p=1000, K=4)
+  seu <- gendata_RNAExp(height=20, width=20,p=100, K=4)
   ## log-normalization
   seu <- NormalizeData(seu)
   ##
-  seu <- FindVariableFeatures(seu, nfeatures=800)
+  seu <- FindVariableFeatures(seu, nfeatures=80)
   ## Scale
   seu <- ScaleData(seu)
   ## Run WPCA
@@ -55,10 +55,12 @@ covariance matrices. Journal of Econometrics, 200(1):59–78.
   seu <- RunTSNE(seu, reduction='wpca')
   seu
   ## Find SVGs
-  seu <- FindSVGs(seu, nfeatures=800)
+  seu <- FindSVGs(seu, nfeatures=80)
   (genes <- topSVGs(seu, ntop=10))
   Idents(seu) <- factor(paste0("cluster", seu$true_clusters), levels=paste0("cluster",1:4))
   RidgePlot(seu, features = genes[1:2], ncol = 2)
   FeaturePlot(seu, features = genes[1:2], reduction = 'tsne' ,ncol=2)
+  }
 }
-\keyword{Dimension reduction, WPCA.}
+\keyword{Dimension reduction}
+\keyword{Weighted PCA}

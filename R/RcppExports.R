@@ -7,12 +7,30 @@
 #' an efficient function to find the neighborhood based on the matrix of position and a pre-defined cutoff
 #'
 #' @param x is a n-by-2 matrix of position.
-#' @param cutoff is a threashold of Euclidean distance to decide whether a spot is an neighborhood of another spot. For example, if the Euclidean distance between spot A and B is less than cutoff, then A is taken as the neighbourhood of B. 
+#' @param radius is a threashold of Euclidean distance to decide whether a spot is an neighborhood of another spot. For example, if the Euclidean distance between spot A and B is less than cutoff, then A is taken as the neighbourhood of B. 
 #' @return A sparse matrix containing the neighbourhood
 #'
 #' @export
-getneighborhood_fast <- function(x, cutoff) {
-    .Call(`_DR_SC_getneighborhood_fast`, x, cutoff)
+getneighborhood_fast <- function(x, radius) {
+    .Call(`_DR_SC_getneighborhood_fast`, x, radius)
+}
+
+#' Calculate column-wise or row-wise mean
+#' @param sp_data A sparse matrix
+#' @param rowMeans A boolean value, whether to calculate row-wise mean
+#' @return A n x 1 or p x 1 matrix 
+#' @export
+sp_means_Rcpp <- function(sp_data, rowMeans = FALSE) {
+    .Call(`_DR_SC_sp_means_Rcpp`, sp_data, rowMeans)
+}
+
+#' Calculate column-wise or row-wise sum
+#' @param sp_data A sparse matrix
+#' @param rowSums A boolean value, whether to calculate row-wise sum
+#' @return A n x 1 or p x 1 matrix 
+#' @export
+sp_sums_Rcpp <- function(sp_data, rowSums = FALSE) {
+    .Call(`_DR_SC_sp_sums_Rcpp`, sp_data, rowSums)
 }
 
 #' @keywords internal

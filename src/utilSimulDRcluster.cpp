@@ -4,15 +4,14 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 
 #include <Rcpp.h>
-#include <omp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include <time.h>
-#include <iostream>
+// #include <time.h>
+// #include <iostream>
 
-#define INT_MIN (-INT_MAX - 1)
+// #define INT_MIN (-INT_MAX - 1)
 
 using namespace Rcpp;
 using namespace arma;

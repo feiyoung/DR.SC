@@ -4,11 +4,11 @@ mbicPlot <- function(seu){
   if (!inherits(seu, "Seurat"))
     stop("seu must be a Seurat object!")
   if(is.null(seu@tools$icMat)) stop("There is no MBIC-related information in 'seu' object!")
-  library(ggplot2)
+  # library(ggplot2)
   
   icMat <- as.data.frame(seu@tools$icMat)
   
-  
+  K <- icMat$K; mbic <- icMat$mbic
   ggplot(data=icMat,
          aes(x=K, y=mbic)) + geom_line(size=1) + cowplot::theme_cowplot() + ylab("MBIC")
 }
@@ -17,12 +17,11 @@ spatialPlotClusters <- function(seu){
   
   if (!inherits(seu, "Seurat"))
     stop("seu must be a Seurat object!")
-  require(ggplot2)
-  library(RColorBrewer)
+  # require(ggplot2)
   cols <- brewer.pal(12, "Set3")
   K <- length(unique(seu$spatial.drsc.cluster))
   dat <- data.frame(row=seu$row, col=seu$col, clusters=Idents(seu))
-  
+  clusters <- dat$clusters
   p1 <- ggplot(dat, aes(x=row, y=col, color=clusters)) +
     geom_point(size = 3, alpha=0.7) +
     theme(axis.text.x = element_blank(),
@@ -48,7 +47,7 @@ drscPlot <- function(seu, dims=1:5, visu.method='tSNE',...){
     stop("seu must be a Seurat object!")
   if(is.null(seu@reductions$'dr-sc')) stop("There is no 'dr-sc' component in slot 'reduction' of 'seu',
                             please perform DR-SC dimension reduction using 'DR.SC' function first!")
-  require(Seurat)
+  # require(Seurat)
   if(visu.method=='tSNE'){
     seu <- RunTSNE(seu, reduction="dr-sc", dims=dims,verbose = F)
   }else if(visu.method=='UMAP'){

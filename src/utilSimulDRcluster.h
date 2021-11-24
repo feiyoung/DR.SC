@@ -5,13 +5,13 @@
 #include "RcppArmadillo.h"
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <Rcpp.h>
-#include <omp.h>
+//#include <omp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <string.h>
-#include <time.h>
-#include <iostream>
+// #include <string.h>
+// #include <time.h>
+// #include <iostream>
 
 
 using namespace Rcpp;

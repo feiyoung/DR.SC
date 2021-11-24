@@ -1,14 +1,14 @@
 \name{DR.SC}
 \alias{DR.SC}
+\alias{DR.SC.Seurat}
 \title{Joint dimension reduction and spatial clustering}
 \description{
   Joint dimension reduction and spatial clustering for scRNA-seq and spatial transcriptomics data
 }
 \usage{
-DR.SC(object, ...)
 ### S3 method for class "Seurat"
 DR.SC(seu, q=15, K=NULL, platform= c("Visium", "ST", 'scRNAseq'),
-       nfeatures=2000,K_set = seq(2, 10), variable.type=c("HVGs", "SVGs") ...)
+       nfeatures=2000,K_set = seq(2, 10), variable.type="HVGs", ...)
 }
 \arguments{
   \item{seu}{an object of class "Seurat". The details of this object are given under 'Details'.}
@@ -18,7 +18,7 @@ DR.SC(seu, q=15, K=NULL, platform= c("Visium", "ST", 'scRNAseq'),
   \item{nfeatures}{a positive integer, means how many highly variable or spatially variable genes used for DR-SC model, default as 2000. If there are less than 2000 features in seu, then all features are used for DR-SC model.}
   \item{K_set}{an optional vector of positive integer, means the candidates of number of clusters used for MBIC.}
   \item{variable.type}{an optional string, specify whether use highly variable genes (HVGs) or spatially variable genes (SVGs) to fit DR-SC model, default as "HVGs".}
-  \item{...}{Other arguments to pass into \link{DR.SC.fit} function.}
+  \item{...}{Other arguments to pass into \link{DR.SC_fit} function.}
 }
 \details{
   seu is an object named \code{Seurat}, thich can easily created by R package \link{Seurat}.
@@ -30,7 +30,7 @@ DR.SC(seu, q=15, K=NULL, platform= c("Visium", "ST", 'scRNAseq'),
 
 }
 \references{
-  
+  None
 }
 \author{
 Wei Liu
@@ -39,28 +39,25 @@ Wei Liu
 nothing
 }
 \seealso{
-
+ None
 }
 \examples{
+
 ## we generate the spatial transcriptomics data with lattice neighborhood, i.e. ST platform.
-seu <- gendata_RNAExp(height=30, width=30,p=500, K=4,platform="ST")
+seu <- gendata_RNAExp(height=10, width=10,p=50, K=4,platform="ST")
 library(Seurat)
 seu <- NormalizeData(seu)
-# choose 400 spatially variable features
-seu <- FindSVGs(seu, nfeatures = 400)
-seu1 <- DR.SC(seu, K=4, platform = 'ST', verbose=F)
+# choose 100 highly variable features
+# seu <- FindVariableFeatures(seu, nfeatures = 100)
+# maxIter = 2 is only used for illustration, and user can use default.
+# seu1 <- DR.SC(seu, K=4, platform = 'ST', maxIter=2,verbose=FALSE)
 
 # choose spatially variable features
-seu <- FindSVGs(seu)
+seu <- FindSVGs(seu, nfeatures = 40)
 # use SVGs to fit DR.SC model
-seu1 <- DR.SC(seu, K=4,platform = 'ST', variable.type = 'SVGs',verbose=F)
-
-## genrate the scRNAseq data
-seu <- gendata_RNAExp(height=30, width=30,p=500, K=4,platform="scRNAseq")
-seu <- NormalizeData(seu)
-# choose 400 variable features using Seurat
-seu <- FindVariableFeatures(seu, nfeatures = 400)
-seu1 <- DR.SC(seu, K=4, platform = 'scRNAseq',nfeatures=400, verbose=F)
+# maxIter = 2 is only used for illustration, and user can use default.
+seu1 <- DR.SC(seu, K=4,platform = 'ST', maxIter=2,variable.type = 'SVGs',verbose=FALSE)
 
 }
-\keyword{Dimension reduction, spatial clustering and cell type identification.}
+\keyword{Dimension reduction}
+\keyword{Spatial clustering}

@@ -1,22 +1,51 @@
-Package: DR.SC
 Type: Package
-Title: Joint dimension reduction and spatial clustering for scRNA-seq and spatial transcriptomics data
-Version: 2.2
-Date: 2021-07-21
-Author: Wei Liu, Jin Liu, Xingjie Shi
+Package: DR.SC
+Title: Joint Dimension Reduction and Spatial Clustering
+Version: 2.3
+Date: 2021-11-19
+Authors@R: 
+    c(person(given = "Wei",
+             family = "Liu",
+             role = c("aut", "cre"),
+             email = "wei.liu@duke-nus.edu.sg"),
+      person(given = "Xingjie",
+             family = "Shi",
+             role = "aut"),
+      person(given = "Jin",
+             family = "Liu",
+             role = "aut"))
+Author: Wei Liu [aut, cre], Xingjie Shi [aut], Jin Liu [aut]
 Maintainer: Wei Liu <wei.liu@duke-nus.edu.sg>
-Description: Joint dimension reduction and spatial clustering for scRNA-seq and spatial transcriptomics data
-License: GPL-3 
-Imports: Rcpp (>= 1.0.5)
+Description: Joint dimension reduction and spatial clustering is conducted for
+    Single-cell RNA sequencing and spatial transcriptomics data, and more details can be referred to 
+    Yi Yang, Xingjie Shi, Wei Liu et al. (2021) <doi:10.1101/2021.06.05.447181>. It is not only computationally efficient and scalable to the sample size increment, but also is capable of choosing the smoothness parameter and the number of clusters as well.
+License: GPL-3
 Depends: 
-    mclust,
-    Matrix,
-    SingleCellExperiment,
-    MASS,
-    purrr,
-    doSNOW,
-    Seurat,
-    RColorBrewer,
+    parallel,
+    spatstat.geom,
+    R (>= 4.0.0)
+Imports: 
+    CompQuadForm,
+    cowplot,
     ggplot2,
-    R (>= 2.10)
-LinkingTo: Rcpp, RcppArmadillo
+    GiRaF,
+    MASS,
+    Matrix,
+    mclust,
+    methods,
+    purrr,
+    RColorBrewer,
+    Rcpp (>= 1.0.5),
+    Seurat,
+    stats
+Suggests: 
+    knitr,
+    rmarkdown
+LinkingTo: 
+    Rcpp,
+    RcppArmadillo
+VignetteBuilder: 
+    knitr
+Encoding: UTF-8
+NeedsCompilation: yes
+RoxygenNote: 7.1.1

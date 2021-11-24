@@ -1,14 +1,13 @@
-\name{DR.SC.fit}
-\alias{DR.SC.fit}
+\name{DR.SC_fit}
+\alias{DR.SC_fit}
 \title{Joint dimension reduction and spatial clustering}
 \description{
   Joint dimension reduction and spatial clustering for scRNA-seq and spatial transcriptomics data
 }
 \usage{
-  DR.SC.fit(X,Adj_sp=NULL, q=15, K= NULL,
-        error.heter= T, K_set = seq(2, 10), beta_grid=seq(0.5, 5, by=0.5),
-        maxIter=30, epsLogLik=1e-5, verbose=F, maxIter_ICM=6,pen.const=1,
-        wpca.int=F, parallel='doSNOW', num_core=5)
+  DR.SC_fit(X,Adj_sp=NULL, q=15, K= NULL,error.heter= TRUE, K_set = seq(2, 10),
+    beta_grid=seq(0.5, 5, by=0.5),maxIter=25, epsLogLik=1e-5, verbose=FALSE, 
+    maxIter_ICM=6,pen.const=1,wpca.int=FALSE, parallel='parallel', num_core=5)
 }
 \arguments{
  \item{X}{an optional sparse matrix with class \code{dgCMatrix}, specify the log-normalization gene expression matrix used for DR-SC model.}
@@ -24,14 +23,14 @@
   \item{maxIter_ICM}{an optional positive value, represents the maximum iterations of ICM.}
   \item{pen.const}{an optional positive value, the adjusted constant used in the MBIC criteria. It usually takes value between 0.1 to 1.}
   \item{wpca.int}{an optional logical value, means whether use the weighted PCA to obtain the initial values of loadings and other paramters, default as \code{FALSE} which means the conventional PCA  is used.}
-  \item{parallel}{a optional string, specify the parallel way to choose the number of clusters by MBIC. We provide three methods: 1. \code{parallel="doSNOW"} uses \code{doSNOW} R package to conduct the parallel schema; 2. \code{parallel="parrallel"} uses \code{parrallel} R package to conduct the parallel schema; 3.\code{parallel=NULL} doesn't use parallel computation.}
+  \item{parallel}{a optional string, specify the parallel way to choose the number of clusters by MBIC. We provide two methods: 1. \code{parallel="parrallel"} uses \code{parrallel} R package to conduct the parallel schema; 2.\code{parallel=NULL} doesn't use parallel computation.}
   \item{num_core}{an optional positive integer, means the cores used in parallel computating.}
 }
 \details{
   Nothing
 }
 \value{
-  DR.SC.fit returns a \link{list} with the following components:
+  DR.SC_fit returns a \link{list} with the following components:
 \item{cluster}{inferred class labels}
 \item{hZ}{extracted latent features.}
 \item{beta}{estimated smoothing parameter}
@@ -42,7 +41,7 @@
 \item{loglik}{pseudo observed log-likelihood}
 }
 \references{
-  
+   None
 }
 \author{
 Wei Liu
@@ -51,19 +50,22 @@ Wei Liu
 nothing
 }
 \seealso{
-
+ None
 }
 \examples{
 ## we generate the spatial transcriptomics data with lattice neighborhood, i.e. ST platform.
-seu <- gendata_RNAExp(height=30, width=30,p=500, K=4)
+seu <- gendata_RNAExp(height=10, width=10,p=50, K=4)
 library(Seurat)
 seu <- NormalizeData(seu)
 # choose 2000 variable features using Seurat
-seu <- FindVariableFeatures(seu, nfeatures = 2000)
+seu <- FindVariableFeatures(seu, nfeatures = 40)
 # users define the adjoint matrix
 Adj_sp <- getAdj(seu, platform = 'ST')
 var.features <- seu@assays$RNA@var.features
-X <- t(LogNormalize(seu@assays$RNA@counts[var.features,],))
-drscList <- DR.SC.fit(X,Adj_sp=Adj_sp ,K=4,  verbose=T)
+X <- Matrix::t(LogNormalize(seu@assays$RNA@counts[var.features,],))
+# maxIter = 2 is only used for illustration, and user can use default.
+drscList <- DR.SC_fit(X,Adj_sp=Adj_sp ,K=4, maxIter=2, verbose=TRUE)
+
 }
-\keyword{Dimension reduction, spatial clustering and cell type identification.}
+\keyword{Dimension reduction}
+\concept{spatial clustering and cell type identification}

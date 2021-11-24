@@ -8,7 +8,7 @@ gendata_noSp <- function(n=100, p =100, q=15, K = 8,  alpha=10, sigma2=1, seed=1
   q <- 2; K <- 10
   if(q <2) stop("error:gendata_noSp::  q must be greater than 2!")
   ## fixed after generation
-  set.seed(1)
+  
   Lambda = sigma2*(abs(rnorm(p, sd=1)))
   W1 <- matrix(rnorm(p*q), p, q)
   W <- qr.Q(qr(W1))
@@ -63,12 +63,12 @@ gendata_noSp <- function(n=100, p =100, q=15, K = 8,  alpha=10, sigma2=1, seed=1
   W12 <- W %*% svd_Sig$u %*% diag(sqrt(svd_Sig$d))
   signal <- sum(svd(W12)$d^2)
   snr <- sum(svd(W12)$d^2) / (sum(svd(W12)$d^2)+ sum(Lambda))
-  cat("SNR=", round(snr,4), '\n')
+  message("SNR=", round(snr,4), '\n')
   return(list(X=X, Z=Z, cluster=cluster, W=W, Mu=Mu, Sigma=Sigma, Pi=Pi, Lam_vec=Lambda, snr=snr))
 }
 
 ### Generate data with spatial dependence.
-gendata_sp <- function(height=30, width=30, p =100, q=10, K=7,  G=4, beta=1, sigma2=1, tau=8, seed=1, view=T){
+gendata_sp <- function(height=30, width=30, p =100, q=10, K=7,  G=4, beta=1, sigma2=1, tau=8, seed=1, view=FALSE){
   # height <- 70
   # width <- 70
   # G <- 4
@@ -78,13 +78,12 @@ gendata_sp <- function(height=30, width=30, p =100, q=10, K=7,  G=4, beta=1, sig
   # p <- 1000
   if(q <2) stop("error:gendata_sp::q must be greater than 2!")
   
-  require(GiRaF)
-  require(MASS)
+  # require(GiRaF)
+  # require(MASS)
   n <- height * width # # of cell in each indviduals 
   
   
   ## generate deterministic parameters, fixed after generation
-  set.seed(1)
   # sigma2 <- 1
   Lambda <- sigma2*abs(rnorm(p, sd=1))
   W1 <- matrix(rnorm(p*q), p, q)
@@ -134,8 +133,7 @@ gendata_sp <- function(height=30, width=30, p =100, q=10, K=7,  G=4, beta=1, sig
   signal <- sum(svd(W12)$d^2)
   snr <- sum(svd(W12)$d^2) / (sum(svd(W12)$d^2)+ sum(Lambda))
   
-  cat("SNR=", round(snr,4), '\n')
-  
+  message("SNR=", round(snr,4), '\n')
   # make position
   pos <- cbind(rep(1:height, width), rep(1:height, each=width))
   
@@ -145,12 +143,12 @@ gendata_sp <- function(height=30, width=30, p =100, q=10, K=7,  G=4, beta=1, sig
 
 #### Generate Spatial data with ST platform
 gendata_RNAExp <- function(height=30, width=30, platform="ST", p =100, q=10, K=7, 
-                            G=4,sigma2=1, tau=8, seed=1, view=F){
+                            G=4,sigma2=1, tau=8, seed=1, view=FALSE){
   
   if(q <2) stop("error:gendata_sp::q must be greater than 2!")
   
-  require(GiRaF)
-  require(MASS)
+  #require(GiRaF)
+  #require(MASS)
   n <- height * width # # of cell in each indviduals 
   
   if(platform=="ST"){
@@ -159,7 +157,7 @@ gendata_RNAExp <- function(height=30, width=30, platform="ST", p =100, q=10, K=7
     beta = 0
   }
   ## generate deterministic parameters, fixed after generation
-  set.seed(1)
+  
   # sigma2 <- 1
   Lambda <- sigma2*abs(rnorm(p, sd=1))
   W1 <- matrix(rnorm(p*q), p, q)
@@ -209,7 +207,7 @@ gendata_RNAExp <- function(height=30, width=30, platform="ST", p =100, q=10, K=7
   # signal <- sum(svd(W12)$d^2)
   # snr <- sum(svd(W12)$d^2) / (sum(svd(W12)$d^2)+ sum(Lambda))
   # 
-  # cat("SNR=", round(snr,4), '\n')
+  
   
   # make position
   pos <- cbind(rep(1:height, width), rep(1:height, each=width))
@@ -218,7 +216,7 @@ gendata_RNAExp <- function(height=30, width=30, platform="ST", p =100, q=10, K=7
   p <- ncol(X); n <- nrow(X)
   rownames(counts) <- paste0("gene-", seq_len(p))
   colnames(counts) <- paste0("spot-", seq_len(n))
-  
+  counts <- as.data.frame(exp(counts)-1)
   ## Make array coordinates - filled rectangle
   
   if(platform=="ST"){
@@ -229,13 +227,14 @@ gendata_RNAExp <- function(height=30, width=30, platform="ST", p =100, q=10, K=7
     cdata$imagerow <- cdata$row
     cdata$imagecol <- cdata$col 
     row.names(cdata) <- colnames(counts)
-    library(Seurat)
+    
+    #library(Seurat)
     ## Make SCE
-    seu <-  CreateSeuratObject(counts= exp(counts)-1, meta.data=cdata)
+    seu <-  CreateSeuratObject(counts= counts, meta.data=cdata) #
   }else if(platform=='scRNAseq'){
-    library(Seurat)
+    # library(Seurat)
     ## Make SCE
-    seu <-  CreateSeuratObject(counts= exp(counts)-1)
+    seu <-  CreateSeuratObject(counts= counts)
   }
   
   seu$true_clusters <- y
@@ -248,7 +247,7 @@ gendata_RNAExp <- function(height=30, width=30, platform="ST", p =100, q=10, K=7
 
 read10XVisium <- function (dirname) {
   
-  require(Seurat)
+  #require(Seurat)
   uniquifyFeatureNames <- function (ID, names)
   {
     if (length(ID) != length(names)) {
@@ -296,7 +295,7 @@ read10XVisium <- function (dirname) {
 }
 
 readscRNAseq <- function(mtx, cells, features, ...){
-  require(Seurat)
+  #require(Seurat)
   spMat <- ReadMtx(mtx,cells,features, ...)
   seu <- CreateSeuratObject(counts = spMat)
   seu@tools$platform <- "scRNAseq"
@@ -307,12 +306,12 @@ readscRNAseq <- function(mtx, cells, features, ...){
 
 # Data prepocessing -------------------------------------------------------
 ## use SPARK to choose spatially variable genes
-FindSVGs <- function(seu, nfeatures=2000,num_core=1, verbose=T){
+FindSVGs <- function(seu, nfeatures=2000,num_core=1, verbose=TRUE){
   
   if (!inherits(seu, "Seurat"))
     stop("method is only for Seurat objects")
-  require(SPARK)
-  require(Seurat)
+  # require(SPARK)
+  # require(Seurat)
   sp_count <- seu@assays$RNA@counts
   if(nrow(sp_count)>5000){
     seu <- FindVariableFeatures(seu, nfeatures = 5000, verbose=verbose)
@@ -320,7 +319,7 @@ FindSVGs <- function(seu, nfeatures=2000,num_core=1, verbose=T){
   }
   location <- as.data.frame(cbind(seu$row, seu$col))
   if(verbose){
-    cat("Find the spatially variables genes by SPARK-X...\n")
+    message("Find the spatially variables genes by SPARK-X...\n")
   }
   sparkX <- sparkx(sp_count,location,numCores=num_core,option="mixture", verbose=verbose)
   if(nfeatures > nrow(sp_count)) nfeatures <- nrow(sp_count)
@@ -342,38 +341,42 @@ topSVGs <- function(seu, ntop=5){
 # Define DR.SC S3 function ------------------------------------------------
 
 
-DR.SC <- function(object, ...) UseMethod("DR.SC")
-DR.SC.fit <- function(X,Adj_sp=NULL, q=15, K= NULL,
-                            error.heter= T, K_set = seq(2, 10), beta_grid=seq(0.5, 5, by=0.5),
-                            maxIter=25, epsLogLik=1e-5, verbose=F, maxIter_ICM=6,pen.const=1,
-                            wpca.int=F, parallel='doSNOW', num_core=5){
+
+DR.SC_fit <- function(X,Adj_sp=NULL, q=15, K= NULL,
+                            error.heter= TRUE, K_set = seq(2, 10), beta_grid=seq(0.5, 5, by=0.5),
+                            maxIter=25, epsLogLik=1e-5, verbose=FALSE, maxIter_ICM=6,pen.const=1,
+                            wpca.int=FALSE, parallel='parallel', num_core=5){
   # if (!inherits(X, "dgCMatrix"))
   #   stop("X must be dgCMatrix objects or Seurat objects")
   if(is.null(K)){
-    cat("Start chooing number of clusters...\n")
-    cat("The candidate set is: ", K_set, '\n')
+    message("Start chooing number of clusters...\n")
+    message("The candidate set is: ", K_set, '\n')
     icMat <- selectClustNumber(X, Adj_sp, q, K_set= K_set, parallel=parallel, num_core = num_core, pen.const=pen.const)
     K_best <- K_set[which.min(icMat[,"mbic"])]
-    cat("The best number of cluster is: ", K_best, '\n')
+    message("The best number of cluster is: ", K_best, '\n')
   }else{
     K_best <- K
   }
-  cat("Fit DR-SC model...\n")
+  message("Fit DR-SC model...\n")
   resList <- simulDRcluster(X,Adj_sp = Adj_sp, q, K_best, error.heter= error.heter, 
                             beta_grid=beta_grid,
                             maxIter=maxIter, epsLogLik=epsLogLik, verbose=verbose, maxIter_ICM=maxIter_ICM,pen.const=pen.const,
-                            alpha=F, wpca.int=wpca.int, diagSigmak=FALSE)
-  cat("Finish DR-SC model fitting\n")
+                            alpha=FALSE, wpca.int=wpca.int, diagSigmak=FALSE)
+  message("Finish DR-SC model fitting\n")
   if(is.null(K)){
     resList$K_best <- K_best
     resList$icMat <- icMat
   }
   return(resList)
 }
-
+DR.SC <- function(seu, q=15, K=NULL, platform= c("Visium", "ST", 'scRNAseq'),
+                  nfeatures=2000,K_set = seq(2, 10), variable.type="HVGs", ...) {
+  UseMethod("DR.SC")
+}
+  
 DR.SC.Seurat <- function(seu, q=15, K=NULL, platform= c("Visium", "ST", 'scRNAseq'),
                          nfeatures=2000,K_set = seq(2, 10), variable.type="HVGs",...){
-  require(Seurat)
+  # require(Seurat)
   if (!inherits(seu, "Seurat"))
     stop("method is only for Seurat objects")
   if(platform == 'scRNAseq'){
@@ -382,7 +385,7 @@ DR.SC.Seurat <- function(seu, q=15, K=NULL, platform= c("Visium", "ST", 'scRNAse
     Adj_sp <- getAdj(seu,  platform)
   }
   if(nfeatures > nrow(seu)){
-    warning('nrow(seu) is less than nfeatures, so assign nfeatures with nrow(seu)!')
+    message('WARNING: nrow(seu) is less than nfeatures, so assign nfeatures with nrow(seu)!')
     nfeatures <- nrow(seu)
   }
     
@@ -391,20 +394,20 @@ DR.SC.Seurat <- function(seu, q=15, K=NULL, platform= c("Visium", "ST", 'scRNAse
       seu <- FindVariableFeatures(seu, nfeatures = nfeatures)
     }
     if(nfeatures > length(seu@assays$RNA@var.features)){
-      warning('number of variable genes is less than nfeatures, 
+      message('WARNING: number of variable genes is less than nfeatures, 
               so assign nfeatures with number of variable genes!')
       nfeatures <- length(seu@assays$RNA@var.features)
     }
     var.features <- seu@assays$RNA@var.features[1:nfeatures]
   
   }else{
-    cat("Using SVGs to fit DR.SC model since variable.type=SVGs...\n")
+    message("Using SVGs to fit DR.SC model since variable.type=SVGs...\n")
     var.features <- row.names(seu)[seu[[DefaultAssay(seu)]]@meta.features$is.SVGs]
   }
   
   X <- Matrix::t(LogNormalize(seu@assays$RNA@counts[var.features,]))
   
-  resList <- DR.SC.fit(X,Adj_sp = Adj_sp, q=q, K=K,K_set =K_set, ...)
+  resList <- DR.SC_fit(X,Adj_sp = Adj_sp, q=q, K=K,K_set =K_set, ...)
   if(is.null(K)){
     K <- resList$K_best
   }
@@ -426,17 +429,17 @@ DR.SC.Seurat <- function(seu, q=15, K=NULL, platform= c("Visium", "ST", 'scRNAse
 ### clustering with homo variance error and no sptial information, second is the 
 ### simulDRcluster with heter variance and no spatial information, and third is the
 ### simulDRcluster with heter variance and spatial information
-simulDRcluster <- function(X,Adj_sp = NULL, q, K, error.heter= T, beta_grid=seq(0.5, 5, by=0.5),
-                           maxIter=30, epsLogLik=1e-5, verbose=F, maxIter_ICM=6,pen.const=0.5,
-                           alpha=F, wpca.int=T, diagSigmak=FALSE){
+simulDRcluster <- function(X,Adj_sp = NULL, q, K, error.heter= TRUE, beta_grid=seq(0.5, 5, by=0.5),
+                           maxIter=30, epsLogLik=1e-5, verbose=FALSE, maxIter_ICM=6,pen.const=0.5,
+                           alpha=FALSE, wpca.int=TRUE, diagSigmak=FALSE){
   
   n <- nrow(X); p <- ncol(X)
-  X <- scale(X, scale=F)
+  X <- scale(X, scale=FALSE)
   if(verbose){
-    cat("-------------------Calculate inital values------------- \n")
+    message("-------------------Calculate inital values------------- \n")
   }
   
-  require(mclust)
+  # require(mclust)
   tic <- proc.time()
   princ <- wpca(X, q, weighted=wpca.int)
   if(error.heter){
@@ -447,7 +450,6 @@ simulDRcluster <- function(X,Adj_sp = NULL, q, K, error.heter= T, beta_grid=seq(
   
   W0 <- princ$loadings
   hZ <- princ$PCs
-  set.seed(1)
   mclus2 <- Mclust(hZ, G=K)
   toc_gmm <- proc.time() - tic
   
@@ -462,7 +464,7 @@ simulDRcluster <- function(X,Adj_sp = NULL, q, K, error.heter= T, beta_grid=seq(
   Sigma0 <- mclus2$parameters$variance$sigma
   
   if(verbose){
-    cat("-------------------Finish computing inital values------------- \n")
+    message("-------------------Finish computing inital values------------- \n")
   }
   
   
@@ -475,7 +477,7 @@ simulDRcluster <- function(X,Adj_sp = NULL, q, K, error.heter= T, beta_grid=seq(
   }
   
   if(verbose)
-    cat("-------------------Starting  EM algortihm------------- \n")
+    message("-------------------Starting  EM algortihm------------- \n")
   if((!is.null(Adj_sp))){
     
     resList <- icmem_heterCpp(X, Adj_sp, y,  Mu0, W0, Sigma0,  Lam_vec0,
@@ -493,8 +495,10 @@ simulDRcluster <- function(X,Adj_sp = NULL, q, K, error.heter= T, beta_grid=seq(
   }
   
   toc_heter <- proc.time() - tic
-  if(verbose) cat("-------------------Complete!------------- \n")
-  cat("elasped time is :", toc_heter, '\n')
+  if(verbose) {
+    message("-------------------Complete!------------- \n")
+    message("elasped time is :", toc_heter, '\n')
+  }
   resList$cluster_init <- y
   time_used <- c(toc_gmm[3], toc_heter[3])
   names(time_used) <- c("pcgmm", "simul")
@@ -503,8 +507,105 @@ simulDRcluster <- function(X,Adj_sp = NULL, q, K, error.heter= T, beta_grid=seq(
 }
 
 
-find_neighbors <- function(sce, platform='ST') {
+# find_neighbors <- function(sce, platform='ST') {
+#   
+#   if (platform == "Visium") {
+#     ## Spots to left and right, two above, two below
+#     offsets <- data.frame(x.offset=c(-2, 2, -1,  1, -1, 1),
+#                           y.offset=c( 0, 0, -1, -1,  1, 1))
+#   } else if (platform == "ST") {
+#     ## L1 radius of 1 (spots above, right, below, and left)
+#     offsets <- data.frame(x.offset=c( 0, 1, 0, -1),
+#                           y.offset=c(-1, 0, 1,  0))
+#   } else {
+#     stop(".find_neighbors: Unsupported platform \"", platform, "\".")
+#   }
+#   
+#   ## Get array coordinates (and label by index of spot in SCE)
+#   spot.positions <- colData(sce)[, c("col", "row")]
+#   spot.positions$spot.idx <- seq_len(nrow(spot.positions))
+#   
+#   ## Compute coordinates of each possible spot neighbor
+#   neighbor.positions <- merge(spot.positions, offsets)
+#   neighbor.positions$x.pos <- neighbor.positions$col + neighbor.positions$x.offset
+#   neighbor.positions$y.pos <- neighbor.positions$row + neighbor.positions$y.offset
+#   
+#   ## Select spots that exist at neighbor coordinates
+#   neighbors <- merge(as.data.frame(neighbor.positions), 
+#                      as.data.frame(spot.positions), 
+#                      by.x=c("x.pos", "y.pos"), by.y=c("col", "row"),
+#                      suffixes=c(".primary", ".neighbor"),
+#                      all.x=TRUE)
+#   
+#   ## Shift to zero-indexing for C++
+#   #neighbors$spot.idx.neighbor <- neighbors$spot.idx.neighbor - 1
+#   
+#   ## Group neighbor indices by spot 
+#   ## (sort first for consistency with older implementation)
+#   neighbors <- neighbors[order(neighbors$spot.idx.primary, 
+#                                neighbors$spot.idx.neighbor), ]
+#   df_j <- split(neighbors$spot.idx.neighbor, neighbors$spot.idx.primary)
+#   df_j <- unname(df_j)
+#   
+#   ## Discard neighboring spots without spot data
+#   ## This can be implemented by eliminating `all.x=TRUE` above, but
+#   ## this makes it easier to keep empty lists for spots with no neighbors
+#   ## (as expected by C++ code)
+#   ## df_j <- map(df_j, function(nbrs) discard(nbrs, function(x) is.na(x)))
+#   df_j <- lapply(df_j, function(nbrs) discard(nbrs, function(x) is.na(x)))
+#   
+#   ## Log number of spots with neighbors
+#   n_with_neighbors <- length(keep(df_j, function(nbrs) length(nbrs) > 0))
+#   message("Neighbors were identified for ", n_with_neighbors, " out of ",
+#           ncol(sce), " spots.")
+#   
+#   n <- length(df_j) 
+#   
+#   D <- matrix(0,  nrow = n, ncol = n)
+#   for (i in 1:n) {
+#     if(length(df_j[[i]]) != 0)
+#       D[i, df_j[[i]]] <- 1
+#   }
+#   ij <- which(D != 0, arr.ind = T)
+#   ij
+# }
+# 
+# runAdj <- function(X, pos, platform='ST'){
+#   require(purrr)
+#   require(SingleCellExperiment)
+#   
+#   # make sce structure
+#   n <- nrow(X)
+#   p <- ncol(X)
+#   counts <- t(X)
+#   rownames(counts) <- paste0("gene_", seq_len(p))
+#   colnames(counts) <- paste0("spot_", seq_len(n))
+#   
+#   ## Make array coordinates - filled rectangle
+#   cdata <- list()
+#   cdata$row <- pos[,1]
+#   cdata$col <- pos[,2]
+#   cdata <- as.data.frame(do.call(cbind, cdata))
+#   cdata$imagerow <- cdata$row
+#   cdata$imagecol <- cdata$col 
+#   ## Make SCE
+#   ## note: scater::runPCA throws warning on our small sim data, so use prcomp
+#   sce <- SingleCellExperiment(assays=list(counts=counts), colData=cdata)
+#   ij <- find_neighbors(sce, platform)
+#   library(Matrix)
+#   Adj_sp <- sparseMatrix(ij[,1], ij[,2], x = 1)
+#   return(Adj_sp)
+# }
+
+
+
+getAdj <- function(obj,platform ='Visium', radius=1) UseMethod("getAdj")
+
+getAdj.Seurat <- function(obj, platform ='Visium', radius=1){
   
+  if (!inherits(obj, "Seurat"))
+    stop("method is only for Seurat or matrix objects")
+  # require(Matrix)
   if (platform == "Visium") {
     ## Spots to left and right, two above, two below
     offsets <- data.frame(x.offset=c(-2, 2, -1,  1, -1, 1),
@@ -518,7 +619,7 @@ find_neighbors <- function(sce, platform='ST') {
   }
   
   ## Get array coordinates (and label by index of spot in SCE)
-  spot.positions <- colData(sce)[, c("col", "row")]
+  spot.positions <- as.data.frame(cbind(row=obj$row, col=obj$col))
   spot.positions$spot.idx <- seq_len(nrow(spot.positions))
   
   ## Compute coordinates of each possible spot neighbor
@@ -553,75 +654,7 @@ find_neighbors <- function(sce, platform='ST') {
   ## Log number of spots with neighbors
   n_with_neighbors <- length(keep(df_j, function(nbrs) length(nbrs) > 0))
   message("Neighbors were identified for ", n_with_neighbors, " out of ",
-          ncol(sce), " spots.")
-  
-  n <- length(df_j) 
-  
-  D <- matrix(0,  nrow = n, ncol = n)
-  for (i in 1:n) {
-    if(length(df_j[[i]]) != 0)
-      D[i, df_j[[i]]] <- 1
-  }
-  ij <- which(D != 0, arr.ind = T)
-  ij
-}
-
-getAdj <- function(object, ...) UseMethod("getAdj")
-
-getAdj.Seurat <- function(seu, platform = c('Visium', 'ST')){
-  
-  if (!inherits(seu, "Seurat"))
-    stop("method is only for Seurat objects")
-  require(Matrix)
-  if (platform == "Visium") {
-    ## Spots to left and right, two above, two below
-    offsets <- data.frame(x.offset=c(-2, 2, -1,  1, -1, 1),
-                          y.offset=c( 0, 0, -1, -1,  1, 1))
-  } else if (platform == "ST") {
-    ## L1 radius of 1 (spots above, right, below, and left)
-    offsets <- data.frame(x.offset=c( 0, 1, 0, -1),
-                          y.offset=c(-1, 0, 1,  0))
-  } else {
-    stop(".find_neighbors: Unsupported platform \"", platform, "\".")
-  }
-  
-  ## Get array coordinates (and label by index of spot in SCE)
-  spot.positions <- as.data.frame(cbind(row=seu$row, col=seu$col))
-  spot.positions$spot.idx <- seq_len(nrow(spot.positions))
-  
-  ## Compute coordinates of each possible spot neighbor
-  neighbor.positions <- merge(spot.positions, offsets)
-  neighbor.positions$x.pos <- neighbor.positions$col + neighbor.positions$x.offset
-  neighbor.positions$y.pos <- neighbor.positions$row + neighbor.positions$y.offset
-  
-  ## Select spots that exist at neighbor coordinates
-  neighbors <- merge(as.data.frame(neighbor.positions), 
-                     as.data.frame(spot.positions), 
-                     by.x=c("x.pos", "y.pos"), by.y=c("col", "row"),
-                     suffixes=c(".primary", ".neighbor"),
-                     all.x=TRUE)
-  
-  ## Shift to zero-indexing for C++
-  #neighbors$spot.idx.neighbor <- neighbors$spot.idx.neighbor - 1
-  
-  ## Group neighbor indices by spot 
-  ## (sort first for consistency with older implementation)
-  neighbors <- neighbors[order(neighbors$spot.idx.primary, 
-                               neighbors$spot.idx.neighbor), ]
-  df_j <- split(neighbors$spot.idx.neighbor, neighbors$spot.idx.primary)
-  df_j <- unname(df_j)
-  
-  ## Discard neighboring spots without spot data
-  ## This can be implemented by eliminating `all.x=TRUE` above, but
-  ## this makes it easier to keep empty lists for spots with no neighbors
-  ## (as expected by C++ code)
-  ## df_j <- map(df_j, function(nbrs) discard(nbrs, function(x) is.na(x)))
-  df_j <- lapply(df_j, function(nbrs) discard(nbrs, function(x) is.na(x)))
-  
-  ## Log number of spots with neighbors
-  n_with_neighbors <- length(keep(df_j, function(nbrs) length(nbrs) > 0))
-  message("Neighbors were identified for ", n_with_neighbors, " out of ",
-          ncol(seu), " spots.")
+          ncol(obj), " spots.")
   
   n <- length(df_j) 
   
@@ -636,40 +669,13 @@ getAdj.Seurat <- function(seu, platform = c('Visium', 'ST')){
   return(Adj_sp)
 }
 
-getAdj.matrix <- function(pos, radius){
-  if (!inherits(pos, "matrix"))
-    stop("pos must be a matrix object!")
+getAdj.matrix <- function(obj, platform ='Visium', radius=1){
+  if (!inherits(obj, "matrix"))
+    stop("method is only for Seurat or matrix objects!")
   if(radius <=0){
     stop('radius must be a positive real!')
   }
-  Adj_sp <- getneighborhood_fast(pos, cutoff=radius)
-  return(Adj_sp)
-}
-
-runAdj <- function(X, pos, platform='ST'){
-  require(purrr)
-  require(SingleCellExperiment)
-  
-  # make sce structure
-  n <- nrow(X)
-  p <- ncol(X)
-  counts <- t(X)
-  rownames(counts) <- paste0("gene_", seq_len(p))
-  colnames(counts) <- paste0("spot_", seq_len(n))
-  
-  ## Make array coordinates - filled rectangle
-  cdata <- list()
-  cdata$row <- pos[,1]
-  cdata$col <- pos[,2]
-  cdata <- as.data.frame(do.call(cbind, cdata))
-  cdata$imagerow <- cdata$row
-  cdata$imagecol <- cdata$col 
-  ## Make SCE
-  ## note: scater::runPCA throws warning on our small sim data, so use prcomp
-  sce <- SingleCellExperiment(assays=list(counts=counts), colData=cdata)
-  ij <- find_neighbors(sce, platform)
-  library(Matrix)
-  Adj_sp <- sparseMatrix(ij[,1], ij[,2], x = 1)
+  Adj_sp <- getneighborhood_fast(obj, radius=radius)
   return(Adj_sp)
 }
 
@@ -686,39 +692,23 @@ selectClustNumber <- function(X,Adj_sp, q, K_set= 3:10, parallel="parallel", num
   nK <- length(K_set)
   if(!is.null(parallel)){
     if (num_core > 1) {
-      if (num_core > detectCores()) {
+      if (num_core > parallel::detectCores()) {
         warning("selectClustNumber:: the number of cores you're setting is larger than detected cores!")
-        num_core = detectCores()
+        num_core = parallel::detectCores()
       }
     }
-    if(parallel=='doSNOW'){
-      require(doSNOW)
-      cl <- makeSOCKcluster(num_core)
-      registerDoSNOW(cl)
+    
+    if(parallel=='parallel'){
+      #library(parallel)
       
-      ## set Prgogress Bar
-      pb <- txtProgressBar(min=1, max=nK, style=3)
-      progress <- function(n) setTxtProgressBar(pb, n)
-      opts <- list(progress=progress)
-      k <- 1
-      icMat <- foreach(k = 1:nK,.packages="MixPPCA" ,.options.snow=opts,
-                       .combine='rbind') %dopar% {
-                         reslist <- simulDRcluster(X,Adj_sp = Adj_sp, q=q, K=K_set[k],  ...) 
-                         
-                         c(reslist$bic, reslist$aic)
-                       }
-      close(pb)
-      stopCluster(cl)
-    }else if(parallel=='parallel'){
-      library(parallel)
-      
-      cl <- makeCluster(num_core)
-      clusterExport(cl, list("EMmPCpp_heter", "icmem_heterCpp", "simulDRcluster"))
-      cat("Starting parallel computing...")
+      cl <- parallel::makeCluster(num_core)
+      # parallel::clusterExport(cl, list("simulDRcluster"))
+      ## "EMmPCpp_heter", "icmem_heterCpp",
+      message("Starting parallel computing...")
       # clusterCall(cl, function() library(MixPPCA))
       # Run
       icMat <- parSapply(cl, X=K_set, parafun1, XX=X, Adj_sp=Adj_sp, q=q, ...)
-      stopCluster(cl)
+      parallel::stopCluster(cl)
       icMat <- t(icMat)
     }
       
@@ -801,14 +791,14 @@ selectFacNumber <- function(X, qmax=15){
 #  reference Bai, J., & Liao, Y. (2013). Statistical inferences using large estimated covariances for panel data and factor models. arXiv preprint arXiv:1307.2662.
 #  and Inferences in panel data with interactive effects using largecovariance matrices
 #  It considers the heterogeneous error term in approximated factor model.
-wpca <- function(X, q, weighted=T){
+wpca <- function(X, q, weighted=TRUE){
   if(!is.matrix(X)) stop("wpca: X must be a matrix!")
   if(q< 1) stop("wpca: q must be a positive integer!")
   X <- scale(X, scale=F) # centralize
   out <- wpcaCpp(X, q, weighted)
   return(out)
 }
-wpca2 <- function(X, q, weighted=T){
+wpca2 <- function(X, q, weighted=TRUE){
   if(!is.matrix(X)) stop("wpca: X must be a matrix!")
   if(q< 1) stop("wpca: q must be a positive integer!")
   X <- scale(X, scale=F) # centralize
@@ -829,43 +819,46 @@ wpca2 <- function(X, q, weighted=T){
   return(list(PCs=PCs, loadings=loadings, Lam_vec=Lam_vec))
 }
 
-RunWPCA <- function(object, ...) UseMethod("RunWPCA")
+RunWPCA <- function(object,q=15) UseMethod("RunWPCA")
 
-RunWPCA.Seurat <- function(seu, q=15){
+RunWPCA.Seurat <- function(object, q=15){
   
-  if (!inherits(seu, "Seurat"))
-    stop("method is only for Seurat objects")
-  if(length(seu@assays[[DefaultAssay(seu)]]@scale.data) == 0)
+  if (!inherits(object, "Seurat"))
+    stop("method is only for Seurat, dgCMatrix or matrix objects")
+  if(length(object@assays[[DefaultAssay(object)]]@scale.data) == 0)
     stop("The slot scale.data is empty! Please use ScaleData function first then use RunWPCA!")
-  scale.data <- seu@assays[[DefaultAssay(seu)]]@scale.data
+  scale.data <- object@assays[[DefaultAssay(object)]]@scale.data
   hZ <- wpca(t(scale.data), q=q, weighted = T)$PCs
-  row.names(hZ) <- colnames(seu)
+  row.names(hZ) <- colnames(object)
   colnames(hZ) <- paste0('WPCA', 1:q)
-  seu@reductions$"wpca" <- CreateDimReducObject(embeddings = hZ, key='WPCA_', assay=DefaultAssay(seu))
-  return(seu)
+  object@reductions$"wpca" <- CreateDimReducObject(embeddings = hZ, key='WPCA_', assay=DefaultAssay(object))
+  return(object)
 }
 
-RunWPCA.matrix <- function(X, q=15){
-  if (!inherits(seu, "matrix"))
-    stop("method is only for Seurat objects")
-  hZ <- wpca(t(X), q=q, weighted = T)
-  if(is.null(colnames(X))){
-    warning('colnames(X) is null, so the colnames are assigned with spot 1:ncol(X)!')
-    colnames(X) <- paste0('spot', 1:ncol(X))
+RunWPCA.matrix <- function(object, q=15){
+  if (!inherits(object, "matrix"))
+    stop("method is only for Seurat, dgCMatrix or matrix objects")
+  hZ <- wpca(t(object), q=q, weighted = T)
+  if(is.null(colnames(object))){
+    warning('colnames(object) is null, so the colnames are assigned with spot 1:ncol(object)!')
+    colnames(object) <- paste0('spot', 1:ncol(object))
   }
-  row.names(hZ) <- colnames(X)
+  row.names(hZ) <- colnames(object)
   colnames(hZ) <- paste0('WPCA', 1:q)
   return(hZ)
 }
-RunWPCA.dgCMatrix<- function(X, q=15){
-  if (!inherits(X, "dgCMatrix"))
-    stop("X must be dgCMatrix objects or Seurat objects")
-  hZ <- wpca(Matrix::t(X), q=q, weighted = T)
-  if(is.null(colnames(X))){
-    warning('colnames(X) is null, so the colnames are assigned with spot 1:ncol(X)!')
-    colnames(X) <- paste0('spot', 1:ncol(X))
+RunWPCA.dgCMatrix<- function(object, q=15){
+  if (!inherits(object, "dgCMatrix"))
+    stop("method is only for Seurat, dgCMatrix or matrix objects")
+  hZ <- wpca(Matrix::t(object), q=q, weighted = T)
+  if(is.null(colnames(object))){
+    warning('colnames(object) is null, so the colnames are assigned with spot 1:ncol(object)!')
+    colnames(object) <- paste0('spot', 1:ncol(object))
   }
-  row.names(hZ) <- colnames(X)
+  row.names(hZ) <- colnames(object)
   colnames(hZ) <- paste0('WPCA', 1:q)
   return(hZ)
 }
+
+
+

@@ -5,14 +5,14 @@
 #include "RcppArmadillo.h"
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <Rcpp.h>
-#include <omp.h>
+//#include <omp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include <time.h>
-#include <iostream>
-#include "utilSimulDRcluster.hpp"
+//#include <time.h>
+//#include <iostream>
+#include "utilSimulDRcluster.h"
 
 #define INT_MIN (-INT_MAX - 1)
 
@@ -321,8 +321,10 @@ Rcpp:: List icmem_heterCpp(const arma::mat& X,const arma::sp_mat& Adj, const arm
     
     // output algorithm info.
     if(verbose){
-      cout<<"iter = "<< iter +1 <<", loglik="<<loglik(iter)<<", dobj ="<<(loglik(iter)  - loglik(iter-1))/ abs(loglik(iter-1))<<endl;
+      // cout<<"iter = "<< iter +1 <<", loglik="<<loglik(iter)<<", dobj ="<<(loglik(iter)  - loglik(iter-1))/ abs(loglik(iter-1))<<endl;
       // cout<<"iter = "<< iter+1<<", Qval="<<Q<<", dQ ="<<Q  - tmp_Q <<endl;
+      Rprintf("iter = %d, loglik= %4f, dloglik=%4f \n", 
+              iter +1, loglik(iter), (loglik(iter)  - loglik(iter-1))/ abs(loglik(iter-1)));
     }
     if(abs((loglik(iter)  - loglik(iter-1))/ loglik(iter-1)) < epsLogLik) break;
     // if(abs(Q  - tmp_Q) < epsLogLik) break;
@@ -473,8 +475,10 @@ Rcpp:: List EMmPCpp_heter(const arma::mat& X, const arma::vec& Pi_int, const arm
     
     // output algorithm info.
     if(verbose){
-      cout<<"iter = "<< iter +1 <<", loglik="<<loglik(iter)<<", dobj ="<<(loglik(iter)  - loglik(iter-1))/ abs(loglik(iter-1))<<endl;
-      // cout<<"iter = "<< iter+1<<", Qval="<<Q<<", dQ ="<<Q  - tmp_Q <<endl;  
+      // cout<<"iter = "<< iter +1 <<", loglik="<<loglik(iter)<<", dobj ="<<(loglik(iter)  - loglik(iter-1))/ abs(loglik(iter-1))<<endl;
+      // cout<<"iter = "<< iter+1<<", Qval="<<Q<<", dQ ="<<Q  - tmp_Q <<endl;
+      Rprintf("iter = %d, loglik= %4f, dloglik=%4f \n", 
+              iter +1, loglik(iter), (loglik(iter)  - loglik(iter-1))/ abs(loglik(iter-1)));
     }
     if(abs((loglik(iter)  - loglik(iter-1))/ loglik(iter-1)) < epsLogLik) break;
     // if(abs(Q  - tmp_Q) < epsLogLik) break;

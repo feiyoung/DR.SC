@@ -12,14 +12,38 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // getneighborhood_fast
-arma::sp_umat getneighborhood_fast(const arma::mat x, double cutoff);
-RcppExport SEXP _DR_SC_getneighborhood_fast(SEXP xSEXP, SEXP cutoffSEXP) {
+arma::sp_umat getneighborhood_fast(const arma::mat x, double radius);
+RcppExport SEXP _DR_SC_getneighborhood_fast(SEXP xSEXP, SEXP radiusSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat >::type x(xSEXP);
-    Rcpp::traits::input_parameter< double >::type cutoff(cutoffSEXP);
-    rcpp_result_gen = Rcpp::wrap(getneighborhood_fast(x, cutoff));
+    Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
+    rcpp_result_gen = Rcpp::wrap(getneighborhood_fast(x, radius));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sp_means_Rcpp
+arma::vec sp_means_Rcpp(arma::sp_mat sp_data, bool rowMeans);
+RcppExport SEXP _DR_SC_sp_means_Rcpp(SEXP sp_dataSEXP, SEXP rowMeansSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::sp_mat >::type sp_data(sp_dataSEXP);
+    Rcpp::traits::input_parameter< bool >::type rowMeans(rowMeansSEXP);
+    rcpp_result_gen = Rcpp::wrap(sp_means_Rcpp(sp_data, rowMeans));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sp_sums_Rcpp
+arma::vec sp_sums_Rcpp(arma::sp_mat sp_data, bool rowSums);
+RcppExport SEXP _DR_SC_sp_sums_Rcpp(SEXP sp_dataSEXP, SEXP rowSumsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::sp_mat >::type sp_data(sp_dataSEXP);
+    Rcpp::traits::input_parameter< bool >::type rowSums(rowSumsSEXP);
+    rcpp_result_gen = Rcpp::wrap(sp_sums_Rcpp(sp_data, rowSums));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -161,6 +185,8 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_DR_SC_getneighborhood_fast", (DL_FUNC) &_DR_SC_getneighborhood_fast, 2},
+    {"_DR_SC_sp_means_Rcpp", (DL_FUNC) &_DR_SC_sp_means_Rcpp, 2},
+    {"_DR_SC_sp_sums_Rcpp", (DL_FUNC) &_DR_SC_sp_sums_Rcpp, 2},
     {"_DR_SC_getPairDist", (DL_FUNC) &_DR_SC_getPairDist, 1},
     {"_DR_SC_calYenergy2D_sp", (DL_FUNC) &_DR_SC_calYenergy2D_sp, 5},
     {"_DR_SC_obj_beta", (DL_FUNC) &_DR_SC_obj_beta, 6},

@@ -1,0 +1,19 @@
+---
+title: "DR-SC"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{DR-SC}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(DR.SC)
+```

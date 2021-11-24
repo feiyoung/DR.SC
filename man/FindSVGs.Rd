@@ -5,7 +5,7 @@
   Identifies features that have spatially variation along spots.
 }
 \usage{
-  FindSVGs(seu, nfeatures=2000,num_core=1, verbose=T)
+  FindSVGs(seu, nfeatures=2000,num_core=1, verbose=TRUE)
 }
 \arguments{
   \item{seu}{an object of class "Seurat".}
@@ -20,7 +20,7 @@
   return a revised Seurat object by adding a column named "is.SVGs" in the meta.features  of default Assay.
 }
 \references{
-  
+   None
 }
 \author{
   Wei Liu
@@ -29,11 +29,13 @@
   nothing
 }
 \seealso{
-  \link{topSVGs}, \link{SPARK}, \link{sparkx}
+  \link{topSVGs}
 }
 \examples{
-  seu <- gendata_RNAExp(height=40, width=40,p=1000, K=4)
-  seu <- FindSVGs(seu, nfeatures=800)
+  seu <- gendata_RNAExp(height=20, width=20,p=200, K=4)
+  
+  seu <- FindSVGs(seu, nfeatures=100)
   topSVGs(seu)
+
 }
 \keyword{Input of spatial data}

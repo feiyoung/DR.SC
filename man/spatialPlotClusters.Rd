@@ -17,7 +17,7 @@
  return a ggplot2 object.
 }
 \references{
-  
+  None
 }
 \author{
 Wei Liu
@@ -26,17 +26,18 @@ Wei Liu
 nothing
 }
 \seealso{
-
+   None
 }
 \examples{
 ## we generate the spatial transcriptomics data with lattice neighborhood, i.e. ST platform.
-seu <- gendata_RNAExp(height=30, width=30,p=500, K=4)
-library(Seurat)
-seu <- NormalizeData(seu)
-# choose spatially variable features using Seurat
-seu <- FindSVGs(seu)
-# use SVGs to fit DR.SC model
-seu1 <- DR.SC(seu, K=4,platform = 'ST', variable.type = 'SVGs',verbose=F)
-spatialPlotClusters(seu1)
+    seu <- gendata_RNAExp(height=10, width=10,p=50, K=4)
+    library(Seurat)
+    seu <- NormalizeData(seu)
+    # choose spatially variable features using Seurat
+    seu <- FindSVGs(seu)
+    # use SVGs to fit DR.SC model
+    # maxIter = 2 is only used for illustration, and user can use default.
+    seu1 <- DR.SC(seu, K=4,platform = 'ST', variable.type = 'SVGs',maxIter=2,verbose=FALSE)
+    spatialPlotClusters(seu1)
 }
-\keyword{Spatial plot.}
+\keyword{Spatial plot}

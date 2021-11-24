@@ -18,7 +18,7 @@
   return a \link{character} vector including the names of SVGs.
 }
 \references{
-  
+  None
 }
 \author{
   Wei Liu
@@ -27,11 +27,12 @@
   nothing
 }
 \seealso{
-  \link{topSVGs}, \link{SPARK}, \link{sparkx}
+  \link{topSVGs}
 }
 \examples{
-  seu <- gendata_RNAExp(height=40, width=40,p=1000, K=4)
-  seu <- FindSVGs(seu, nfeatures=800)
+  seu <- gendata_RNAExp(height=20, width=20,p=200, K=4)
+  seu <- FindSVGs(seu, nfeatures=100)
   (genes <- topSVGs(seu, ntop=10))
+  
 }
 \keyword{SVGs}

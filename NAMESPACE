@@ -2,13 +2,12 @@ useDynLib(DR.SC, .registration=TRUE)
 importFrom(Rcpp, evalCpp)
 #exportPattern("^[[:alpha:]]+")
 
-export(DR.SC,DR.SC.fit, gendata_RNAExp,  FindSVGs, getAdj,
+export(DR.SC,DR.SC_fit, gendata_RNAExp,  FindSVGs, getAdj,getneighborhood_fast,
        RunWPCA, topSVGs)
 export(spatialPlotClusters, drscPlot, mbicPlot)
 export(read10XVisium,readscRNAseq)
 
-importFrom("Seurat", "RidgePlot", "VlnPlot", "FeaturePlot", "DotPlot", "DoHeatmap")
-
+  
 S3method("DR.SC","Seurat")
 S3method("getAdj","Seurat")
 S3method("getAdj","matrix")
@@ -16,3 +15,36 @@ S3method("getAdj","matrix")
 S3method("RunWPCA","Seurat")
 S3method("RunWPCA","matrix")
 S3method("RunWPCA","dgCMatrix")
+
+
+
+# importFrom(SPARK, sparkx)
+
+import(parallel)
+import(spatstat.geom)
+
+importFrom(MASS, mvrnorm)
+importFrom(ggplot2, ggplot, aes, geom_line, ylab,geom_point,
+           theme,element_blank,element_text,scale_color_manual)
+importFrom(CompQuadForm, davies, liu)
+importFrom("methods", "as", "is")
+importFrom("stats", "p.adjust", "pcauchy", "quantile")
+importFrom(stats,rnorm, rmultinom, cov,cor)
+importFrom("utils", "read.csv", "read.table", "setTxtProgressBar",
+             "txtProgressBar")
+importFrom(cowplot, theme_cowplot)
+importFrom(GiRaF,sampler.mrf)
+importFrom(purrr, discard, keep)
+importFrom(Matrix, sparseMatrix, t)
+importFrom(RColorBrewer, brewer.pal)
+importFrom(mclust,Mclust, mclustBIC)
+importFrom(Seurat, RidgePlot, VlnPlot, FeaturePlot, DotPlot, DoHeatmap,
+           FindVariableFeatures, DefaultAssay,LogNormalize,CreateDimReducObject,
+           Idents, RunTSNE,RunUMAP, DimPlot, CreateSeuratObject,ReadMtx,'Idents<-',
+           AddMetaData)
+# importFrom(doSNOW,registerDoSNOW)
+# importFrom(snow, makeSOCKcluster, stopCluster)
+# importFrom(foreach,foreach)
+# importFrom(parallel, stopCluster, parSapply,clusterExport)
+
+

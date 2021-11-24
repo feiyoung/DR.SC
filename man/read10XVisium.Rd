@@ -17,7 +17,7 @@
   return a Seurat object.
 }
 \references{
-  
+  None
 }
 \author{
   Wei Liu
@@ -26,11 +26,13 @@
   nothing
 }
 \seealso{
-  
+   None
 }
 \examples{
-  ### Not run
-  ## data_name <- "D/HCC"
-  ## HCC1 <- read10XVisium(data_name)
+\dontrun{
+  ## set your file directory, then read it.
+  data_name <- "D/HCC"
+  HCC1 <- read10XVisium(data_name)
+  }
 }
-\keyword{Input of spatial data.}
+\keyword{Input of spatial data}
