@@ -323,11 +323,16 @@ FindSVGs <- function(seu, nfeatures=2000,num_core=1, verbose=TRUE){
   }
   sparkX <- sparkx(sp_count,location,numCores=num_core,option="mixture", verbose=verbose)
   if(nfeatures > nrow(sp_count)) nfeatures <- nrow(sp_count)
-  genes <- row.names(sp_count)[order(sparkX$res_mtest$adjustedPval)[1:nfeatures]]
-  is.SVGs <- rep(F, nrow(seu))
+  order_nfeatures <- order(sparkX$res_mtest$adjustedPval)[1:nfeatures]
+  genes <- row.names(sp_count)[order_nfeatures]
+  is.SVGs <- rep(FALSE, nrow(seu))
+  order.SVGs <- rep(NA, nrow(seu))
   names(is.SVGs) <- row.names(seu)
-  is.SVGs[genes] <- T
+  names(order.SVGs) <- row.names(seu)
+  order.SVGs[genes] <- order_nfeatures
+  is.SVGs[genes] <- TRUE
   seu[['RNA']]@meta.features$is.SVGs <- is.SVGs
+  seu[['RNA']]@meta.features$order.SVGs <- order.SVGs
   seu
 }
 
@@ -335,7 +340,11 @@ topSVGs <- function(seu, ntop=5){
   if (!inherits(seu, "Seurat"))
     stop("method is only for Seurat objects")
   if(ntop > nrow(seu)) warning(paste0("Only ", nrow(seu), ' SVGs will be returned since the number of genes is less than ', ntop, '\n'))
-  row.names(seu)[seu@assays$RNA@meta.features$is.SVGs][1:ntop]
+  SVGs <- row.names(seu)[seu@assays$RNA@meta.features$is.SVGs]
+  order_features <- seu[['RNA']]@meta.features$order.SVGs
+  
+  idx <- order(order_features[!is.na(order_features)])[1:ntop]
+  SVGs[idx]
   
 }
 # Define DR.SC S3 function ------------------------------------------------
@@ -346,8 +355,17 @@ DR.SC_fit <- function(X,Adj_sp=NULL, q=15, K= NULL,
                             error.heter= TRUE, K_set = seq(2, 10), beta_grid=seq(0.5, 5, by=0.5),
                             maxIter=25, epsLogLik=1e-5, verbose=FALSE, maxIter_ICM=6,pen.const=1,
                             wpca.int=FALSE, parallel='parallel', num_core=5){
-  # if (!inherits(X, "dgCMatrix"))
-  #   stop("X must be dgCMatrix objects or Seurat objects")
+  if (!(inherits(X, "dgCMatrix") || inherits(X, "matrix")))
+    stop("X must be dgCMatrix object or matrix object")
+  if(is.null(colnames(X))) colnames(X) <- paste0('gene', 1:ncol(X))
+  ## Check whether X include zero-variance genes
+  sd_zeros <- apply(X, 2, sd)
+  if(sum(sd_zeros==0)>0){
+    warning(paste0('There are ', sum(sd_zeros==0), ' zero-variance genes that will be removed!\n'))
+    X <- X[, sd_zeros !=0]
+  }
+   
+  
   if(is.null(K)){
     message("Start chooing number of clusters...\n")
     message("The candidate set is: ", K_set, '\n')
@@ -369,12 +387,12 @@ DR.SC_fit <- function(X,Adj_sp=NULL, q=15, K= NULL,
   }
   return(resList)
 }
-DR.SC <- function(seu, q=15, K=NULL, platform= c("Visium", "ST", 'scRNAseq'),
+DR.SC <- function(seu, q=15, K=NULL, platform= "Visium",
                   nfeatures=2000,K_set = seq(2, 10), variable.type="HVGs", ...) {
   UseMethod("DR.SC")
 }
   
-DR.SC.Seurat <- function(seu, q=15, K=NULL, platform= c("Visium", "ST", 'scRNAseq'),
+DR.SC.Seurat <- function(seu, q=15, K=NULL, platform= "Visium",
                          nfeatures=2000,K_set = seq(2, 10), variable.type="HVGs",...){
   # require(Seurat)
   if (!inherits(seu, "Seurat"))
@@ -599,9 +617,9 @@ simulDRcluster <- function(X,Adj_sp = NULL, q, K, error.heter= TRUE, beta_grid=s
 
 
 
-getAdj <- function(obj,platform ='Visium', radius=1) UseMethod("getAdj")
+getAdj <- function(obj,platform ='Visium') UseMethod("getAdj")
 
-getAdj.Seurat <- function(obj, platform ='Visium', radius=1){
+getAdj.Seurat <- function(obj, platform ='Visium'){
   
   if (!inherits(obj, "Seurat"))
     stop("method is only for Seurat or matrix objects")
@@ -614,7 +632,12 @@ getAdj.Seurat <- function(obj, platform ='Visium', radius=1){
     ## L1 radius of 1 (spots above, right, below, and left)
     offsets <- data.frame(x.offset=c( 0, 1, 0, -1),
                           y.offset=c(-1, 0, 1,  0))
-  } else {
+  }else if(tolower(platform) %in% c("seqfish", 'merfish', 'slide-seqv2', 'seqscope')){
+    pos <- as.matrix(cbind(row=obj$row, col=obj$col))
+    Adj_sp <- getAdj_auto(pos)
+    
+    return(Adj_sp)
+  }else {
     stop(".find_neighbors: Unsupported platform \"", platform, "\".")
   }
   
@@ -669,17 +692,116 @@ getAdj.Seurat <- function(obj, platform ='Visium', radius=1){
   return(Adj_sp)
 }
 
-getAdj.matrix <- function(obj, platform ='Visium', radius=1){
-  if (!inherits(obj, "matrix"))
-    stop("method is only for Seurat or matrix objects!")
-  if(radius <=0){
-    stop('radius must be a positive real!')
+## Bisection method to search the optimal radius to make the  median of neighborhoods between 4~6.
+find_neighbors <- function(pos, platform=c('ST', "Visium")) {
+  require(purrr)
+  require(S4Vectors)
+  if (platform == "Visium") {
+    ## Spots to left and right, two above, two below
+    offsets <- data.frame(x.offset=c(-2, 2, -1,  1, -1, 1),
+                          y.offset=c( 0, 0, -1, -1,  1, 1))
+  } else if (platform == "ST") {
+    ## L1 radius of 1 (spots above, right, below, and left)
+    offsets <- data.frame(x.offset=c( 0, 1, 0, -1),
+                          y.offset=c(-1, 0, 1,  0))
+  } else {
+    stop("find_neighbors: Unsupported platform \"", platform, "\".")
   }
-  Adj_sp <- getneighborhood_fast(obj, radius=radius)
+  
+  ## Get array coordinates (and label by index of spot in SCE)
+  colnames(pos) <- c("row", "col")
+  pos <- DataFrame(pos)
+  spot.positions <- pos
+  spot.positions$spot.idx <- seq_len(nrow(spot.positions))
+  
+  ## Compute coordinates of each possible spot neighbor
+  neighbor.positions <- merge(spot.positions, offsets)
+  neighbor.positions$x.pos <- neighbor.positions$col + neighbor.positions$x.offset
+  neighbor.positions$y.pos <- neighbor.positions$row + neighbor.positions$y.offset
+  
+  ## Select spots that exist at neighbor coordinates
+  neighbors <- merge(as.data.frame(neighbor.positions), 
+                     as.data.frame(spot.positions), 
+                     by.x=c("x.pos", "y.pos"), by.y=c("col", "row"),
+                     suffixes=c(".primary", ".neighbor"),
+                     all.x=TRUE)
+  
+  ## Shift to zero-indexing for C++
+  #neighbors$spot.idx.neighbor <- neighbors$spot.idx.neighbor - 1
+  
+  ## Group neighbor indices by spot 
+  ## (sort first for consistency with older implementation)
+  neighbors <- neighbors[order(neighbors$spot.idx.primary, 
+                               neighbors$spot.idx.neighbor), ]
+  df_j <- split(neighbors$spot.idx.neighbor, neighbors$spot.idx.primary)
+  df_j <- unname(df_j)
+  
+  ## Discard neighboring spots without spot data
+  ## This can be implemented by eliminating `all.x=TRUE` above, but
+  ## this makes it easier to keep empty lists for spots with no neighbors
+  ## (as expected by C++ code)
+  ## df_j <- map(df_j, function(nbrs) discard(nbrs, function(x) is.na(x)))
+  df_j <- lapply(df_j, function(nbrs) discard(nbrs, function(x) is.na(x)))
+  
+  ## Log number of spots with neighbors
+  n_with_neighbors <- length(keep(df_j, function(nbrs) length(nbrs) > 0))
+  message("Neighbors were identified for ", n_with_neighbors, " out of ",
+          nrow(pos), " spots.")
+  
+  n <- length(df_j) 
+  
+  D <- matrix(0,  nrow = n, ncol = n)
+  for (i in 1:n) {
+    if(length(df_j[[i]]) != 0)
+      D[i, df_j[[i]]] <- 1
+  }
+  ij <- which(D != 0, arr.ind = T)
+  ij
+}
+getAdj_reg <- function(pos, platform ='Visisum'){
+    require(Matrix)
+    ij <- find_neighbors(pos, platform)
+    Adj_sp <- sparseMatrix(ij[,1], ij[,2], x = 1)
+    return(Adj_sp)
+}
+
+getAdj_auto <- function(pos){
+  if (!inherits(pos, "matrix"))
+    stop("method is only for  matrix object!")
+  
+  radius.lower <- 1
+  radius.upper <- 50
+  start.radius <- 1
+  Med <- 0
+  while(!(Med >= 4 && Med <=6)){ # ensure that each spot has about 4~6 neighborhoods in median.
+    
+    Adj_sp <- getneighborhood_fast(pos, radius=start.radius)
+    Med <- summary(Matrix::rowSums(Adj_sp))['Median']
+    if(Med < 4){
+      radius.lower <- start.radius
+      start.radius <- (radius.lower + radius.upper)/2
+    }else if(Med >6){
+      radius.upper <- start.radius
+      start.radius <- (radius.lower + radius.upper)/2
+    }
+    message("Current radius is ", start.radius, '\n')
+    message("Median of neighborhoods is ", Med, '\n')
+  }
   return(Adj_sp)
 }
 
 
+
+getAdj_manual <- function(pos, radius){
+  if (!inherits(pos, "matrix"))
+    stop("pos must be a matrix!")
+  if(radius <=0){
+    stop('radius must be a positive real!')
+  }
+  
+  Adj_sp <- getneighborhood_fast(pos, radius=radius)
+  return(Adj_sp)
+}
 
 
 # select cluster number K -------------------------------------------------

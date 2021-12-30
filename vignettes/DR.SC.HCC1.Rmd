@@ -30,6 +30,7 @@ data("HCC1", package = 'DR.SC')
 
 ### Data preprocessing
 ```{r  eval=FALSE}
+library(Seurat)
 # standard log-normalization
 HCC1 <- NormalizeData(HCC1)
 # choose 2000 highly variable features
@@ -41,7 +42,7 @@ seu <- FindVariableFeatures(HCC1, nfeatures = 1000)
 We set the argument variable.type='HVGs' (default option) to use the highly variable genes.
 ```{r  eval=FALSE}
 ### Given K
-seu <- DR.SC(seu, K=6, platform = 'Visium', variable.type = 'HVGs',verbose=F)
+seu <- DR.SC(seu, K=6, platform = 'Visium',nfeatures=1000, variable.type = 'HVGs',verbose=F)
 ```
 
 ### Visualization
@@ -70,7 +71,8 @@ seus <- FindSVGs(seu, nfeatures = 1000)
 We set the argument variable.type='SVGs' (default option) to use the spatially variable genes.
 ```{r  eval=FALSE}
 ### Given K
-seus <- DR.SC(seus, K=6, platform = 'Visium', variable.type='SVGs', verbose=T)
+seus <- DR.SC(seus, K=6, platform = 'Visium', nfeatures=1000, 
+              variable.type='SVGs', verbose=T)
 ```
 
 ### Visualization
@@ -89,10 +91,12 @@ Show the UMAP plot based on the extracted features from DR-SC.
 drscPlot(seus, visu.method = 'UMAP')
 ```
 
+
 ### Ridge plots 
-Find the marker genes for each clusters
+Find the marker genes in SVGs for each clusters
 ```{r  eval=FALSE}
-dat <- FindAllMarkers(seus)
+SVGs <- topSVGs(seus, ntop = 1000)
+dat <- FindAllMarkers(seus, features = SVGs)
 head(dat)
 library(dplyr, verbose=F)
 top2 <-  dat %>%

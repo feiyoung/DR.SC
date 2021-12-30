@@ -7,14 +7,14 @@
 }
 \usage{
 ### S3 method for class "Seurat"
-DR.SC(seu, q=15, K=NULL, platform= c("Visium", "ST", 'scRNAseq'),
+DR.SC(seu, q=15, K=NULL, platform= "Visium",
        nfeatures=2000,K_set = seq(2, 10), variable.type="HVGs", ...)
 }
 \arguments{
   \item{seu}{an object of class "Seurat". The details of this object are given under 'Details'.}
   \item{q}{a positive integer, specify the number of latent features to be extracted, default as 15.}
   \item{K}{a positive  integer, specify the number of clusters, default as \code{NULL}. When \code{K=NULL}, it is automatically selected by MBIC criteria.}
-  \item{platform}{a string, specify the platform of the provided data, default as "Visium". There are three platforms to be chosen, including "Visuim", "ST" and "scRNAseq", where the first two means there are spatial coordinates information in the metadata of seu, named "row" and "col" and a Hidden Markov random field is used to model the spatial coordinates, and the last one "scRNAseq" means there is no spatial information in object seu and a multinomial model is used to model the unobserved class labels. The platform helps to calculate the adjoint matrix.}
+  \item{platform}{a string, specify the platform of the provided data, default as "Visium". There are three platforms to be chosen, including ("Visuim", "ST", "seqfish", 'merfish', 'slide-seqv2', 'seqscope') and "scRNAseq", where the first five means there are spatial coordinates information in the metadata of seu, named "row" and "col" and a Hidden Markov random field is used to model the spatial coordinates, and the last one "scRNAseq" means there is no spatial information in object seu and a multinomial model is used to model the unobserved class labels. The platform helps to calculate the adjoint matrix.}
   \item{nfeatures}{a positive integer, means how many highly variable or spatially variable genes used for DR-SC model, default as 2000. If there are less than 2000 features in seu, then all features are used for DR-SC model.}
   \item{K_set}{an optional vector of positive integer, means the candidates of number of clusters used for MBIC.}
   \item{variable.type}{an optional string, specify whether use highly variable genes (HVGs) or spatially variable genes (SVGs) to fit DR-SC model, default as "HVGs".}

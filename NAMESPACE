@@ -2,15 +2,15 @@ useDynLib(DR.SC, .registration=TRUE)
 importFrom(Rcpp, evalCpp)
 #exportPattern("^[[:alpha:]]+")
 
-export(DR.SC,DR.SC_fit, gendata_RNAExp,  FindSVGs, getAdj,getneighborhood_fast,
-       RunWPCA, topSVGs)
+export(DR.SC,DR.SC_fit, gendata_RNAExp,  FindSVGs, getAdj,getAdj_manual,
+       RunWPCA, topSVGs, getAdj_auto, getAdj_reg)
 export(spatialPlotClusters, drscPlot, mbicPlot)
 export(read10XVisium,readscRNAseq)
 
   
 S3method("DR.SC","Seurat")
 S3method("getAdj","Seurat")
-S3method("getAdj","matrix")
+# S3method("getAdj","matrix")
 
 S3method("RunWPCA","Seurat")
 S3method("RunWPCA","matrix")

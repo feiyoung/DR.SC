@@ -10,7 +10,7 @@
     maxIter_ICM=6,pen.const=1,wpca.int=FALSE, parallel='parallel', num_core=5)
 }
 \arguments{
- \item{X}{an optional sparse matrix with class \code{dgCMatrix}, specify the log-normalization gene expression matrix used for DR-SC model.}
+ \item{X}{a  sparse matrix with class \code{dgCMatrix} or \code{matrix}, specify the log-normalization gene expression matrix used for DR-SC model.}
  \item{Adj_sp}{an optional sparse matrix with class \code{dgCMatrix}, specify the adjoint matrix used for DR-SC model. We provide this interface for those users  who would like to define the adjoint matrix by their own.}
   \item{q}{a positive integer, specify the number of latent features to be extracted, default as 15.}
   \item{K}{a positive  integer, specify the number of clusters, default as \code{NULL}. When \code{K=NULL}, it is automatically selected by MBIC criteria.}

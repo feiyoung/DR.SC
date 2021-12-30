@@ -20,7 +20,7 @@ spatialPlotClusters <- function(seu){
   # require(ggplot2)
   cols <- brewer.pal(12, "Set3")
   K <- length(unique(seu$spatial.drsc.cluster))
-  dat <- data.frame(row=seu$row, col=seu$col, clusters=Idents(seu))
+  dat <- data.frame(row=seu$row, col=seu$col, clusters=factor(seu$spatial.drsc.cluster))
   clusters <- dat$clusters
   p1 <- ggplot(dat, aes(x=row, y=col, color=clusters)) +
     geom_point(size = 3, alpha=0.7) +
