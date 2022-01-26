@@ -15,7 +15,7 @@
   A sparse matrix containing the neighbourhood
 }
 \seealso{
-  \link{getAdj_auto}, \link{getAdj}, \link{getAdj_manual},.
+  \link{getAdj_auto}, \link{getAdj}, \link{getAdj_manual}.
 }
 \description{
   an efficient function to find the neighborhood based on the matrix of position for the platform with regular-distributed spots, such as 'Visium' and 'ST'.

@@ -89,27 +89,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// runICM_sp
-Rcpp::List runICM_sp(const arma::mat& X, arma::ivec& y, const arma::mat& W0, const arma::vec& Lam_vec0, const arma::mat& Mu0, const arma::cube& Sigma0, const arma::sp_mat& Adj, const arma::vec& alpha, const arma::vec& beta_grid, double beta, int maxIter_ICM);
-RcppExport SEXP _DR_SC_runICM_sp(SEXP XSEXP, SEXP ySEXP, SEXP W0SEXP, SEXP Lam_vec0SEXP, SEXP Mu0SEXP, SEXP Sigma0SEXP, SEXP AdjSEXP, SEXP alphaSEXP, SEXP beta_gridSEXP, SEXP betaSEXP, SEXP maxIter_ICMSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< arma::ivec& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type W0(W0SEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type Lam_vec0(Lam_vec0SEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type Mu0(Mu0SEXP);
-    Rcpp::traits::input_parameter< const arma::cube& >::type Sigma0(Sigma0SEXP);
-    Rcpp::traits::input_parameter< const arma::sp_mat& >::type Adj(AdjSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type alpha(alphaSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type beta_grid(beta_gridSEXP);
-    Rcpp::traits::input_parameter< double >::type beta(betaSEXP);
-    Rcpp::traits::input_parameter< int >::type maxIter_ICM(maxIter_ICMSEXP);
-    rcpp_result_gen = Rcpp::wrap(runICM_sp(X, y, W0, Lam_vec0, Mu0, Sigma0, Adj, alpha, beta_grid, beta, maxIter_ICM));
-    return rcpp_result_gen;
-END_RCPP
-}
 // icmem_heterCpp
 Rcpp:: List icmem_heterCpp(const arma::mat& X, const arma::sp_mat& Adj, const arma::ivec& y_int, const arma::mat& Mu_int, const arma::mat& W_int, const arma::cube& Sigma_int, const arma::vec& Lam_vec_int, const arma::vec& alpha, const double& beta_int, const arma::vec& beta_grid, const int& maxIter_ICM, const int& maxIter, const double& epsLogLik, const int& verbose, const bool& homo, const bool& diagSigmak);
 RcppExport SEXP _DR_SC_icmem_heterCpp(SEXP XSEXP, SEXP AdjSEXP, SEXP y_intSEXP, SEXP Mu_intSEXP, SEXP W_intSEXP, SEXP Sigma_intSEXP, SEXP Lam_vec_intSEXP, SEXP alphaSEXP, SEXP beta_intSEXP, SEXP beta_gridSEXP, SEXP maxIter_ICMSEXP, SEXP maxIterSEXP, SEXP epsLogLikSEXP, SEXP verboseSEXP, SEXP homoSEXP, SEXP diagSigmakSEXP) {
@@ -190,7 +169,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_DR_SC_getPairDist", (DL_FUNC) &_DR_SC_getPairDist, 1},
     {"_DR_SC_calYenergy2D_sp", (DL_FUNC) &_DR_SC_calYenergy2D_sp, 5},
     {"_DR_SC_obj_beta", (DL_FUNC) &_DR_SC_obj_beta, 6},
-    {"_DR_SC_runICM_sp", (DL_FUNC) &_DR_SC_runICM_sp, 11},
     {"_DR_SC_icmem_heterCpp", (DL_FUNC) &_DR_SC_icmem_heterCpp, 16},
     {"_DR_SC_EMmPCpp_heter", (DL_FUNC) &_DR_SC_EMmPCpp_heter, 11},
     {"_DR_SC_calculateWeight", (DL_FUNC) &_DR_SC_calculateWeight, 2},

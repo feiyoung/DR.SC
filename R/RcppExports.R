@@ -51,10 +51,6 @@ obj_beta <- function(y, R, Adj, K, alpha, beta) {
     .Call(`_DR_SC_obj_beta`, y, R, Adj, K, alpha, beta)
 }
 
-runICM_sp <- function(X, y, W0, Lam_vec0, Mu0, Sigma0, Adj, alpha, beta_grid, beta, maxIter_ICM) {
-    .Call(`_DR_SC_runICM_sp`, X, y, W0, Lam_vec0, Mu0, Sigma0, Adj, alpha, beta_grid, beta, maxIter_ICM)
-}
-
 icmem_heterCpp <- function(X, Adj, y_int, Mu_int, W_int, Sigma_int, Lam_vec_int, alpha, beta_int, beta_grid, maxIter_ICM, maxIter, epsLogLik, verbose, homo = FALSE, diagSigmak = FALSE) {
     .Call(`_DR_SC_icmem_heterCpp`, X, Adj, y_int, Mu_int, W_int, Sigma_int, Lam_vec_int, alpha, beta_int, beta_grid, maxIter_ICM, maxIter, epsLogLik, verbose, homo, diagSigmak)
 }

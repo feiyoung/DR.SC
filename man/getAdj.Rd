@@ -1,15 +1,16 @@
 \name{getAdj}
 \alias{getAdj}
+\alias{getAdj.Seurat}
 \title{Calculate the Adjoint matrix given the spatial coordinates}
 \description{
   Calculate the Adjoint matrix for the spatial transcriptomics data measured on 10X Visium or other platforms as a Seurat object.  
 }
 \usage{
 
-  getAdj(obj,platform ='Visium')
-  ### S3 method for class "Seurat"
-  ## getAdj(obj, platform = c('Visium', 'ST', "seqfish", 'merfish', 'slide-seqv2', 'seqscope'))
-  
+  getAdj(obj, platform ='Visium')
+  ## getAdj(obj, platform = c('Visium', 'ST', "seqfish", 
+  ## 'merfish', 'slide-seqv2', 'seqscope'))
+  \method{getAdj}{Seurat}(obj,platform ='Visium')
   
 }
 \arguments{
@@ -32,7 +33,7 @@
   nothing
 }
 \seealso{
-  \link{getAdj_auto}, \link{getAdj_manual}.
+  \link{getAdj_auto}, \link{getAdj_manual}, \link{getAdj_reg}.
 }
 \examples{
   ## S3 method for class "Seurat"

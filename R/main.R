@@ -515,7 +515,7 @@ simulDRcluster <- function(X,Adj_sp = NULL, q, K, error.heter= TRUE, beta_grid=s
   toc_heter <- proc.time() - tic
   if(verbose) {
     message("-------------------Complete!------------- \n")
-    message("elasped time is :", toc_heter, '\n')
+    message("elasped time is :", toc_heter[3], '\n')
   }
   resList$cluster_init <- y
   time_used <- c(toc_gmm[3], toc_heter[3])
@@ -688,14 +688,14 @@ getAdj.Seurat <- function(obj, platform ='Visium'){
   }
   ij <- which(D != 0, arr.ind = T)
   
-  Adj_sp <- sparseMatrix(ij[,1], ij[,2], x = 1)
+  Adj_sp <- sparseMatrix(ij[,1], ij[,2], x = 1, dims=c(n, n))
   return(Adj_sp)
 }
 
 ## Bisection method to search the optimal radius to make the  median of neighborhoods between 4~6.
 find_neighbors <- function(pos, platform=c('ST', "Visium")) {
-  require(purrr)
-  require(S4Vectors)
+  # require(purrr)
+  # require()
   if (platform == "Visium") {
     ## Spots to left and right, two above, two below
     offsets <- data.frame(x.offset=c(-2, 2, -1,  1, -1, 1),
@@ -759,9 +759,10 @@ find_neighbors <- function(pos, platform=c('ST', "Visium")) {
   ij
 }
 getAdj_reg <- function(pos, platform ='Visisum'){
-    require(Matrix)
+    # require(Matrix)
     ij <- find_neighbors(pos, platform)
-    Adj_sp <- sparseMatrix(ij[,1], ij[,2], x = 1)
+    n <- nrow(pos)
+    Adj_sp <- sparseMatrix(ij[,1], ij[,2], x = 1, dims=c(n, n))
     return(Adj_sp)
 }
 

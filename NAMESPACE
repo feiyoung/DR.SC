@@ -28,7 +28,7 @@ importFrom(ggplot2, ggplot, aes, geom_line, ylab,geom_point,
            theme,element_blank,element_text,scale_color_manual)
 importFrom(CompQuadForm, davies, liu)
 importFrom("methods", "as", "is")
-importFrom("stats", "p.adjust", "pcauchy", "quantile")
+importFrom("stats", "p.adjust", "pcauchy", "quantile", "sd")
 importFrom(stats,rnorm, rmultinom, cov,cor)
 importFrom("utils", "read.csv", "read.table", "setTxtProgressBar",
              "txtProgressBar")
@@ -42,6 +42,7 @@ importFrom(Seurat, RidgePlot, VlnPlot, FeaturePlot, DotPlot, DoHeatmap,
            FindVariableFeatures, DefaultAssay,LogNormalize,CreateDimReducObject,
            Idents, RunTSNE,RunUMAP, DimPlot, CreateSeuratObject,ReadMtx,'Idents<-',
            AddMetaData)
+importFrom(S4Vectors, DataFrame)
 # importFrom(doSNOW,registerDoSNOW)
 # importFrom(snow, makeSOCKcluster, stopCluster)
 # importFrom(foreach,foreach)
