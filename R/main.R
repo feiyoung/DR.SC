@@ -202,20 +202,16 @@ gendata_RNAExp <- function(height=30, width=30, platform="ST", p =100, q=10, K=7
   Mu <- Mu - matrix(Ez, K, q, byrow=T) # center Z
   X <- Z %*% t(W) + MASS::mvrnorm(n, mu=rep(0,p), Sigma=diag(Lambda))
   
-  # svd_Sig <- svd(cov(Z))
-  # W12 <- W %*% svd_Sig$u %*% diag(sqrt(svd_Sig$d))
-  # signal <- sum(svd(W12)$d^2)
-  # snr <- sum(svd(W12)$d^2) / (sum(svd(W12)$d^2)+ sum(Lambda))
-  # 
+  
   
   
   # make position
   pos <- cbind(rep(1:height, width), rep(1:height, each=width))
-  #  make BayesSpace metadata used in BayesSpace-------------------------------------------------
+  
   counts <- t(X) - min(X)
   p <- ncol(X); n <- nrow(X)
-  rownames(counts) <- paste0("gene-", seq_len(p))
-  colnames(counts) <- paste0("spot-", seq_len(n))
+  rownames(counts) <- paste0("gene", seq_len(p))
+  colnames(counts) <- paste0("spot", seq_len(n))
   counts <- as.data.frame(exp(counts)-1)
   ## Make array coordinates - filled rectangle
   
