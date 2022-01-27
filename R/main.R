@@ -312,10 +312,11 @@ FindSVGs <- function(seu, nfeatures=2000,num_core=1, verbose=TRUE){
     stop("method is only for Seurat objects")
   # require(SPARK)
   # require(Seurat)
-  sp_count <- seu@assays$RNA@counts
+  assy <- DefaultAssay(seu)
+  sp_count <- seu[[assy]]@counts
   if(nrow(sp_count)>5000){
     seu <- FindVariableFeatures(seu, nfeatures = 5000, verbose=verbose)
-    sp_count <- seu@assays$RNA@counts[seu@assays$RNA@var.features,]
+    sp_count <- seu[[assy]]@counts[seu[[assy]]@var.features,]
   }
   location <- as.data.frame(cbind(seu$row, seu$col))
   if(verbose){
@@ -323,16 +324,24 @@ FindSVGs <- function(seu, nfeatures=2000,num_core=1, verbose=TRUE){
   }
   sparkX <- sparkx(sp_count,location,numCores=num_core,option="mixture", verbose=verbose)
   if(nfeatures > nrow(sp_count)) nfeatures <- nrow(sp_count)
+  
+  ## Find top nfeatures smallest adjusted p-values
   order_nfeatures <- order(sparkX$res_mtest$adjustedPval)[1:nfeatures]
   genes <- row.names(sp_count)[order_nfeatures]
+  
+  ## Access the gene based on gene name 
   is.SVGs <- rep(FALSE, nrow(seu))
   order.SVGs <- rep(NA, nrow(seu))
-  names(is.SVGs) <- row.names(seu)
-  names(order.SVGs) <- row.names(seu)
-  order.SVGs[genes] <- order_nfeatures
+  adjusted.pval.SVGs <- rep(NA, nrow(seu))
+  names(is.SVGs) <- names(order.SVGs)<- names(adjusted.pval.SVGs) <- row.names(seu)
+  
+  order.SVGs[genes] <- 1:length(genes)
   is.SVGs[genes] <- TRUE
-  seu[['RNA']]@meta.features$is.SVGs <- is.SVGs
-  seu[['RNA']]@meta.features$order.SVGs <- order.SVGs
+  adjusted.pval.SVGs[genes] <- sparkX$res_mtest$adjustedPval[order_nfeatures]
+  
+  seu[[assy]]@meta.features$is.SVGs <- is.SVGs
+  seu[[assy]]@meta.features$order.SVGs <- order.SVGs
+  seu[[assy]]@meta.features$adjusted.pval.SVGs <- adjusted.pval.SVGs
   seu
 }
 
@@ -340,8 +349,12 @@ topSVGs <- function(seu, ntop=5){
   if (!inherits(seu, "Seurat"))
     stop("method is only for Seurat objects")
   if(ntop > nrow(seu)) warning(paste0("Only ", nrow(seu), ' SVGs will be returned since the number of genes is less than ', ntop, '\n'))
-  SVGs <- row.names(seu)[seu@assays$RNA@meta.features$is.SVGs]
-  order_features <- seu[['RNA']]@meta.features$order.SVGs
+  assy <- DefaultAssay(seu)
+  if(is.null(seu[[assy]]@meta.features$is.SVGs)) 
+    stop("There is no information about SVGs in default Assay. Please use function FindSVGs first!")
+  
+  SVGs <- row.names(seu)[seu[[assy]]@meta.features$is.SVGs]
+  order_features <- seu[[assy]]@meta.features$order.SVGs
   
   idx <- order(order_features[!is.na(order_features)])[1:ntop]
   SVGs[idx]
@@ -406,24 +419,25 @@ DR.SC.Seurat <- function(seu, q=15, K=NULL, platform= "Visium",
     message('WARNING: nrow(seu) is less than nfeatures, so assign nfeatures with nrow(seu)!')
     nfeatures <- nrow(seu)
   }
-    
+  assy <- DefaultAssay(seu)
+  
   if(variable.type=='HVGs'){
-    if(is.null(seu@assays$RNA@var.features)){
+    if(is.null(seu[[assy]]@var.features)){
       seu <- FindVariableFeatures(seu, nfeatures = nfeatures)
     }
-    if(nfeatures > length(seu@assays$RNA@var.features)){
+    if(nfeatures > length(seu[[assy]]@var.features)){
       message('WARNING: number of variable genes is less than nfeatures, 
               so assign nfeatures with number of variable genes!')
-      nfeatures <- length(seu@assays$RNA@var.features)
+      nfeatures <- length(seu[[assy]]@var.features)
     }
-    var.features <- seu@assays$RNA@var.features[1:nfeatures]
+    var.features <- seu[[assy]]@var.features[1:nfeatures]
   
   }else{
     message("Using SVGs to fit DR.SC model since variable.type=SVGs...\n")
-    var.features <- row.names(seu)[seu[[DefaultAssay(seu)]]@meta.features$is.SVGs]
+    var.features <- row.names(seu)[seu[[assy]]@meta.features$is.SVGs]
   }
   
-  X <- Matrix::t(LogNormalize(seu@assays$RNA@counts[var.features,]))
+  X <- Matrix::t(LogNormalize(seu[[assy]]@counts[var.features,]))
   
   resList <- DR.SC_fit(X,Adj_sp = Adj_sp, q=q, K=K,K_set =K_set, ...)
   if(is.null(K)){

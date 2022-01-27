@@ -17,13 +17,10 @@
   Nothing
 }
 \value{
-  return a revised Seurat object by adding a column named "is.SVGs" in the meta.features  of default Assay.
+  return a revised Seurat object by adding three columns named "is.SVGs", "order.SVGs" and "adjusted.pval.SVGs" in the meta.features  of default Assay.
 }
 \references{
-   None
-}
-\author{
-  Wei Liu
+   Zhu, J., Sun, S., Zhou, X.: Spark-x: non-parametric modeling enables scalable and robust detection of spatialexpression patterns for large spatial transcriptomic studies. Genome Biology 22(1), 1–25 (2021)
 }
 \note{
   nothing
