@@ -2,8 +2,8 @@ useDynLib(DR.SC, .registration=TRUE)
 importFrom(Rcpp, evalCpp)
 #exportPattern("^[[:alpha:]]+")
 
-export(DR.SC,DR.SC_fit, gendata_RNAExp,  FindSVGs, getAdj,getAdj_manual,
-       RunWPCA, topSVGs, getAdj_auto, getAdj_reg)
+export(DR.SC, DR.SC_fit, gendata_RNAExp,  FindSVGs, getAdj,getAdj_manual,
+       getAdj_auto, RunWPCA, topSVGs)
 export(spatialPlotClusters, drscPlot, mbicPlot)
 export(read10XVisium,readscRNAseq)
 
@@ -24,7 +24,7 @@ import(parallel)
 import(spatstat.geom)
 
 importFrom(MASS, mvrnorm)
-importFrom(ggplot2, ggplot, aes, geom_line, ylab,geom_point,
+importFrom(ggplot2, ggplot, aes, aes_string, geom_line, ylab,geom_point,
            theme,element_blank,element_text,scale_color_manual)
 importFrom(CompQuadForm, davies, liu)
 importFrom("methods", "as", "is")

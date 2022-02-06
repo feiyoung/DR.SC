@@ -30,15 +30,18 @@ sparkx <- function (count_in, locus_in, X_in = NULL, numCores = 1, option = "mix
   count_mat <- count_mat[keep_gene_idx, ]
   numGene <- nrow(count_mat)
   numCell <- ncol(count_mat)
-  message(paste("## ===== SPARK-X INPUT INFORMATION ==== \n"))
-  message(paste("## number of total samples:", numCell, "\n"))
-  message(paste("## number of total genes:", numGene, "\n"))
-  if (numCores > 1) {
-    message(paste("## Running with", numCores, "cores \n"))
+  if(verbose){
+    message(paste("## ===== SPARK-X INPUT INFORMATION ===="))
+    message(paste("## number of total samples:", numCell))
+    message(paste("## number of total genes:", numGene))
+    if (numCores > 1) {
+      message(paste("## Running with", numCores, "cores \n"))
+    }
+    else {
+      message(paste("## Running with single core, may take some time \n"))
+    }
   }
-  else {
-    message(paste("## Running with single core, may take some time \n"))
-  }
+  
   GeneNames <- rownames(count_mat)
   if (sum(is.na(GeneNames)) > 0) {
     GeneNames[is.na(GeneNames)] <- "NAgene"
@@ -46,7 +49,8 @@ sparkx <- function (count_in, locus_in, X_in = NULL, numCores = 1, option = "mix
   sparkx_list <- list()
   icount = 0
   if (option == "mixture") {
-    message(paste0("## Testing With Projection Kernel\n"))
+    if(verbose)
+       message(paste0("## Testing With Projection Kernel"))
     icount = icount + 1
     final_location <- fil_loc
     sparkx_list[[icount]] <- sparkx.sk(count_mat, final_location, 
@@ -54,8 +58,8 @@ sparkx <- function (count_in, locus_in, X_in = NULL, numCores = 1, option = "mix
     rm(final_location)
     for (iker in 1:5) {
       icount = icount + 1
-      message(paste0("## Testing With Gaussian Kernel ", 
-                 iker, "\n"))
+      if(verbose)
+         message(paste0("## Testing With Gaussian Kernel ", iker))
       final_location <- apply(fil_loc, 2, transloc_func, 
                               lker = iker, transfunc = "gaussian")
       sparkx_list[[icount]] <- sparkx.sk(count_mat, final_location, 
@@ -64,8 +68,8 @@ sparkx <- function (count_in, locus_in, X_in = NULL, numCores = 1, option = "mix
     }
     for (iker in 1:5) {
       icount = icount + 1
-      message(paste0("## Testing With Cosine Kernel ", 
-                 iker, "\n"))
+      if(verbose)
+      message(paste0("## Testing With Cosine Kernel ", iker))
       final_location <- apply(fil_loc, 2, transloc_func, 
                               lker = iker, transfunc = "cosine")
       sparkx_list[[icount]] <- sparkx.sk(count_mat, final_location, 
@@ -76,7 +80,8 @@ sparkx <- function (count_in, locus_in, X_in = NULL, numCores = 1, option = "mix
                                                  1:5), paste0("cos", 1:5))
   }
   else if (option == "single") {
-    message(paste0("## Testing With Projection Kernel\n"))
+    if(verbose)
+       message(paste0("## Testing With Projection Kernel"))
     icount = icount + 1
     final_location <- fil_loc
     sparkx_list[[icount]] <- sparkx.sk(count_mat, final_location, 

@@ -22,7 +22,7 @@ library("DR.SC")
 ```
 
 
-## Fit DR-SC using real data CRC
+## Fit DR-SC using real data HCC1
 ### load the data HCC1 in package DR.SC
 ```{r  eval=FALSE,message=FALSE, warning=FALSE}
 data("HCC1", package = 'DR.SC')
@@ -32,13 +32,12 @@ data("HCC1", package = 'DR.SC')
 ```{r  eval=FALSE}
 library(Seurat)
 # standard log-normalization
-HCC1 <- NormalizeData(HCC1)
+HCC1 <- NormalizeData(HCC1, verbose = F)
 # choose 2000 highly variable features
-seu <- FindVariableFeatures(HCC1, nfeatures = 1000)
-
+seu <- FindVariableFeatures(HCC1, nfeatures = 1000, verbose = F)
 ```
 
-## Fit DR-SC model using 2000 highly variable features
+## Fit DR-SC model using 1000 highly variable features
 We set the argument variable.type='HVGs' (default option) to use the highly variable genes.
 ```{r  eval=FALSE}
 ### Given K
@@ -61,7 +60,7 @@ Show the UMAP plot based on the extracted features from DR-SC.
 drscPlot(seu, visu.method = 'UMAP')
 ```
 
-## Fit DR-SC model using 2000 spatially variable features
+## Fit DR-SC model using 1000 spatially variable features
 
 ```{r  eval=FALSE}
 # choose 2000 spatially variable features
@@ -106,14 +105,14 @@ top2
 ```
 
 Visualize single cell expression distributions in each cluster from Seruat.
-```{r  eval=FALSE}
+```{r  eval=FALSE, fig.height=6, fig.width=10}
 genes <- top2$gene[seq(1, 12, by=2)]
 RidgePlot(seus, features = genes, ncol = 2)
 ```
 ### Violin plot
 
 Visualize single cell expression distributions in each cluster
-```{r  eval=FALSE}
+```{r  eval=FALSE, fig.height=6, fig.width=10}
 
 VlnPlot(seus, features = genes, ncol=2)
 ```
@@ -121,7 +120,7 @@ VlnPlot(seus, features = genes, ncol=2)
 ### Feature plot
 We extract tSNE based on the features from DR-SC and then visualize feature expression in the low-dimensional space
  
-```{r  eval=FALSE}
+```{r  eval=FALSE, fig.height=6, fig.width=10}
 seus <- RunTSNE(seus, reduction="dr-sc", reduction.key='drsc_tSNE_')
 FeaturePlot(seus, features = genes, reduction = 'tsne' ,ncol=2)
 
@@ -139,6 +138,10 @@ DotPlot(seus, features = genes)
 
 Single cell heatmap of feature expression
 ```{r  eval=FALSE}
+top20 <-  dat %>%
+  group_by(cluster) %>%
+  top_n(n = 20, wt = avg_log2FC)
+genes <- top20$gene
 # standard scaling (no regression)
 seus <- ScaleData(seus)
 DoHeatmap(subset(seus, downsample = 500), features = genes, size = 5)

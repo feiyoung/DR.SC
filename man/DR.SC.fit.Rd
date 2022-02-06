@@ -23,7 +23,7 @@
   \item{maxIter_ICM}{an optional positive value, represents the maximum iterations of ICM.}
   \item{pen.const}{an optional positive value, the adjusted constant used in the MBIC criteria. It usually takes value between 0.1 to 1.}
   \item{wpca.int}{an optional logical value, means whether use the weighted PCA to obtain the initial values of loadings and other paramters, default as \code{FALSE} which means the conventional PCA  is used.}
-  \item{parallel}{a optional string, specify the parallel way to choose the number of clusters by MBIC. We provide two methods: 1. \code{parallel="parrallel"} uses \code{parrallel} R package to conduct the parallel schema; 2.\code{parallel=NULL} doesn't use parallel computation.}
+  \item{parallel}{a optional string, specify the parallel way to choose the number of clusters by MBIC. We provide two methods: 1. \code{parallel="parallel"} uses \code{parallel} R package to conduct the parallel schema; 2.\code{parallel=NULL} doesn't use parallel computation.}
   \item{num_core}{an optional positive integer, means the cores used in parallel computating.}
 }
 \details{
@@ -56,13 +56,15 @@ nothing
 ## we generate the spatial transcriptomics data with lattice neighborhood, i.e. ST platform.
 seu <- gendata_RNAExp(height=10, width=10,p=50, K=4)
 library(Seurat)
-seu <- NormalizeData(seu)
-# choose 2000 variable features using Seurat
-seu <- FindVariableFeatures(seu, nfeatures = 40)
-# users define the adjoint matrix
+seu <- NormalizeData(seu, verbose=FALSE)
+# choose 40 highly variable features using FindVariableFeatures in Seurat
+# seu <- FindVariableFeatures(seu, nfeatures = 40)
+# or choose 40 spatailly variable features using FindSVGs in DR.SC
+seu <- FindSVGs(seu, nfeatures = 40, verbose=FALSE)
+# users define the adjacency matrix
 Adj_sp <- getAdj(seu, platform = 'ST')
 var.features <- seu@assays$RNA@var.features
-X <- Matrix::t(LogNormalize(seu@assays$RNA@counts[var.features,],))
+X <- Matrix::t(seu[["RNA"]]@data[var.features,])
 # maxIter = 2 is only used for illustration, and user can use default.
 drscList <- DR.SC_fit(X,Adj_sp=Adj_sp ,K=4, maxIter=2, verbose=TRUE)
 

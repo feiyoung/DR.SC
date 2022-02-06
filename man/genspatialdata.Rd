@@ -10,7 +10,7 @@
 }
 \arguments{
  \item{height, width}{Height and width of lattice grids for generating spatial coordinates. n=height * width cells for scRNAseq data}
- \item{platform}{Set the platform for the simulated data.}
+ \item{platform}{set the platform for the simulated data, only support 'ST' and 'scRNAseq'.}
  \item{p}{number of genes to generate.}
  \item{q}{number of true latent features to generate gene expression}
  \item{K}{number of clusters (cell types).}

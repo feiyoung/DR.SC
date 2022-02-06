@@ -31,7 +31,7 @@
 }
 \examples{
   seu <- gendata_RNAExp(height=20, width=20,p=200, K=4)
-  seu <- FindSVGs(seu, nfeatures=100)
+  seu <- FindSVGs(seu, nfeatures=100, verbose=FALSE)
   (genes <- topSVGs(seu, ntop=10))
   
 }

@@ -56,29 +56,101 @@
                 "column" : 13,
                 "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
                 "kind" : 6,
-                "line" : 233,
+                "line" : 228,
                 "name" : "icmem_heterCpp(const arma::mat &, const arma::sp_mat &, const arma::ivec &, const arma::mat &, const arma::mat &, const arma::cube &, const arma::vec &, const arma::vec &, const double &, const arma::vec &, const int &, const int &, const double &, const int &, const bool &, const bool &)",
                 "parent_name" : "",
                 "usr" : "c:@F@icmem_heterCpp#&1$@N@arma@S@Mat>#d#&1$@N@arma@S@SpMat>#d#&1$@N@arma@S@Col>#K#S0_#S0_#&1$@N@arma@S@Cube>#d#&1$@N@arma@S@Col>#d#S8_#&1d#S8_#&1I#S11_#S10_#S11_#&1b#S12_#"
             },
             {
+                "column" : 6,
+                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
+                "kind" : 6,
+                "line" : 360,
+                "name" : "runEstep(const arma::mat &, const arma::mat &, const arma::vec &, const arma::mat &, const arma::cube &, const arma::vec &, arma::mat &, arma::cube &, arma::cube &, double &)",
+                "parent_name" : "",
+                "usr" : "c:@F@runEstep#&1$@N@arma@S@Mat>#d#S0_#&1$@N@arma@S@Col>#d#S0_#&1$@N@arma@S@Cube>#d#S2_#&S1_#&S5_#S7_#&d#"
+            },
+            {
                 "column" : 13,
                 "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
                 "kind" : 6,
-                "line" : 365,
+                "line" : 401,
                 "name" : "EMmPCpp_heter(const arma::mat &, const arma::vec &, const arma::mat &, const arma::mat &, const arma::cube &, const arma::vec &, const int &, const double &, const bool &, const bool &, const bool &)",
                 "parent_name" : "",
                 "usr" : "c:@F@EMmPCpp_heter#&1$@N@arma@S@Mat>#d#&1$@N@arma@S@Col>#d#S0_#S0_#&1$@N@arma@S@Cube>#d#S2_#&1I#&1d#&1b#S8_#S8_#"
             }
         ],
         "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
-        "file_last_write" : 1641953421.000000
+        "file_last_write" : 1644050823.000000
     },
     {
         "definitions" : [
+            {
+                "column" : 6,
+                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
+                "kind" : 6,
+                "line" : 43,
+                "name" : "multi_det_SkCpp2(const arma::mat &, const arma::vec &, const arma::mat &, const arma::mat &, const arma::rowvec, const arma::mat &, double &, arma::vec &)",
+                "parent_name" : "",
+                "usr" : "c:@F@multi_det_SkCpp2#&1$@N@arma@S@Mat>#d#&1$@N@arma@S@Col>#d#S0_#S0_#1$@N@arma@S@Row>#d#S0_#&d#&S3_#"
+            },
+            {
+                "column" : 6,
+                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
+                "kind" : 6,
+                "line" : 81,
+                "name" : "multi_det_SkCpp(const arma::mat &, const arma::vec &, const arma::mat &, const arma::mat &, const arma::rowvec, double &, arma::vec &)",
+                "parent_name" : "",
+                "usr" : "c:@F@multi_det_SkCpp#&1$@N@arma@S@Mat>#d#&1$@N@arma@S@Col>#d#S0_#S0_#1$@N@arma@S@Row>#d#&d#&S3_#"
+            },
+            {
+                "column" : 5,
+                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
+                "kind" : 6,
+                "line" : 117,
+                "name" : "decomp(const arma::mat &, const arma::mat &)",
+                "parent_name" : "",
+                "usr" : "c:@F@decomp#&1$@N@arma@S@Mat>#d#S0_#"
+            },
+            {
+                "column" : 5,
+                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
+                "kind" : 6,
+                "line" : 133,
+                "name" : "update_W0(const arma::mat &, const arma::mat &, const arma::cube &, const arma::cube &, const arma::vec &)",
+                "parent_name" : "",
+                "usr" : "c:@F@update_W0#&1$@N@arma@S@Mat>#d#S0_#&1$@N@arma@S@Cube>#d#S2_#&1$@N@arma@S@Col>#d#"
+            },
+            {
+                "column" : 6,
+                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
+                "kind" : 6,
+                "line" : 146,
+                "name" : "update_Sigma0(const arma::mat &, const arma::cube &, const arma::cube &, const arma::mat &, const arma::vec &, const bool &)",
+                "parent_name" : "",
+                "usr" : "c:@F@update_Sigma0#&1$@N@arma@S@Mat>#d#&1$@N@arma@S@Cube>#d#S2_#S0_#&1$@N@arma@S@Col>#d#&1b#"
+            },
+            {
+                "column" : 5,
+                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
+                "kind" : 6,
+                "line" : 163,
+                "name" : "update_Lam(const arma::mat &, const arma::mat &, const arma::mat &, const arma::cube &, const arma::cube &, const bool &)",
+                "parent_name" : "",
+                "usr" : "c:@F@update_Lam#&1$@N@arma@S@Mat>#d#S0_#S0_#&1$@N@arma@S@Cube>#d#S2_#&1b#"
+            },
+            {
+                "column" : 8,
+                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
+                "kind" : 6,
+                "line" : 196,
+                "name" : "Q_fun(const arma::mat &, const arma::mat &, const arma::cube &, const arma::cube &, const arma::mat &, const arma::mat &, const arma::cube &, const arma::vec &, const arma::vec &)",
+                "parent_name" : "",
+                "usr" : "c:@F@Q_fun#&1$@N@arma@S@Mat>#d#S0_#&1$@N@arma@S@Cube>#d#S2_#S0_#S0_#S2_#&1$@N@arma@S@Col>#d#S4_#"
+            }
         ],
         "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
-        "file_last_write" : 1637323203.000000
+        "file_last_write" : 1644048150.000000
     },
     {
         "definitions" : [

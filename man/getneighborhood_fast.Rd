@@ -1,0 +1,17 @@
+\name{getneighborhood_fast}
+\alias{getneighborhood_fast}
+\title{getneighborhood_fast}
+\usage{
+getneighborhood_fast(x, radius)
+}
+\arguments{
+\item{x}{is a n-by-2 matrix of position.}
+
+\item{radius}{is a threashold of Euclidean distance to decide whether a spot is an neighborhood of another spot. For example, if the Euclidean distance between spot A and B is less than cutoff, then A is taken as the neighbourhood of B.}
+}
+\value{
+A sparse matrix containing the neighbourhood
+}
+\description{
+an efficient function to find the neighborhood based on the matrix of position and a pre-defined cutoff
+}

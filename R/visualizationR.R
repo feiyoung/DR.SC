@@ -8,9 +8,9 @@ mbicPlot <- function(seu){
   
   icMat <- as.data.frame(seu@tools$icMat)
   
-  K <- icMat$K; mbic <- icMat$mbic
+  #K <- icMat$K; mbic <- icMat$mbic
   ggplot(data=icMat,
-         aes(x=K, y=mbic)) + geom_line(size=1) + cowplot::theme_cowplot() + ylab("MBIC")
+         aes_string(x='K', y='mbic')) + geom_line(size=1) + cowplot::theme_cowplot() + ylab("MBIC")
 }
 
 spatialPlotClusters <- function(seu){

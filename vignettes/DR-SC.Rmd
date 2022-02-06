@@ -1,5 +1,5 @@
 ---
-title: "DR-SC"
+title: "DR-SC: installation"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{DR-SC}
@@ -14,6 +14,21 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(DR.SC)
+## Install the DR.SC
+This vignette provides an introduction to the R package `DR.SC`, where the function `DR.SC` implements the model `DR-SC`, spatial clustering with hidden Markov random field using empirical Bayes.
+The package can be installed with the following command from [Github](https://github.com/feiyoung/ILSE):
+
+`install.packages('remotes')`
+`remotes::install_github("feiyoung/DR.SC")`
+
+or install from [CRAN](https://cran.r-project.org/)
+
+`install.packages("DR.SC")`
+
+
+
+The package can be loaded with the command:
+```{r  eval=TRUE}
+
+library("DR.SC")
 ```

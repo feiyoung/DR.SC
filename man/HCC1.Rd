@@ -2,7 +2,7 @@
 \alias{HCC1}
 \title{A liver dataset on Visium platform}
 \description{
-  A liver dataset measured on the  Visium platform, which invcludes 2983 spots and 4000 genes.
+  A liver dataset measured on the  Visium platform, which invcludes 2983 spots and 2000 genes.
 }
 
 \references{

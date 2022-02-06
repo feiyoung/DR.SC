@@ -1,8 +1,8 @@
 Type: Package
 Package: DR.SC
 Title: Joint Dimension Reduction and Spatial Clustering
-Version: 2.4
-Date: 2022-01-07
+Version: 2.5
+Date: 2022-02-06
 Authors@R: 
     c(person(given = "Wei",
              family = "Liu",

@@ -5,13 +5,14 @@
   Identifies features that have spatially variation along spots.
 }
 \usage{
-  FindSVGs(seu, nfeatures=2000,num_core=1, verbose=TRUE)
+  FindSVGs(seu, nfeatures=2000, covariates=NULL, num_core=1, verbose=TRUE)
 }
 \arguments{
   \item{seu}{an object of class "Seurat".}
-  \item{nfeatures}{a positive integer, means how many highly variable or spatially variable genes to be chosen. If there are less than 2000 features in seu, then all features are identified.}
+  \item{nfeatures}{a positive integer, means how many spatially variable genes to be chosen. If there are less than 2000 features in seu, then all features are identified.}
+  \item{covariates}{a covariate matrix named control variable matrix whose number of rows is equal to the number of columns of seu.}
    \item{num_core}{an optional positive integer, specify the cores used for identifying the SVGs in parallel.}
-   \item{verbose}{an optional logical value, whether output the mediate information.}
+   \item{verbose}{an optional logical value, whether output the related information.}
 }
 \details{
   Nothing

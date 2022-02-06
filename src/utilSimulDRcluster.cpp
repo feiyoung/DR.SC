@@ -45,7 +45,7 @@ void multi_det_SkCpp2(const arma::mat& X, const arma::vec& Lam_vec0,
                       const arma::rowvec Muk, const mat& Sigmak,
                       double& logdSk, arma::vec& mSk){
   //int p = X.n_cols;
-  int n = X.n_rows;
+  int n = X.n_rows, q = W0.n_cols;
   
   
   mat WC12,  tmp2;
@@ -55,7 +55,7 @@ void multi_det_SkCpp2(const arma::mat& X, const arma::vec& Lam_vec0,
   // method B: use SVD to compute |Srk.i()|
   svd(U, s, V, Sigmak);
   WC12 = W0 * (U * diagmat(sqrt(s)));
-  WC12 = sp_mat(diagmat(1.0/sqrt(Lam_vec0))) * WC12;  // change to sparse matrix multiplication.
+  WC12 =WC12% repmat(1.0/sqrt(Lam_vec0), 1, q);  // O(pq)  // change to sparse matrix multiplication.
   vec d = svd(WC12);
   logdSk = -accu(log(1 +  d%d)) - accu(log(Lam_vec0));
   // method A: directly compuate log|Srki|
@@ -68,9 +68,9 @@ void multi_det_SkCpp2(const arma::mat& X, const arma::vec& Lam_vec0,
   // tmp2 = X_tk * WC12;
   // mSk  = sum(tmp2 % tmp2, 1);
   svd(U, s, V, Ck.i());
-  WC12 = W0 * (U * diagmat(sqrt(s)));
-  WC12 = sp_mat(diagmat(1.0/sqrt(Lam_vec0))) * WC12;  
-  X_tk = (X - repmat(Muk* W0.t(), n, 1)) * sp_mat(diagmat(1/sqrt(Lam_vec0))) ;  // change to sparse matrix multiplication.
+  WC12 = W0 * (U * diagmat(sqrt(s))); // O(p*q^2)
+  WC12 = WC12 % repmat(1.0/sqrt(Lam_vec0), 1, q);  // O(pq)
+  X_tk = (X - repmat(Muk* W0.t(), n, 1)) % trans(repmat(1.0/sqrt(Lam_vec0), 1, n));  // change to sparse matrix multiplication.
   tmp1 = sum(X_tk % X_tk, 1);
   tmp2 = X_tk * WC12;
   tmp3 = sum(tmp2 % tmp2, 1);
