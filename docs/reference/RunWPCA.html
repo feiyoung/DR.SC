@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DR.SC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.6</span>
       </span>
     </div>
 
@@ -85,6 +85,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/DR-SC.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -95,10 +98,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/DR.SC.HCC1.html">DR-SC: HCC1 Data Analysis</a>
+      <a href="../articles/DR.SC.HCC1.html">DR-SC: DLPFC Data Analysis</a>
     </li>
     <li>
-      <a href="../articles/DR.SC.Simu.html">DR-SC: installation and simulation</a>
+      <a href="../articles/DR.SC.Simu.html">DR-SC: simulation</a>
     </li>
   </ul>
 </li>
@@ -127,30 +130,26 @@
     <p>Run a weighted PCA dimensionality reduction</p>
     </div>
 
-    <pre class="usage"><span class='fu'>RunWPCA</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>RunWPCA</span><span class='op'>(</span><span class='va'>object</span>, q<span class='op'>=</span><span class='fl'>15</span><span class='op'>)</span>
   <span class='co'>### S3 method for class "Seurat"</span>
-  <span class='co'>#RunWPCA(seu, q=15)</span>
+  <span class='co'>## RunWPCA(object, q=15)</span>
   
   <span class='co'>### S3 method for class "matrix"</span>
-  <span class='co'>#RunWPCA(X, q=15)</span>
+  <span class='co'>## RunWPCA(object, q=15)</span>
   
   <span class='co'>### S3 method for class "dgCMatrix"</span>
-  <span class='co'>#RunWPCA(X, q=15)</span></pre>
+  <span class='co'>## RunWPCA(object, q=15)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>seu</th>
-      <td><p>an object of class "Seurat" with slot "scale.data".</p></td>
+      <th>object</th>
+      <td><p>an object named "Seurat", "maxtrix" or "dgCMatrix". The object of class "Seurat" must include slot "scale.data".</p></td>
     </tr>
     <tr>
       <th>q</th>
       <td><p>an optional positive integer, specify the number of features to be extracted.</p></td>
-    </tr>
-    <tr>
-      <th>X</th>
-      <td><p>a object of class "matrix" or "dgCMatrix" whose row is gene and column is spot/cell.</p></td>
     </tr>
     </table>
 
@@ -172,54 +171,32 @@ covariance matrices. Journal of Econometrics, 200(1):59–78.</p>
     <p>nothing</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'>
-  
-</div>
+    <div class='dont-index'><p>None</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>  <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://satijalab.org/seurat'>Seurat</a></span><span class='op'>)</span>
-  <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gendata_RNAExp.html'>gendata_RNAExp</a></span><span class='op'>(</span>height<span class='op'>=</span><span class='fl'>40</span>, width<span class='op'>=</span><span class='fl'>40</span>,p<span class='op'>=</span><span class='fl'>1000</span>, K<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: The following arguments are not used: row.names</span></div><div class='input'>  <span class='co'>## log-normalization</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://satijalab.org/seurat'>Seurat</a></span><span class='op'>)</span>
+  <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gendata_RNAExp.html'>gendata_RNAExp</a></span><span class='op'>(</span>height<span class='op'>=</span><span class='fl'>20</span>, width<span class='op'>=</span><span class='fl'>20</span>,p<span class='op'>=</span><span class='fl'>100</span>, K<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
+  <span class='co'>## log-normalization</span>
   <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://satijalab.org/seurat/reference/NormalizeData.html'>NormalizeData</a></span><span class='op'>(</span><span class='va'>seu</span><span class='op'>)</span>
   <span class='co'>##</span>
-  <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://satijalab.org/seurat/reference/FindVariableFeatures.html'>FindVariableFeatures</a></span><span class='op'>(</span><span class='va'>seu</span>, nfeatures<span class='op'>=</span><span class='fl'>800</span><span class='op'>)</span>
+  <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://satijalab.org/seurat/reference/FindVariableFeatures.html'>FindVariableFeatures</a></span><span class='op'>(</span><span class='va'>seu</span>, nfeatures<span class='op'>=</span><span class='fl'>80</span><span class='op'>)</span>
   <span class='co'>## Scale</span>
   <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://satijalab.org/seurat/reference/ScaleData.html'>ScaleData</a></span><span class='op'>(</span><span class='va'>seu</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Centering and scaling data matrix</span></div><div class='input'>  <span class='co'>## Run WPCA</span>
+  <span class='co'>## Run WPCA</span>
   <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'>RunWPCA</span><span class='op'>(</span><span class='va'>seu</span><span class='op'>)</span>
   <span class='va'>seu</span>
-</div><div class='output co'>#&gt; An object of class Seurat 
-#&gt; 1000 features across 1600 samples within 1 assay 
-#&gt; Active assay: RNA (1000 features, 800 variable features)
-#&gt;  1 dimensional reduction calculated: wpca</div><div class='input'>  <span class='co'>## Run tSNE based on wpca</span>
+  <span class='co'>## Run tSNE based on wpca</span>
   <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://satijalab.org/seurat/reference/RunTSNE.html'>RunTSNE</a></span><span class='op'>(</span><span class='va'>seu</span>, reduction<span class='op'>=</span><span class='st'>'wpca'</span><span class='op'>)</span>
   <span class='va'>seu</span>
-</div><div class='output co'>#&gt; An object of class Seurat 
-#&gt; 1000 features across 1600 samples within 1 assay 
-#&gt; Active assay: RNA (1000 features, 800 variable features)
-#&gt;  2 dimensional reductions calculated: wpca, tsne</div><div class='input'>  <span class='co'>## Find SVGs</span>
-  <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='FindSVGs.html'>FindSVGs</a></span><span class='op'>(</span><span class='va'>seu</span>, nfeatures<span class='op'>=</span><span class='fl'>800</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Find the spatially variables genes by SPARK-X...
-#&gt; ## ===== SPARK-X INPUT INFORMATION ==== 
-#&gt; ## number of total samples: 1600 
-#&gt; ## number of total genes: 1000 
-#&gt; ## Running with single core, may take some time 
-#&gt; ## Testing With Projection Kernel
-#&gt; ## Testing With Gaussian Kernel 1
-#&gt; ## Testing With Gaussian Kernel 2
-#&gt; ## Testing With Gaussian Kernel 3
-#&gt; ## Testing With Gaussian Kernel 4
-#&gt; ## Testing With Gaussian Kernel 5
-#&gt; ## Testing With Cosine Kernel 1
-#&gt; ## Testing With Cosine Kernel 2
-#&gt; ## Testing With Cosine Kernel 3
-#&gt; ## Testing With Cosine Kernel 4
-#&gt; ## Testing With Cosine Kernel 5</div><div class='input'>  <span class='op'>(</span><span class='va'>genes</span> <span class='op'>&lt;-</span> <span class='fu'><a href='topSVGs.html'>topSVGs</a></span><span class='op'>(</span><span class='va'>seu</span>, ntop<span class='op'>=</span><span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;  [1] "gene-1"  "gene-2"  "gene-3"  "gene-4"  "gene-5"  "gene-6"  "gene-7" 
-#&gt;  [8] "gene-8"  "gene-9"  "gene-10"</div><div class='input'>  <span class='fu'><a href='https://satijalab.org/seurat/reference/Idents.html'>Idents</a></span><span class='op'>(</span><span class='va'>seu</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"cluster"</span>, <span class='va'>seu</span><span class='op'>$</span><span class='va'>true_clusters</span><span class='op'>)</span>, levels<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"cluster"</span>,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='co'>## Find SVGs</span>
+  <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='FindSVGs.html'>FindSVGs</a></span><span class='op'>(</span><span class='va'>seu</span>, nfeatures<span class='op'>=</span><span class='fl'>80</span><span class='op'>)</span>
+  <span class='op'>(</span><span class='va'>genes</span> <span class='op'>&lt;-</span> <span class='fu'><a href='topSVGs.html'>topSVGs</a></span><span class='op'>(</span><span class='va'>seu</span>, ntop<span class='op'>=</span><span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='fu'><a href='https://satijalab.org/seurat/reference/Idents.html'>Idents</a></span><span class='op'>(</span><span class='va'>seu</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"cluster"</span>, <span class='va'>seu</span><span class='op'>$</span><span class='va'>true_clusters</span><span class='op'>)</span>, levels<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"cluster"</span>,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span><span class='op'>)</span><span class='op'>)</span>
   <span class='fu'><a href='https://satijalab.org/seurat/reference/RidgePlot.html'>RidgePlot</a></span><span class='op'>(</span><span class='va'>seu</span>, features <span class='op'>=</span> <span class='va'>genes</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>]</span>, ncol <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Picking joint bandwidth of 0.169</span></div><div class='output co'>#&gt; <span class='message'>Picking joint bandwidth of 0.0983</span></div><div class='img'><img src='RunWPCA-1.png' alt='' width='700' height='433' /></div><div class='input'>  <span class='fu'><a href='https://satijalab.org/seurat/reference/FeaturePlot.html'>FeaturePlot</a></span><span class='op'>(</span><span class='va'>seu</span>, features <span class='op'>=</span> <span class='va'>genes</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>]</span>, reduction <span class='op'>=</span> <span class='st'>'tsne'</span> ,ncol<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span>
-</div><div class='img'><img src='RunWPCA-2.png' alt='' width='700' height='433' /></div></pre>
+  <span class='fu'><a href='https://satijalab.org/seurat/reference/FeaturePlot.html'>FeaturePlot</a></span><span class='op'>(</span><span class='va'>seu</span>, features <span class='op'>=</span> <span class='va'>genes</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>]</span>, reduction <span class='op'>=</span> <span class='st'>'tsne'</span> ,ncol<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span>
+  <span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -231,7 +208,7 @@ covariance matrices. Journal of Econometrics, 200(1):59–78.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Wei Liu.</p>
+  <p>Developed by Wei Liu, Yi Yang, Xingjie Shi, Jin Liu.</p>
 </div>
 
 <div class="pkgdown">

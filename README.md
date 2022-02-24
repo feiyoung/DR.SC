@@ -12,8 +12,13 @@ install.packages("DR.SC")
 install.packages("remotes")
 remotes::install_github("feiyoung/DR.SC")
 ```
-
+## Setup on Linux or MacOS system
+For running big data, users can use the following system command to set the C_stack unlimited in case of `R Error: C stack usage is too close to the limit`.
+```{Linux}
+ulimit -s unlimited
+```
 
 # Demonstration
 
 For an example of typical DR.SC usage, please see our [Package vignette](https://feiyoung.github.io/DR.SC/index.html) for a demonstration and overview of the functions included in DR.SC.
+

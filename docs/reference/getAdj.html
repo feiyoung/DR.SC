@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculate the Adjoint matrix given the spatial coordinates — getAdj • DR.SC</title>
+<title>Calculate the adjacency matrix given the spatial coordinates — getAdj • DR.SC</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Calculate the Adjoint matrix given the spatial coordinates — getAdj" />
-<meta property="og:description" content="Calculate the Adjoint matrix for the spatial transcriptomics data measured on 10X Visium or ST platform as a Seurat object." />
+<meta property="og:title" content="Calculate the adjacency matrix given the spatial coordinates — getAdj" />
+<meta property="og:description" content="Calculate the adjacency matrix for the spatial transcriptomics data measured on 10X Visium or other platforms as a Seurat object." />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DR.SC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.6</span>
       </span>
     </div>
 
@@ -85,6 +85,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/DR-SC.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -95,10 +98,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/DR.SC.HCC1.html">DR-SC: HCC1 Data Analysis</a>
+      <a href="../articles/DR.SC.HCC1.html">DR-SC: DLPFC Data Analysis</a>
     </li>
     <li>
-      <a href="../articles/DR.SC.Simu.html">DR-SC: installation and simulation</a>
+      <a href="../articles/DR.SC.Simu.html">DR-SC: simulation</a>
     </li>
   </ul>
 </li>
@@ -118,54 +121,43 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculate the Adjoint matrix given the spatial coordinates</h1>
+    <h1>Calculate the adjacency matrix given the spatial coordinates</h1>
     
     <div class="hidden name"><code>getAdj.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Calculate the Adjoint matrix for the spatial transcriptomics data measured on 10X Visium or ST platform as a Seurat object.</p>
+    <p>Calculate the adjacency matrix for the spatial transcriptomics data measured on 10X Visium or other platforms as a Seurat object.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>getAdj</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span> 
-  <span class='co'>### S3 method for class "Seurat"</span>
-  <span class='co'>#getAdj(seu, platform = c('Visium', 'ST'))</span>
-  
-  <span class='co'>### S3 method for class "matrix"</span>
-  <span class='co'>#getAdj(pos, radius)</span></pre>
+    <pre class="usage"><span class='fu'>getAdj</span><span class='op'>(</span><span class='va'>obj</span>, platform <span class='op'>=</span><span class='st'>'Visium'</span><span class='op'>)</span>
+  <span class='co'>## getAdj(obj, platform = c('Visium', 'ST', "seqfish", </span>
+  <span class='co'>## 'merfish', 'slide-seqv2', 'seqscope'))</span>
+  <span class='co'># S3 method for Seurat</span>
+<span class='fu'>getAdj</span><span class='op'>(</span><span class='va'>obj</span>,platform <span class='op'>=</span><span class='st'>'Visium'</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>seu</th>
-      <td><p>an object of class "Seurat".</p></td>
+      <th>obj</th>
+      <td><p>an object with class "Seurat", there are spatial coordinates information in the metadata of obj, named "row" and "col", where first column is x-axis coordinate, the second column is y-axis coordinate. <a href='getAdj_manual.html'>getAdj_manual</a> and <a href='getAdj_auto.html'>getAdj_auto</a>  supports multi-dimensional spatial coordinates with a matrix as input.</p></td>
     </tr>
     <tr>
       <th>platform</th>
-      <td><p>a string, specify the platform of the provided data, default as "Visium". There are three platforms to be chosen, including "Visuim", "ST" and "scRNAseq", where the first two means there are spatial coordinates information in the metadata of seu, named "row" and "col" , and the last one "scRNAseq" means there is no spatial information in object seu. The platform helps to calculate the adjoint matrix by defining the neighborhoods.</p></td>
-    </tr>
-    <tr>
-      <th>pos</th>
-      <td><p>a matrix with d columns, typical one is the two columns where first column is x-axis coordinate, the second column is y-axis coordinate. This function support multi-dimensional spatial coordinates.</p></td>
-    </tr>
-    <tr>
-      <th>radius</th>
-      <td><p>a positive real, speficify the radius of Euclidean distance between two spots to define the neighbors. The radius is larger, then the neighbors will be more.</p></td>
+      <td><p>a string, specify the platform of the provided data, default as "Visium". There are many platforms to be supported, including ("Visuim", "ST", "SeqFISH", 'merFISH', 'slide-seqv2', 'seqscope', "HDST"), which means there are spatial coordinates information in the metadata of seu, named "row" and "col". The platform helps to calculate the adjacency matrix by defining the neighborhoods.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>For lattice grids, i.e., two-dimensional coordinates, the interior spot has four neighbors (left, right, up and down),the boundary spot has three neighbors, and the spot in the corner has two neighbors. For hexagon grids, such as spatial coordinate in 10X Visium platform, the interior spot has six neighbors. More flexible definition can be used if there are some additional information. And then use <code>getAdj.matrix</code> function to evalute the Adjoint matrix as a input for <a href='DR.SC.fit.html'>DR.SC.fit</a> to run DR-SC model.</p>
+    <p>For lattice grids, i.e., two-dimensional coordinates, the interior spot has four neighbors (left, right, up and down),the boundary spot has three neighbors, and the spot in the corner has two neighbors. For hexagon grids, such as spatial coordinate in 10X Visium platform, the interior spot has six neighbors. More flexible definition can be used if there are some additional information. And then use <a href='getAdj_manual.html'>getAdj_manual</a> function to evalute the adjacency matrix as a input for <a href='DR.SC_fit.html'>DR.SC_fit</a> to run DR-SC model.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Return a <code>dgCMatrix</code> object recording the information of neighborhoods about each spot.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    
-  
-
+    <p>None</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Wei Liu</p>
@@ -174,23 +166,13 @@
     <p>nothing</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'>
-  
-</div>
+    <div class='dont-index'><p><a href='getAdj_auto.html'>getAdj_auto</a>, <a href='getAdj_manual.html'>getAdj_manual</a>.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>  <span class='co'>## S3 method for class "Seurat"</span>
-  <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gendata_RNAExp.html'>gendata_RNAExp</a></span><span class='op'>(</span>height<span class='op'>=</span><span class='fl'>30</span>, width<span class='op'>=</span><span class='fl'>30</span>,p<span class='op'>=</span><span class='fl'>500</span>, K<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: The following arguments are not used: row.names</span></div><div class='input'>  <span class='va'>Adj_sp</span> <span class='op'>&lt;-</span> <span class='fu'>getAdj</span><span class='op'>(</span><span class='va'>seu</span>, platform <span class='op'>=</span> <span class='st'>'ST'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Neighbors were identified for 900 out of 900 spots.</span></div><div class='input'>  
-  <span class='co'>## S3 method for class "matrix"</span>
-  <span class='va'>pos</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>seu</span><span class='op'>$</span><span class='va'>row</span>, <span class='va'>seu</span><span class='op'>$</span><span class='va'>col</span><span class='op'>)</span>
-  <span class='va'>Adj_sp</span> <span class='op'>&lt;-</span> <span class='fu'>getAdj</span><span class='op'>(</span><span class='va'>pos</span>, radius<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span><span class='op'>(</span><span class='st'>"The number of neighborhoods for each spot is about: "</span>, <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/apply.html'>apply</a></span><span class='op'>(</span><span class='va'>Adj_sp</span>, <span class='fl'>1</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>==</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>4</span><span class='op'>]</span>, <span class='st'>'\n'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; The number of neighborhoods for each spot is about:  7.604444 </div><div class='input'>  <span class='co'>## To ensure thatST platform has 4 neighborhoods, we tune the 'radius' parameters to 1.4</span>
-  <span class='va'>Adj_sp</span> <span class='op'>&lt;-</span> <span class='fu'>getAdj</span><span class='op'>(</span><span class='va'>pos</span>, radius<span class='op'>=</span><span class='fl'>1.4</span><span class='op'>)</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span><span class='op'>(</span><span class='st'>"The number of neighborhoods for each spot is about: "</span>, <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/apply.html'>apply</a></span><span class='op'>(</span><span class='va'>Adj_sp</span>, <span class='fl'>1</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>==</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>4</span><span class='op'>]</span>, <span class='st'>'\n'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; The number of neighborhoods for each spot is about:  3.866667 </div></pre>
+  <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gendata_RNAExp.html'>gendata_RNAExp</a></span><span class='op'>(</span>height<span class='op'>=</span><span class='fl'>20</span>, width<span class='op'>=</span><span class='fl'>20</span>,p<span class='op'>=</span><span class='fl'>200</span>, K<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
+  <span class='va'>Adj_sp</span> <span class='op'>&lt;-</span> <span class='fu'>getAdj</span><span class='op'>(</span><span class='va'>seu</span>, platform <span class='op'>=</span> <span class='st'>'ST'</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Neighbors were identified for 400 out of 400 spots.</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -202,7 +184,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Wei Liu.</p>
+  <p>Developed by Wei Liu, Yi Yang, Xingjie Shi, Jin Liu.</p>
 </div>
 
 <div class="pkgdown">

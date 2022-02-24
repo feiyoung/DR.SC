@@ -5,10 +5,11 @@
   Intuitive way of visualizing how modified BIC values changes across different number of clusters
 }
 \usage{
-  mbicPlot(seu)
+  mbicPlot(seu, criteria="MBIC")
 }
 \arguments{
- \item{seu}{an object of class "Seurat" revised by \link{DR.SC} with argument \code{K=NULL}.}
+ \item{seu}{an object of class \code{Seurat} revised by \link{DR.SC} with argument \code{K=NULL}.}
+ \item{criteria}{a string specifying the information criteria such as AIC, BIC and MBIC to be plotted, default as MBIC.}
 }
 \details{
   Nothing
@@ -37,7 +38,7 @@ nothing
   # choose spatially variable features
   seu <- FindSVGs(seu)
   ## Just for illustrating the usage of mbicPlot
-  seu@tools$icMat <- data.frame(K=2:5, mbic=c(105, 101, 99, 108))
+  seu[["RNA"]]@misc[['icMat']] <- data.frame(K=2:5, MBIC=c(105, 101, 99, 108))
   mbicPlot(seu)
 
 }

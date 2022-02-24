@@ -363,10 +363,10 @@ topSVGs <- function(seu, ntop=5){
 
 
 
-DR.SC_fit <- function(X,Adj_sp=NULL, q=15, K= NULL,
-                            error.heter= TRUE, K_set = seq(2, 10), beta_grid=seq(0.5, 5, by=0.5),
-                            maxIter=25, epsLogLik=1e-5, verbose=FALSE, maxIter_ICM=6,pen.const=1,
-                            wpca.int=FALSE, parallel='parallel', num_core=5){
+DR.SC_fit <- function(X, K, Adj_sp=NULL, q=15,
+                            error.heter= TRUE, beta_grid=seq(0.5, 5, by=0.5),
+                            maxIter=25, epsLogLik=1e-5, verbose=FALSE, maxIter_ICM=6,
+                            wpca.int=FALSE, coreNum = length(K)){
   if (!(inherits(X, "dgCMatrix") || inherits(X, "matrix")))
     stop("X must be dgCMatrix object or matrix object")
   if(is.null(colnames(X))) colnames(X) <- paste0('gene', 1:ncol(X))
@@ -377,107 +377,92 @@ DR.SC_fit <- function(X,Adj_sp=NULL, q=15, K= NULL,
     X <- X[, sd_zeros !=0]
   }
    
-  
-  if(is.null(K)){
-    message("Start chooing number of clusters...\n")
-    message("The candidate set is: ", paste0(K_set, " "), '\n')
-    icMat <- selectClustNumber(X, Adj_sp, q, K_set= K_set, parallel=parallel, num_core = num_core, pen.const=pen.const)
-    K_best <- K_set[which.min(icMat[,"mbic"])]
-    message("The best number of cluster is: ", K_best, '\n')
-  }else{
-    K_best <- K
-  }
+
   message("Fit DR-SC model...\n")
-  resList <- simulDRcluster(X,Adj_sp = Adj_sp, q, K_best, error.heter= error.heter, 
-                            beta_grid=beta_grid,
-                            maxIter=maxIter, epsLogLik=epsLogLik, verbose=verbose, maxIter_ICM=maxIter_ICM,pen.const=pen.const,
-                            alpha=FALSE, wpca.int=wpca.int, diagSigmak=FALSE)
+  resList <- drsc(X,Adj_sp = Adj_sp, q=q, K=K, error.heter= error.heter, 
+                  beta_grid=beta_grid,maxIter=maxIter, epsLogLik=epsLogLik,
+                  verbose=verbose, maxIter_ICM=maxIter_ICM,
+                  alpha=FALSE, wpca.int=wpca.int, diagSigmak=FALSE, coreNum =coreNum)
   message("Finish DR-SC model fitting\n")
-  if(is.null(K)){
-    resList$K_best <- K_best
-    resList$icMat <- icMat
-  }
+  
   return(resList)
 }
-DR.SC <- function(seu, q=15, K=NULL, platform= "Visium",
-                  nfeatures=2000,K_set = seq(2, 10), variable.type="HVGs", ...) {
+DR.SC <- function(seu, K, q=15,  platform= "Visium", ...) {
   UseMethod("DR.SC")
 }
   
-DR.SC.Seurat <- function(seu, q=15, K=NULL, platform= "Visium",
-                         nfeatures=2000,K_set = seq(2, 10), variable.type="HVGs",...){
+DR.SC.Seurat <- function(seu, K, q=15,  platform= "Visium", ...){
   # require(Seurat)
   if (!inherits(seu, "Seurat"))
     stop("method is only for Seurat objects")
+  
   if(platform == 'scRNAseq'){
     Adj_sp <- NULL
   }else{
     Adj_sp <- getAdj(seu,  platform)
   }
-  if(nfeatures > nrow(seu)){
-    message('WARNING: nrow(seu) is less than nfeatures, so assign nfeatures with nrow(seu)!')
-    nfeatures <- nrow(seu)
-  }
+ 
+  
   assy <- DefaultAssay(seu)
   
-  if(variable.type=='HVGs'){
-    message("Using HVGs to fit DR.SC model since variable.type=HVGs...")
-    if(is.null(seu[[assy]]@var.features)){
-      message("variable.type=='HVGs': but there is no highly variable gene in Seruat!")
-      message("FindVariableFeatures function is used to find the highly variable genes automatically.")
-      seu <- FindVariableFeatures(seu, nfeatures = nfeatures)
-    }
-  }else{
-    message("Using SVGs to fit DR.SC model since variable.type=SVGs...")
-    if(is.null(seu[[assy]]@meta.features$is.SVGs)){
-      message("variable.type=='SVGs': but there is no spatially variable gene in Seruat!")
-      message("FindSVGs function is used to find the spatially variable genes automatically.")
-      # var.features <- row.names(seu)[seu[[assy]]@meta.features$is.SVGs]
-      seu <- FindSVGs(seu, nfeatures = nfeatures)
-    } 
-     
-  }
   
+  var.features <- seu[[assy]]@var.features
   
-  if(nfeatures > length(seu[[assy]]@var.features)){
-    message('WARNING: number of variable genes is less than nfeatures, 
-              so assign nfeatures with number of variable genes!')
-    nfeatures <- length(seu[[assy]]@var.features)
-  }
-  var.features <- seu[[assy]]@var.features[1:nfeatures]
+  X <- Matrix::t(seu[[assy]]@data[var.features, ])
   
-  if(is.null(seu[[assy]]@data)){
-    X <- Matrix::t(LogNormalize(seu[[assy]]@counts[var.features,]))
-  }else{
-    X <- Matrix::t(seu[[assy]]@data[var.features, ])
-  }
+  resList <- DR.SC_fit(X,Adj_sp = Adj_sp, q=q, K=K, ...)
   
+  # hZ <-resList$hZ
+  # row.names(hZ) <- colnames(seu)
+  # colnames(hZ) <- paste0('DR-SC', 1:q)
+  # seu@reductions$"dr-sc" <- CreateDimReducObject(embeddings = hZ, key='DRSC_', assay=DefaultAssay(seu))
+  # seu$spatial.drsc.cluster <- resList$cluster
+  # Idents(seu) <- factor(paste0("cluster", seu$spatial.drsc.cluster), levels=paste0('cluster',1:K))
+  # seu@tools <- resList[-c(1,2)]
+  seu[[assy]]@misc[['dr-scInf']] <- extractInfModel(resList)
+  seu <- selectModel(seu,  criteria = 'MBIC', pen.const=0.5)
   
-  resList <- DR.SC_fit(X,Adj_sp = Adj_sp, q=q, K=K,K_set =K_set, ...)
-  if(is.null(K)){
-    K <- resList$K_best
-  }
-  hZ <-resList$hZ
-  row.names(hZ) <- colnames(seu)
-  colnames(hZ) <- paste0('DR-SC', 1:q)
-  seu@reductions$"dr-sc" <- CreateDimReducObject(embeddings = hZ, key='DRSC_', assay=DefaultAssay(seu))
-  seu$spatial.drsc.cluster <- resList$cluster
-  Idents(seu) <- factor(paste0("cluster", seu$spatial.drsc.cluster), levels=paste0('cluster',1:K))
-  seu@tools <- resList[-c(1,2)]
   return(seu)
   
 }
 
 
-
+extractInfModel <- function(resList){
+  
+  
+  if(!inherits(resList, 'drscObject')) stop('extractInfModel: resList must be "drscObject" class!\n')
+  
+  nObj <- length(resList$Objdrsc)
+  if(nObj<1) stop("extractInfModel: the length of 'resList' is zero!")
+  if(nObj >= 1){
+    loglik_vec <- rep(NA, nObj)
+    dmat <- matrix(NA, nObj, 3)
+    colnames(dmat) <- c("n", "p", "df")
+    clusterList <- list()
+    hZList <- list()
+    for(i in 1:nObj){
+      loglik_vec[i] <- resList$Objdrsc[[i]]$loglik
+      dmat[i, ] <- resList$out_param[i, c(3,4,6)]
+      clusterList[[i]] <- resList$Objdrsc[[i]]$cluster
+      hZList[[i]] <- resList$Objdrsc[[i]]$hZ
+    }
+    
+    KinfMat <- cbind(K=resList$K_set,loglik=loglik_vec,dmat)
+    
+    return(list(clusterList=clusterList, hZList=hZList, KinfMat=KinfMat))
+  }
+  
+}
 
 ### This function includes the main methods: first is simultaneous dimension reduction and 
 ### clustering with homo variance error and no sptial information, second is the 
-### simulDRcluster with heter variance and no spatial information, and third is the
-### simulDRcluster with heter variance and spatial information
-simulDRcluster <- function(X,Adj_sp = NULL, q, K, error.heter= TRUE, beta_grid=seq(0.5, 5, by=0.5),
-                           maxIter=30, epsLogLik=1e-5, verbose=FALSE, maxIter_ICM=6,pen.const=0.5,
-                           alpha=FALSE, wpca.int=TRUE, diagSigmak=FALSE){
+### drsc with heter variance and no spatial information, and third is the
+### drsc with heter variance and spatial information
+### This version use parallel package to evalute initial values, then use multi-thread in C++
+### to evaluate Z and y in multi-K.
+drsc <- function(X,Adj_sp = NULL, q, K, error.heter= TRUE, beta_grid=seq(0.5, 5, by=0.5),
+                           maxIter=30, epsLogLik=1e-5, verbose=FALSE, maxIter_ICM=6,
+                           alpha=FALSE, wpca.int=TRUE, diagSigmak=FALSE, coreNum = length(K)){
   
   n <- nrow(X); p <- ncol(X)
   X <- scale(X, scale=FALSE)
@@ -485,7 +470,7 @@ simulDRcluster <- function(X,Adj_sp = NULL, q, K, error.heter= TRUE, beta_grid=s
     message("-------------------Calculate inital values-------------")
   }
   
-  # require(mclust)
+  
   tic <- proc.time()
   princ <- wpca(X, q, weighted=wpca.int)
   if(error.heter){
@@ -493,28 +478,50 @@ simulDRcluster <- function(X,Adj_sp = NULL, q, K, error.heter= TRUE, beta_grid=s
   }else{
     Lam_vec0 <- rep(mean(princ$Lam_vec), p)
   }
-  
   W0 <- princ$loadings
   hZ <- princ$PCs
-  mclus2 <- Mclust(hZ, G=K, verbose=FALSE)
-  toc_gmm <- proc.time() - tic
   
-  y <- mclus2$classification
-  if(alpha){
-    alpha0 <- mclus2$parameters$pro
+  rm(princ) ## delete the temporary variable.
+  
+  nK <- length(K)
+  if(nK>1){
+    message("Starting parallel computing intial values...")
+    ## set the number of cores in evaluating initial values by comparing nK with Cores*0.8
+    num_core <- ifelse(nK <= detectCores()*0.8, nK,  detectCores()*0.5)
+    if(Sys.info()[1]=="Windows"){
+      cl <- makeCluster(num_core)
+    }else{
+      cl <- makeCluster(num_core, type="FORK")
+    }
+    intList <- parLapply(cl, X=K, parfun_int, Z=hZ, alpha=alpha)
+    stopCluster(cl)
   }else{
-    alpha0 <- rep(0, K)
+    intList <- list(parfun_int(K, hZ, alpha))
   }
   
-  Mu0 <- t(mclus2$parameters$mean)
-  Sigma0 <- mclus2$parameters$variance$sigma
+  
+  
+  
+  alpha0List = list()
+  Mu0List = list()
+  Sigma0List = list()
+  ymat = matrix(0, n, nK)
+  Pi0List = list()
+  
+  for (kk in 1: nK){
+    
+    ymat[,kk] <- intList[[kk]]$yveck
+    alpha0List[[kk]] <-  intList[[kk]]$alpha0k
+    Mu0List[[kk]] <- intList[[kk]]$Mu0k
+    Sigma0List[[kk]] <- intList[[kk]]$Sigma0k
+    
+    Pi0List[[kk]] <- intList[[kk]]$Pi0k
+  }
+  rm(intList) ## delete the temporary variable.
   
   if(verbose){
     message("-------------------Finish computing inital values------------- ")
   }
-  
-  
-  
   
   if(verbose){
     verbose <- 1
@@ -526,18 +533,15 @@ simulDRcluster <- function(X,Adj_sp = NULL, q, K, error.heter= TRUE, beta_grid=s
     message("-------------------Starting  ICM-EM algortihm-------------")
   if((!is.null(Adj_sp))){
     
-    resList <- icmem_heterCpp(X, Adj_sp, y,  Mu0, W0, Sigma0,  Lam_vec0,
-                              alpha=alpha0,  beta_int=1.5, beta_grid=beta_grid, maxIter_ICM, maxIter, 
-                              epsLogLik, verbose, !error.heter, diagSigmak)
-    resList$aic <- -2.0* resList$loglik + (1+p*(q+1) + K*(q+q*(q+1)/2.0))* 2* log(log(p+n))*pen.const # adjusted  bic and aic for high dimension
-    resList$bic <-  -2.0* resList$loglik + (1+p*(q+1) + K*(q+q*(q+1)/2.0))* log(n)* log(log(p+n))*pen.const 
+    beta0 = matrix(1, length(K), 1)*1.5
+    resList <- icmem_heterCpp(X, Adj_sp, ymat,Mu0List, W0, Sigma0List,  Lam_vec0,
+                              alpha0List,  beta_int=beta0, beta_grid=beta_grid, maxIter_ICM, maxIter, 
+                              epsLogLik, verbose, !error.heter, diagSigmak, max(K), min(K), coreNum)
     
   }else if(is.null(Adj_sp)){
-    alpha0 <- mclus2$parameters$pro
-    resList <- EMmPCpp_heter(X, alpha0, Mu0, W0,Sigma0, Lam_vec0,maxIter, epsLogLik, 
-                             verbose, !error.heter, diagSigmak)
-    resList$aic <- -2.0* resList$loglik + (1+p*(q+1) + K*(q+q*(q+1)/2.0))* 2* log(log(p+n))*pen.const # adjusted  bic and aic for high dimension
-    resList$bic <-  -2.0* resList$loglik + (1+p*(q+1) + K*(q+q*(q+1)/2.0))* log(n)* log(log(p+n)) *pen.const
+    
+    resList <- EMmPCpp_heter(X, Pi0List, Mu0List, W0, Sigma0List, Lam_vec0, maxIter, epsLogLik, 
+                             verbose, !error.heter, diagSigmak, max(K), min(K), coreNum)
   }
   
   toc_heter <- proc.time() - tic
@@ -545,105 +549,121 @@ simulDRcluster <- function(X,Adj_sp = NULL, q, K, error.heter= TRUE, beta_grid=s
     message("-------------------Complete!-------------")
     message("elasped time is :", round(toc_heter[3], 2))
   }
-  resList$cluster_init <- y
-  time_used <- c(toc_gmm[3], toc_heter[3])
-  names(time_used) <- c("pcgmm", "simul")
-  resList$time <- time_used
+  resList$K_set <- K
+  
+  class(resList) <- "drscObject"
   return(resList)
 }
 
 
-# find_neighbors <- function(sce, platform='ST') {
-#   
-#   if (platform == "Visium") {
-#     ## Spots to left and right, two above, two below
-#     offsets <- data.frame(x.offset=c(-2, 2, -1,  1, -1, 1),
-#                           y.offset=c( 0, 0, -1, -1,  1, 1))
-#   } else if (platform == "ST") {
-#     ## L1 radius of 1 (spots above, right, below, and left)
-#     offsets <- data.frame(x.offset=c( 0, 1, 0, -1),
-#                           y.offset=c(-1, 0, 1,  0))
-#   } else {
-#     stop(".find_neighbors: Unsupported platform \"", platform, "\".")
-#   }
-#   
-#   ## Get array coordinates (and label by index of spot in SCE)
-#   spot.positions <- colData(sce)[, c("col", "row")]
-#   spot.positions$spot.idx <- seq_len(nrow(spot.positions))
-#   
-#   ## Compute coordinates of each possible spot neighbor
-#   neighbor.positions <- merge(spot.positions, offsets)
-#   neighbor.positions$x.pos <- neighbor.positions$col + neighbor.positions$x.offset
-#   neighbor.positions$y.pos <- neighbor.positions$row + neighbor.positions$y.offset
-#   
-#   ## Select spots that exist at neighbor coordinates
-#   neighbors <- merge(as.data.frame(neighbor.positions), 
-#                      as.data.frame(spot.positions), 
-#                      by.x=c("x.pos", "y.pos"), by.y=c("col", "row"),
-#                      suffixes=c(".primary", ".neighbor"),
-#                      all.x=TRUE)
-#   
-#   ## Shift to zero-indexing for C++
-#   #neighbors$spot.idx.neighbor <- neighbors$spot.idx.neighbor - 1
-#   
-#   ## Group neighbor indices by spot 
-#   ## (sort first for consistency with older implementation)
-#   neighbors <- neighbors[order(neighbors$spot.idx.primary, 
-#                                neighbors$spot.idx.neighbor), ]
-#   df_j <- split(neighbors$spot.idx.neighbor, neighbors$spot.idx.primary)
-#   df_j <- unname(df_j)
-#   
-#   ## Discard neighboring spots without spot data
-#   ## This can be implemented by eliminating `all.x=TRUE` above, but
-#   ## this makes it easier to keep empty lists for spots with no neighbors
-#   ## (as expected by C++ code)
-#   ## df_j <- map(df_j, function(nbrs) discard(nbrs, function(x) is.na(x)))
-#   df_j <- lapply(df_j, function(nbrs) discard(nbrs, function(x) is.na(x)))
-#   
-#   ## Log number of spots with neighbors
-#   n_with_neighbors <- length(keep(df_j, function(nbrs) length(nbrs) > 0))
-#   message("Neighbors were identified for ", n_with_neighbors, " out of ",
-#           ncol(sce), " spots.")
-#   
-#   n <- length(df_j) 
-#   
-#   D <- matrix(0,  nrow = n, ncol = n)
-#   for (i in 1:n) {
-#     if(length(df_j[[i]]) != 0)
-#       D[i, df_j[[i]]] <- 1
-#   }
-#   ij <- which(D != 0, arr.ind = T)
-#   ij
-# }
-# 
-# runAdj <- function(X, pos, platform='ST'){
-#   require(purrr)
-#   require(SingleCellExperiment)
-#   
-#   # make sce structure
-#   n <- nrow(X)
-#   p <- ncol(X)
-#   counts <- t(X)
-#   rownames(counts) <- paste0("gene_", seq_len(p))
-#   colnames(counts) <- paste0("spot_", seq_len(n))
-#   
-#   ## Make array coordinates - filled rectangle
-#   cdata <- list()
-#   cdata$row <- pos[,1]
-#   cdata$col <- pos[,2]
-#   cdata <- as.data.frame(do.call(cbind, cdata))
-#   cdata$imagerow <- cdata$row
-#   cdata$imagecol <- cdata$col 
-#   ## Make SCE
-#   ## note: scater::runPCA throws warning on our small sim data, so use prcomp
-#   sce <- SingleCellExperiment(assays=list(counts=counts), colData=cdata)
-#   ij <- find_neighbors(sce, platform)
-#   library(Matrix)
-#   Adj_sp <- sparseMatrix(ij[,1], ij[,2], x = 1)
-#   return(Adj_sp)
-# }
+
+mycluster <- function(Z, G){
+  
+  mclus2 <- Mclust(Z, G=G, verbose=FALSE)
+  return(mclus2)
+}
+
+parfun_int <- function(k, Z,  alpha){
+  
+  mclus2 <- mycluster(Z, k)
+  yveck <- mclus2$classification
+  
+  if(alpha){
+    alpha0k <- mclus2$parameters$pro
+  }else{
+    alpha0k <- rep(0, k)
+  }
+  
+  Mu0k <- t(mclus2$parameters$mean)
+  Sigma0k <- mclus2$parameters$variance$sigma
+  
+  Pi0k <- mclus2$parameters$pro
+  
+  return(list(yveck=yveck, alpha0k=alpha0k, Mu0k = Mu0k, Sigma0k=Sigma0k, Pi0k=Pi0k))
+}
 
 
+selectModel <- function(obj, criteria = 'MBIC', pen.const=1){
+  UseMethod("selectModel")
+}
+
+selectModel.drscObject <- function(obj, criteria = 'MBIC', pen.const=1){
+  
+  # select the best model based on the returned values from SimulDRcluster
+  if(!inherits(obj, 'drscObject')) 
+    stop('selectModel: method is only for Seurat or drscObject object!\n')
+  
+ 
+  reslist <- extractInfModel(obj)
+  dfInf <- reslist$KinfMat
+  K_set <- reslist$KinfMat[,"K"]
+  nK <- length(K_set)
+  icVec <-  rep(Inf, nK)
+  for(k in 1:nK){
+    # k <- 1
+    
+    n <- dfInf[k,3]; p <- dfInf[k,4];  dfree <- dfInf[k,5]
+    loglik <- dfInf[k, 2]
+    icVec[k] <- switch(criteria, 
+                         MAIC = -2.0* loglik +dfree * 2 * log(log(p+n))*pen.const,
+                         AIC = -2.0* loglik +dfree * 2,
+                         MBIC =  -2.0* loglik +dfree * log(n) * log(log(p+n))*pen.const, 
+                         BIC =  -2.0* loglik +dfree * log(n))
+      
+    
+    
+  }
+  min_indx <- which.min(icVec)
+  bestK <- K_set[min_indx]
+  icMat <- cbind(K=K_set, IC=icVec)
+
+  cluster_PCList <- list(bestK= bestK, cluster=as.vector(reslist$clusterList[[min_indx]]),
+                         hZ = reslist$hZList[[min_indx]], icMat=icMat)
+  return(cluster_PCList)
+  
+}
+
+selectModel.Seurat <- function(obj,  criteria = 'MBIC', pen.const=1){
+  if (!inherits(obj, "Seurat"))
+    stop("selectModel: method is only for Seurat or drscObject object")
+  
+  assy <- DefaultAssay(obj)
+  
+  reslist <- obj[[assy]]@misc[['dr-scInf']] 
+  dfInf <- reslist$KinfMat
+  K_set <- reslist$KinfMat[,"K"]
+  nK <- length(K_set)
+  
+  icMat <- matrix(Inf, nK, 3)
+  colnames(icMat) <- toupper(c("MBIC", "BIC", "AIC"))
+  for(k in 1:nK){
+    # k <- 1
+    
+    n <- dfInf[k,3]; p <- dfInf[k,4];  dfree <- dfInf[k,5]
+    loglik <- dfInf[k, 2]
+    icMat[k, ] <-c(MBIC =  -2.0* loglik +dfree * log(n) * log(log(p+n))*pen.const, 
+                     BIC =  -2.0* loglik +dfree * log(n),
+                       AIC = -2.0* loglik +dfree * 2)
+    
+    
+    
+  }
+  criteria <- toupper(criteria)
+  icVec <- icMat[,criteria]
+  min_indx <- which.min(icVec)
+  bestK <- K_set[min_indx]
+  icMat <- cbind(K=K_set, icMat)
+  
+  hZ <- reslist$hZList[[min_indx]]
+  row.names(hZ) <- colnames(obj)
+  colnames(hZ) <- paste0('DR-SC', 1: ncol(hZ))
+  obj@reductions$"dr-sc" <- CreateDimReducObject(embeddings = hZ, key='DRSC_', assay=assy)
+  obj$spatial.drsc.cluster <- as.vector(reslist$clusterList[[min_indx]])
+  Idents(obj) <- factor(paste0("cluster", obj$spatial.drsc.cluster), levels=paste0('cluster',1: bestK))
+  obj[[assy]]@misc[['icMat']] <- icMat 
+  
+  return(obj)
+}
 
 getAdj <- function(obj,platform ='Visium') UseMethod("getAdj")
 
@@ -836,106 +856,8 @@ getAdj_manual <- function(pos, radius){
 }
 
 
-# select cluster number K -------------------------------------------------
 
 
-
-selectClustNumber <- function(X,Adj_sp, q, K_set= 3:10, parallel="parallel", num_core = 1,...){
-  
-  
-  nK <- length(K_set)
-  if(!is.null(parallel)){
-    if (num_core > 1) {
-      if (num_core > parallel::detectCores()) {
-        warning("selectClustNumber:: the number of cores you're setting is larger than detected cores!")
-        num_core = parallel::detectCores()
-      }
-    }
-    
-    if(parallel=='parallel'){
-      #library(parallel)
-      
-      cl <- parallel::makeCluster(num_core)
-      # parallel::clusterExport(cl, list("simulDRcluster"))
-      ## "EMmPCpp_heter", "icmem_heterCpp",
-      message("Starting parallel computing...")
-      # clusterCall(cl, function() library(MixPPCA))
-      # Run
-      icMat <- parSapply(cl, X=K_set, parafun1, XX=X, Adj_sp=Adj_sp, q=q, ...)
-      parallel::stopCluster(cl)
-      icMat <- t(icMat)
-    }
-      
-  }else{
-    icMat <- matrix(NA, nK, 2)
-    pb <- txtProgressBar()
-    for(k in 1:nK){
-      reslist <- simulDRcluster(X,Adj_sp = Adj_sp, q=q, K=K_set[k],  ...) 
-      setTxtProgressBar(pb, k)
-      icMat[k, ] <- c(reslist$bic, reslist$aic)
-    }
-    close(pb)
-  }
-  
-  
-  
-  
-  icMat <- cbind(K_set, icMat)
-  colnames(icMat) <- c("K", 'mbic', 'aic')
-  row.names(icMat) <- as.character(K_set)
-  return(icMat)
-}
-parafun1 <- function(K, XX, Adj_sp, q, ...){
-  reslist <- simulDRcluster(XX,Adj_sp = Adj_sp, q=q, K=K,  ...) 
-  
-  return(c(reslist$bic, reslist$aic))
-}
-
-
-# select factor number q --------------------------------------------------
-
-selectFacNumber <- function(X, qmax=15){
-  mnlamjFun <- function(eigvals, j){
-    p <- length(eigvals)
-    lamj <- eigvals[j]
-    Sum <- 0
-    for(l in (j+1):p){
-      Sum <- Sum + 1/(eigvals[l] - lamj)
-    }
-    res <- Sum + 1/ ((3*lamj + eigvals[j+1])/4 - lamj)
-    return(res/(p-j))
-  }
-  mtnlamjFun <- function(n, eigvals, j){
-    p <- length(eigvals)
-    rhojn <-  (p-j)/(n-1)
-    res <- -(1-rhojn)/ eigvals[j] + rhojn * mnlamjFun(eigvals, j)
-    return(res)
-  }
-  ##Reference: Fan, J., Guo, J., & Zheng, S. (2020). Estimating number of factors by adjusted eigenvalues thresholding. Journal of the American Statistical Association, 1-10.
-  n <- nrow(X)
-  p <- ncol(X)
-  corMat <- cor(X)
-  evalues <- eigen(corMat)$values
-  hq1 <- sum(evalues>1+sqrt(p/(n-1)))
-  if(hq1 < 15){
-    hq <- hq1
-  }else{ # ajdust the eigvalues
-    adj.eigvals <- sapply(1:(p-1), function(j) -1/mtnlamjFun(n, evalues, j))
-    hq <- sum(adj.eigvals >1) # overselect
-  }
-  if(hq > qmax || hq < 5) hq <- qmax
-  
-  
-  
-  
-  
-  propvar <- sum(evalues[1:hq]) / sum(evalues)
-  res <- list()
-  res$q <- hq
-  res$propvar <- sum(evalues[1:hq]) / sum(evalues)
-  
-  return(res)
-}
 
 
 
@@ -1016,3 +938,201 @@ RunWPCA.dgCMatrix<- function(object, q=15){
 
 
 
+
+
+
+# Previous core functions  Code in previous package-------------------------------------------------
+
+
+simulDRcluster <- function(X,Adj_sp = NULL, q, K, error.heter= TRUE, beta_grid=seq(0.5, 5, by=0.5),
+                           maxIter=30, epsLogLik=1e-5, verbose=FALSE, maxIter_ICM=6,pen.const=0.5,
+                           alpha=FALSE, wpca.int=TRUE, diagSigmak=FALSE){
+  
+  n <- nrow(X); p <- ncol(X)
+  X <- scale(X, scale=FALSE)
+  if(verbose){
+    message("-------------------Calculate inital values-------------")
+  }
+  
+  # require(mclust)
+  tic <- proc.time()
+  princ <- wpca(X, q, weighted=wpca.int)
+  if(error.heter){
+    Lam_vec0 <- princ$Lam_vec
+  }else{
+    Lam_vec0 <- rep(mean(princ$Lam_vec), p)
+  }
+  
+  W0 <- princ$loadings
+  hZ <- princ$PCs
+  mclus2 <- Mclust(hZ, G=K, verbose=FALSE)
+  toc_gmm <- proc.time() - tic
+  
+  y <- mclus2$classification
+  if(alpha){
+    alpha0 <- mclus2$parameters$pro
+  }else{
+    alpha0 <- rep(0, K)
+  }
+  
+  Mu0 <- t(mclus2$parameters$mean)
+  Sigma0 <- mclus2$parameters$variance$sigma
+  
+  alpha0List = list()
+  Mu0List = list()
+  Sigma0List = list()
+  
+  ymat = matrix(0, n, 1)
+  Pi0List = list()
+  
+  for (kk in 1: 1){
+    
+    ymat[,kk] <- y
+    alpha0List[[kk]] <-  alpha0
+    Mu0List[[kk]] <- Mu0
+    Sigma0List[[kk]] <- Sigma0
+    
+    Pi0List[[kk]] <- mclus2$parameters$pro
+  }
+  
+  if(verbose){
+    message("-------------------Finish computing inital values------------- ")
+  }
+  
+  
+  
+  
+  if(verbose){
+    verbose <- 1
+  }else{
+    verbose <- 0
+  }
+  
+  if(verbose)
+    message("-------------------Starting  ICM-EM algortihm-------------")
+  if((!is.null(Adj_sp))){
+    
+    resList <- icmem_heterCpp(X, Adj_sp, ymat,Mu0List, W0, Sigma0List,  Lam_vec0,
+                              alpha0List,  beta_int=1.5, beta_grid=beta_grid, maxIter_ICM, maxIter, 
+                              epsLogLik, verbose, !error.heter, diagSigmak, max(K), min(K), 1)
+    resList <- resList[[1]][[1]]
+    resList$aic <- -2.0* resList$loglik + (1+p*(q+1) + K*(q+q*(q+1)/2.0))* 2* log(log(p+n))*pen.const # adjusted  bic and aic for high dimension
+    resList$bic <-  -2.0* resList$loglik + (1+p*(q+1) + K*(q+q*(q+1)/2.0))* log(n)* log(log(p+n))*pen.const 
+    
+  }else if(is.null(Adj_sp)){
+    
+    resList <- EMmPCpp_heter(X, Pi0List, Mu0List, W0, Sigma0List, Lam_vec0, maxIter, 
+                             epsLogLik, 
+                             verbose, !error.heter, diagSigmak, max(K), min(K), 1)
+    resList <- resList[[1]][[1]]
+    resList$aic <- -2.0* resList$loglik + (1+p*(q+1) + K*(q+q*(q+1)/2.0))* 2* log(log(p+n))*pen.const # adjusted  bic and aic for high dimension
+    resList$bic <-  -2.0* resList$loglik + (1+p*(q+1) + K*(q+q*(q+1)/2.0))* log(n)* log(log(p+n)) *pen.const
+  }
+  
+  toc_heter <- proc.time() - tic
+  if(verbose) {
+    message("-------------------Complete!-------------")
+    message("elasped time is :", round(toc_heter[3], 2))
+  }
+  resList$cluster_init <- y
+  time_used <- c(toc_gmm[3], toc_heter[3])
+  names(time_used) <- c("pcgmm", "simul")
+  resList$time <- time_used
+  return(resList)
+}
+selectClustNumber <- function(X,Adj_sp=NULL, q, K_set= 3:10, parallel="parallel", num_core = 1,...){
+  
+  
+  nK <- length(K_set)
+  if(!is.null(parallel)){
+    if (num_core > 1) {
+      if (num_core > parallel::detectCores()) {
+        warning("selectClustNumber:: the number of cores you're setting is larger than detected cores!")
+        num_core = parallel::detectCores()
+      }
+    }
+    
+    if(parallel=='parallel'){
+      #library(parallel)
+      
+      cl <- parallel::makeCluster(num_core)
+      # parallel::clusterExport(cl, list("simulDRcluster"))
+      ## "EMmPCpp_heter", "icmem_heterCpp",
+      message("Starting parallel computing...")
+      # clusterCall(cl, function() library(MixPPCA))
+      # Run
+      icMat <- parSapply(cl, X=K_set, parafun1, XX=X, Adj_sp=Adj_sp, q=q, ...)
+      parallel::stopCluster(cl)
+      icMat <- t(icMat)
+    }
+    
+  }else{
+    icMat <- matrix(NA, nK, 2)
+    pb <- txtProgressBar()
+    for(k in 1:nK){
+      reslist <- simulDRcluster(X,Adj_sp = Adj_sp, q=q, K=K_set[k],  ...) 
+      setTxtProgressBar(pb, k)
+      icMat[k, ] <- c(reslist$bic, reslist$aic)
+    }
+    close(pb)
+  }
+  
+  
+  
+  
+  icMat <- cbind(K_set, icMat)
+  colnames(icMat) <- c("K", 'mbic', 'aic')
+  row.names(icMat) <- as.character(K_set)
+  return(icMat)
+}
+parafun1 <- function(K, XX, Adj_sp, q, ...){
+  reslist <- simulDRcluster(XX,Adj_sp = Adj_sp, q=q, K=K,  ...) 
+  
+  return(c(reslist$bic, reslist$aic))
+}
+
+
+# select factor number q --------------------------------------------------
+
+selectFacNumber <- function(X, qmax=15){
+  mnlamjFun <- function(eigvals, j){
+    p <- length(eigvals)
+    lamj <- eigvals[j]
+    Sum <- 0
+    for(l in (j+1):p){
+      Sum <- Sum + 1/(eigvals[l] - lamj)
+    }
+    res <- Sum + 1/ ((3*lamj + eigvals[j+1])/4 - lamj)
+    return(res/(p-j))
+  }
+  mtnlamjFun <- function(n, eigvals, j){
+    p <- length(eigvals)
+    rhojn <-  (p-j)/(n-1)
+    res <- -(1-rhojn)/ eigvals[j] + rhojn * mnlamjFun(eigvals, j)
+    return(res)
+  }
+  ##Reference: Fan, J., Guo, J., & Zheng, S. (2020). Estimating number of factors by adjusted eigenvalues thresholding. Journal of the American Statistical Association, 1-10.
+  n <- nrow(X)
+  p <- ncol(X)
+  corMat <- cor(X)
+  evalues <- eigen(corMat)$values
+  hq1 <- sum(evalues>1+sqrt(p/(n-1)))
+  if(hq1 < 15){
+    hq <- hq1
+  }else{ # ajdust the eigvalues
+    adj.eigvals <- sapply(1:(p-1), function(j) -1/mtnlamjFun(n, evalues, j))
+    hq <- sum(adj.eigvals >1) # overselect
+  }
+  if(hq > qmax || hq < 5) hq <- qmax
+  
+  
+  
+  
+  
+  propvar <- sum(evalues[1:hq]) / sum(evalues)
+  res <- list()
+  res$q <- hq
+  res$propvar <- sum(evalues[1:hq]) / sum(evalues)
+  
+  return(res)
+}

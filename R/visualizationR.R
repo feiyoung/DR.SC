@@ -1,16 +1,22 @@
 
-mbicPlot <- function(seu){
+mbicPlot <- function(seu, criteria="MBIC"){
   
   if (!inherits(seu, "Seurat"))
     stop("seu must be a Seurat object!")
-  if(is.null(seu@tools$icMat)) stop("There is no MBIC-related information in 'seu' object!")
+  
+  assy <- DefaultAssay(seu)
+  
+  if(is.null(seu[[assy]]@misc$icMat)) stop("There is no MBIC-related information in 'seu' object!")
   # library(ggplot2)
   
-  icMat <- as.data.frame(seu@tools$icMat)
   
-  #K <- icMat$K; mbic <- icMat$mbic
+  icMat <- as.data.frame(seu[[assy]]@misc$icMat)
+  if(nrow(icMat)<2) stop("mbicPlot: there are less than two candidates in K!")
+  
+  criteria <- toupper(criteria)
   ggplot(data=icMat,
-         aes_string(x='K', y='mbic')) + geom_line(size=1) + cowplot::theme_cowplot() + ylab("MBIC")
+         aes_string(x='K', y=criteria)) + geom_line(size=1) + cowplot::theme_cowplot() + 
+    ylab(paste0(criteria, " value"))
 }
 
 spatialPlotClusters <- function(seu){

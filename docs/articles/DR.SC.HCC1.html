@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DR-SC: HCC1 Data Analysis • DR.SC</title>
+<title>DR-SC: DLPFC Data Analysis • DR.SC</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="DR-SC: HCC1 Data Analysis">
+<script src="../pkgdown.js"></script><meta property="og:title" content="DR-SC: DLPFC Data Analysis">
 <meta property="og:description" content="DR.SC">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DR.SC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.6</span>
       </span>
     </div>
 
@@ -44,6 +44,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/DR-SC.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -54,10 +57,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/DR.SC.HCC1.html">DR-SC: HCC1 Data Analysis</a>
+      <a href="../articles/DR.SC.HCC1.html">DR-SC: DLPFC Data Analysis</a>
     </li>
     <li>
-      <a href="../articles/DR.SC.Simu.html">DR-SC: installation and simulation</a>
+      <a href="../articles/DR.SC.Simu.html">DR-SC: simulation</a>
     </li>
   </ul>
 </li>
@@ -75,10 +78,10 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>DR-SC: HCC1 Data Analysis</h1>
+      <h1 data-toc-skip>DR-SC: DLPFC Data Analysis</h1>
                         <h4 class="author">Wei Liu</h4>
             
-            <h4 class="date">2021-10-06</h4>
+            <h4 class="date">2022-02-23</h4>
       
       
       <div class="hidden name"><code>DR.SC.HCC1.Rmd</code></div>
@@ -90,173 +93,56 @@
 <p>The package can be loaded with the command:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st">"DR.SC"</span><span class="op">)</span>
-<span class="co">#&gt; Loading required package: mclust</span>
-<span class="co">#&gt; Package 'mclust' version 5.4.7</span>
-<span class="co">#&gt; Type 'citation("mclust")' for citing this R package in publications.</span>
-<span class="co">#&gt; Loading required package: Matrix</span>
-<span class="co">#&gt; Loading required package: SingleCellExperiment</span>
-<span class="co">#&gt; Loading required package: SummarizedExperiment</span>
-<span class="co">#&gt; Loading required package: MatrixGenerics</span>
-<span class="co">#&gt; Loading required package: matrixStats</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'MatrixGenerics'</span>
-<span class="co">#&gt; The following objects are masked from 'package:matrixStats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,</span>
-<span class="co">#&gt;     colCounts, colCummaxs, colCummins, colCumprods, colCumsums,</span>
-<span class="co">#&gt;     colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,</span>
-<span class="co">#&gt;     colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,</span>
-<span class="co">#&gt;     colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,</span>
-<span class="co">#&gt;     colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,</span>
-<span class="co">#&gt;     colWeightedMeans, colWeightedMedians, colWeightedSds,</span>
-<span class="co">#&gt;     colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,</span>
-<span class="co">#&gt;     rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,</span>
-<span class="co">#&gt;     rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,</span>
-<span class="co">#&gt;     rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,</span>
-<span class="co">#&gt;     rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,</span>
-<span class="co">#&gt;     rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,</span>
-<span class="co">#&gt;     rowWeightedMads, rowWeightedMeans, rowWeightedMedians,</span>
-<span class="co">#&gt;     rowWeightedSds, rowWeightedVars</span>
-<span class="co">#&gt; Loading required package: GenomicRanges</span>
-<span class="co">#&gt; Loading required package: stats4</span>
-<span class="co">#&gt; Loading required package: BiocGenerics</span>
-<span class="co">#&gt; Warning: package 'BiocGenerics' was built under R version 4.0.5</span>
 <span class="co">#&gt; Loading required package: parallel</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'BiocGenerics'</span>
-<span class="co">#&gt; The following objects are masked from 'package:parallel':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,</span>
-<span class="co">#&gt;     clusterExport, clusterMap, parApply, parCapply, parLapply,</span>
-<span class="co">#&gt;     parLapplyLB, parRapply, parSapply, parSapplyLB</span>
-<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     IQR, mad, sd, var, xtabs</span>
-<span class="co">#&gt; The following objects are masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     anyDuplicated, append, as.data.frame, basename, cbind, colnames,</span>
-<span class="co">#&gt;     dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,</span>
-<span class="co">#&gt;     grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,</span>
-<span class="co">#&gt;     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,</span>
-<span class="co">#&gt;     rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,</span>
-<span class="co">#&gt;     union, unique, unsplit, which.max, which.min</span>
-<span class="co">#&gt; Loading required package: S4Vectors</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'S4Vectors'</span>
-<span class="co">#&gt; The following object is masked from 'package:Matrix':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     expand</span>
-<span class="co">#&gt; The following object is masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     expand.grid</span>
-<span class="co">#&gt; Loading required package: IRanges</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'IRanges'</span>
-<span class="co">#&gt; The following object is masked from 'package:grDevices':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     windows</span>
-<span class="co">#&gt; Loading required package: GenomeInfoDb</span>
-<span class="co">#&gt; Warning: package 'GenomeInfoDb' was built under R version 4.0.5</span>
-<span class="co">#&gt; Loading required package: Biobase</span>
-<span class="co">#&gt; Welcome to Bioconductor</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     Vignettes contain introductory material; view with</span>
-<span class="co">#&gt;     'browseVignettes()'. To cite Bioconductor, see</span>
-<span class="co">#&gt;     'citation("Biobase")', and for packages 'citation("pkgname")'.</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'Biobase'</span>
-<span class="co">#&gt; The following object is masked from 'package:MatrixGenerics':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     rowMedians</span>
-<span class="co">#&gt; The following objects are masked from 'package:matrixStats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     anyMissing, rowMedians</span>
-<span class="co">#&gt; Loading required package: MASS</span>
-<span class="co">#&gt; Warning: package 'MASS' was built under R version 4.0.4</span>
-<span class="co">#&gt; Loading required package: purrr</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'purrr'</span>
-<span class="co">#&gt; The following object is masked from 'package:GenomicRanges':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     reduce</span>
-<span class="co">#&gt; The following object is masked from 'package:IRanges':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     reduce</span>
-<span class="co">#&gt; The following object is masked from 'package:mclust':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     map</span>
-<span class="co">#&gt; Loading required package: doSNOW</span>
-<span class="co">#&gt; Warning: package 'doSNOW' was built under R version 4.0.5</span>
-<span class="co">#&gt; Loading required package: foreach</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'foreach'</span>
-<span class="co">#&gt; The following objects are masked from 'package:purrr':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     accumulate, when</span>
-<span class="co">#&gt; Loading required package: iterators</span>
-<span class="co">#&gt; Loading required package: snow</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'snow'</span>
-<span class="co">#&gt; The following objects are masked from 'package:BiocGenerics':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,</span>
-<span class="co">#&gt;     clusterExport, clusterMap, clusterSplit, parApply, parCapply,</span>
-<span class="co">#&gt;     parLapply, parRapply, parSapply</span>
-<span class="co">#&gt; The following objects are masked from 'package:parallel':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,</span>
-<span class="co">#&gt;     clusterExport, clusterMap, clusterSplit, makeCluster, parApply,</span>
-<span class="co">#&gt;     parCapply, parLapply, parRapply, parSapply, splitIndices,</span>
-<span class="co">#&gt;     stopCluster</span>
-<span class="co">#&gt; Loading required package: Seurat</span>
-<span class="co">#&gt; Attaching SeuratObject</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'Seurat'</span>
-<span class="co">#&gt; The following object is masked from 'package:SummarizedExperiment':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     Assays</span>
-<span class="co">#&gt; Loading required package: RColorBrewer</span>
-<span class="co">#&gt; Loading required package: ggplot2</span></code></pre></div>
-<div id="fit-dr-sc-using-real-data-crc" class="section level2">
+<span class="co">#&gt; Loading required package: spatstat.geom</span>
+<span class="co">#&gt; Warning: package 'spatstat.geom' was built under R version 4.0.5</span>
+<span class="co">#&gt; Loading required package: spatstat.data</span>
+<span class="co">#&gt; Warning: package 'spatstat.data' was built under R version 4.0.4</span>
+<span class="co">#&gt; spatstat.geom 2.3-0</span>
+<span class="co">#&gt; DR.SC :  Joint dimension reduction and spatial clustering is conducted for</span>
+<span class="co">#&gt; Single-cell RNA sequencing and spatial transcriptomics data, and more details can be referred to</span>
+<span class="co">#&gt; Wei Liu, Xu Liao, Yi Yang, Huazhen Lin, Joe Yeong, Xiang Zhou, Xingjie Shi and Jin Liu. (2022) &lt;doi:10.1101/2021.12.25.474153&gt;. It is not only computationally efficient and scalable to the sample size increment, but also is capable of choosing the smoothness parameter and the number of clusters as well.</span></code></pre></div>
+<div id="fit-dr-sc-using-real-data-hcc1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#fit-dr-sc-using-real-data-crc" class="anchor"></a>Fit DR-SC using real data CRC</h2>
+<a href="#fit-dr-sc-using-real-data-hcc1" class="anchor"></a>Fit DR-SC using real data HCC1</h2>
 <div id="load-the-data-hcc1-in-package-dr-sc" class="section level3">
 <h3 class="hasAnchor">
 <a href="#load-the-data-hcc1-in-package-dr-sc" class="anchor"></a>load the data HCC1 in package DR.SC</h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"HCC1"</span>, package <span class="op">=</span> <span class="st">'DR.SC'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"dlpfc151510"</span>, package <span class="op">=</span> <span class="st">'DR.SC'</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="data-preprocessing" class="section level3">
 <h3 class="hasAnchor">
 <a href="#data-preprocessing" class="anchor"></a>Data preprocessing</h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># standard log-normalization</span>
-<span class="va">HCC1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html">NormalizeData</a></span><span class="op">(</span><span class="va">HCC1</span><span class="op">)</span>
-<span class="co"># choose 2000 highly variable features</span>
-<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html">FindVariableFeatures</a></span><span class="op">(</span><span class="va">HCC1</span>, nfeatures <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span>
+<span class="co">#&gt; Attaching SeuratObject</span>
+<span class="co"># standard log-normalization</span>
+<span class="va">dlpfc151510</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html">NormalizeData</a></span><span class="op">(</span><span class="va">dlpfc151510</span>, verbose <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
+<span class="co"># choose 500 highly variable features</span>
+<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html">FindVariableFeatures</a></span><span class="op">(</span><span class="va">dlpfc151510</span>, nfeatures <span class="op">=</span> <span class="fl">500</span>, verbose <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
-<div id="fit-dr-sc-model-using-2000-highly-variable-features" class="section level2">
+<div id="fit-dr-sc-model-using-1000-highly-variable-features" class="section level2">
 <h2 class="hasAnchor">
-<a href="#fit-dr-sc-model-using-2000-highly-variable-features" class="anchor"></a>Fit DR-SC model using 2000 highly variable features</h2>
+<a href="#fit-dr-sc-model-using-1000-highly-variable-features" class="anchor"></a>Fit DR-SC model using 1000 highly variable features</h2>
 <p>We set the argument variable.type=‘HVGs’ (default option) to use the highly variable genes.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">### Given K</span>
-<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DR.SC.html">DR.SC</a></span><span class="op">(</span><span class="va">seu</span>, K<span class="op">=</span><span class="fl">6</span>, platform <span class="op">=</span> <span class="st">'Visium'</span>, variable.type <span class="op">=</span> <span class="st">'HVGs'</span>,verbose<span class="op">=</span><span class="cn">F</span><span class="op">)</span>
-<span class="co">#&gt; Neighbors were identified for 2982 out of 2983 spots.</span>
+<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DR.SC.html">DR.SC</a></span><span class="op">(</span><span class="va">seu</span>, K<span class="op">=</span><span class="fl">7</span>, platform <span class="op">=</span> <span class="st">'Visium'</span>, verbose<span class="op">=</span><span class="cn">F</span><span class="op">)</span>
+<span class="co">#&gt; Neighbors were identified for 4634 out of 4634 spots.</span>
 <span class="co">#&gt; Fit DR-SC model...</span>
-<span class="co">#&gt; elasped time is : 165.89 11.43 179.86 NA NA </span>
 <span class="co">#&gt; Finish DR-SC model fitting</span></code></pre></div>
 <div id="visualization" class="section level3">
 <h3 class="hasAnchor">
 <a href="#visualization" class="anchor"></a>Visualization</h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/spatialPlotClusters.html">spatialPlotClusters</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span></code></pre></div>
-<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>Show the tSNE plot based on the extracted features from DR-SC.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/drscPlot.html">drscPlot</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span></code></pre></div>
-<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 <p>Show the UMAP plot based on the extracted features from DR-SC.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/drscPlot.html">drscPlot</a></span><span class="op">(</span><span class="va">seu</span>, visu.method <span class="op">=</span> <span class="st">'UMAP'</span><span class="op">)</span>
@@ -266,21 +152,20 @@
 <span class="co">#&gt; Warning: Invalid name supplied, making object name syntactically valid. New</span>
 <span class="co">#&gt; object name is RunUMAP.RNA.dr.sc; see ?make.names for more details on syntax</span>
 <span class="co">#&gt; validity</span></code></pre></div>
-<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 </div>
 </div>
-<div id="fit-dr-sc-model-using-2000-spatially-variable-features" class="section level2">
+<div id="fit-dr-sc-model-using-480-spatially-variable-features" class="section level2">
 <h2 class="hasAnchor">
-<a href="#fit-dr-sc-model-using-2000-spatially-variable-features" class="anchor"></a>Fit DR-SC model using 2000 spatially variable features</h2>
+<a href="#fit-dr-sc-model-using-480-spatially-variable-features" class="anchor"></a>Fit DR-SC model using 480 spatially variable features</h2>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># choose 2000 spatially variable features</span>
-<span class="va">seus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FindSVGs.html">FindSVGs</a></span><span class="op">(</span><span class="va">seu</span>, nfeatures <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span>
-<span class="co">#&gt; Loading required package: SPARK</span>
+<code class="sourceCode R"><span class="co"># choose 480 spatially variable features</span>
+<span class="va">seus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FindSVGs.html">FindSVGs</a></span><span class="op">(</span><span class="va">seu</span>, nfeatures <span class="op">=</span> <span class="fl">480</span><span class="op">)</span>
 <span class="co">#&gt; Find the spatially variables genes by SPARK-X...</span>
-<span class="co">#&gt; ## ===== SPARK-X INPUT INFORMATION ==== </span>
-<span class="co">#&gt; ## number of total samples: 2983 </span>
-<span class="co">#&gt; ## number of total genes: 4000 </span>
-<span class="co">#&gt; ## Running with single core, may take some time </span>
+<span class="co">#&gt; ## ===== SPARK-X INPUT INFORMATION ====</span>
+<span class="co">#&gt; ## number of total samples: 4634</span>
+<span class="co">#&gt; ## number of total genes: 500</span>
+<span class="co">#&gt; ## Running with single core, may take some time</span>
 <span class="co">#&gt; ## Testing With Projection Kernel</span>
 <span class="co">#&gt; ## Testing With Gaussian Kernel 1</span>
 <span class="co">#&gt; ## Testing With Gaussian Kernel 2</span>
@@ -295,15 +180,38 @@
 <p>We set the argument variable.type=‘SVGs’ (default option) to use the spatially variable genes.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">### Given K</span>
-<span class="va">seus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DR.SC.html">DR.SC</a></span><span class="op">(</span><span class="va">seus</span>, K<span class="op">=</span><span class="fl">6</span>, platform <span class="op">=</span> <span class="st">'Visium'</span>, variable.type<span class="op">=</span><span class="st">'SVGs'</span>, verbose<span class="op">=</span><span class="cn">T</span><span class="op">)</span>
-<span class="co">#&gt; Neighbors were identified for 2982 out of 2983 spots.</span>
-<span class="co">#&gt; Using SVGs to fit DR.SC model since variable.type=SVGs...</span>
+<span class="va">seus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DR.SC.html">DR.SC</a></span><span class="op">(</span><span class="va">seus</span>, K<span class="op">=</span><span class="fl">7</span>, platform <span class="op">=</span> <span class="st">'Visium'</span>, verbose<span class="op">=</span><span class="cn">T</span><span class="op">)</span>
+<span class="co">#&gt; Neighbors were identified for 4634 out of 4634 spots.</span>
 <span class="co">#&gt; Fit DR-SC model...</span>
-<span class="co">#&gt; -------------------Calculate inital values------------- </span>
-<span class="co">#&gt; -------------------Finish computing inital values------------- </span>
-<span class="co">#&gt; -------------------Starting  EM algortihm------------- </span>
-<span class="co">#&gt; -------------------Complete!------------- </span>
-<span class="co">#&gt; elasped time is : 131.42 10.26 140.95 NA NA </span>
+<span class="co">#&gt; -------------------Calculate inital values-------------</span>
+<span class="co">#&gt; -------------------Finish computing inital values-------------</span>
+<span class="co">#&gt; -------------------Starting  ICM-EM algortihm-------------</span>
+<span class="co">#&gt; iter = 2, loglik= -1228522.642564, dloglik=0.999428 </span>
+<span class="co">#&gt; iter = 3, loglik= -1222070.073574, dloglik=0.005252 </span>
+<span class="co">#&gt; iter = 4, loglik= -1220229.244307, dloglik=0.001506 </span>
+<span class="co">#&gt; iter = 5, loglik= -1219175.850470, dloglik=0.000863 </span>
+<span class="co">#&gt; iter = 6, loglik= -1218496.647196, dloglik=0.000557 </span>
+<span class="co">#&gt; iter = 7, loglik= -1217959.809427, dloglik=0.000441 </span>
+<span class="co">#&gt; iter = 8, loglik= -1217552.576343, dloglik=0.000334 </span>
+<span class="co">#&gt; iter = 9, loglik= -1217209.187820, dloglik=0.000282 </span>
+<span class="co">#&gt; iter = 10, loglik= -1216928.461434, dloglik=0.000231 </span>
+<span class="co">#&gt; iter = 11, loglik= -1216689.528325, dloglik=0.000196 </span>
+<span class="co">#&gt; iter = 12, loglik= -1216479.388650, dloglik=0.000173 </span>
+<span class="co">#&gt; iter = 13, loglik= -1216298.431104, dloglik=0.000149 </span>
+<span class="co">#&gt; iter = 14, loglik= -1216134.346168, dloglik=0.000135 </span>
+<span class="co">#&gt; iter = 15, loglik= -1215985.318437, dloglik=0.000123 </span>
+<span class="co">#&gt; iter = 16, loglik= -1215854.370103, dloglik=0.000108 </span>
+<span class="co">#&gt; iter = 17, loglik= -1215739.339004, dloglik=0.000095 </span>
+<span class="co">#&gt; iter = 18, loglik= -1215634.316515, dloglik=0.000086 </span>
+<span class="co">#&gt; iter = 19, loglik= -1215526.012082, dloglik=0.000089 </span>
+<span class="co">#&gt; iter = 20, loglik= -1215417.093982, dloglik=0.000090 </span>
+<span class="co">#&gt; iter = 21, loglik= -1215331.186944, dloglik=0.000071 </span>
+<span class="co">#&gt; iter = 22, loglik= -1215249.364654, dloglik=0.000067 </span>
+<span class="co">#&gt; iter = 23, loglik= -1215167.058207, dloglik=0.000068 </span>
+<span class="co">#&gt; iter = 24, loglik= -1215100.725954, dloglik=0.000055 </span>
+<span class="co">#&gt; iter = 25, loglik= -1215037.260550, dloglik=0.000052</span>
+<span class="co">#&gt; -------------------Complete!-------------</span>
+<span class="co">#&gt; elasped time is :62.25</span>
 <span class="co">#&gt; Finish DR-SC model fitting</span></code></pre></div>
 <div id="visualization-1" class="section level3">
 <h3 class="hasAnchor">
@@ -311,66 +219,51 @@
 <p>Show the spatial scatter plot for clusters</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/spatialPlotClusters.html">spatialPlotClusters</a></span><span class="op">(</span><span class="va">seus</span><span class="op">)</span></code></pre></div>
-<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 <p>Show the tSNE plot based on the extracted features from DR-SC.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/drscPlot.html">drscPlot</a></span><span class="op">(</span><span class="va">seus</span><span class="op">)</span></code></pre></div>
-<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-11-1.png" width="700"> Show the UMAP plot based on the extracted features from DR-SC.</p>
+<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-12-1.png" width="700"> Show the UMAP plot based on the extracted features from DR-SC.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/drscPlot.html">drscPlot</a></span><span class="op">(</span><span class="va">seus</span>, visu.method <span class="op">=</span> <span class="st">'UMAP'</span><span class="op">)</span>
 <span class="co">#&gt; Warning: Invalid name supplied, making object name syntactically valid. New</span>
 <span class="co">#&gt; object name is RunUMAP.RNA.dr.sc; see ?make.names for more details on syntax</span>
 <span class="co">#&gt; validity</span></code></pre></div>
-<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 </div>
 <div id="ridge-plots" class="section level3">
 <h3 class="hasAnchor">
 <a href="#ridge-plots" class="anchor"></a>Ridge plots</h3>
-<p>Find the marker genes for each clusters</p>
+<p>Find the marker genes in SVGs for each clusters</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindAllMarkers.html">FindAllMarkers</a></span><span class="op">(</span><span class="va">seus</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">SVGs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/topSVGs.html">topSVGs</a></span><span class="op">(</span><span class="va">seus</span>, ntop <span class="op">=</span> <span class="fl">400</span><span class="op">)</span>
+<span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindAllMarkers.html">FindAllMarkers</a></span><span class="op">(</span><span class="va">seus</span>, features <span class="op">=</span> <span class="va">SVGs</span><span class="op">)</span>
 <span class="co">#&gt; Calculating cluster cluster1</span>
 <span class="co">#&gt; Calculating cluster cluster2</span>
 <span class="co">#&gt; Calculating cluster cluster3</span>
 <span class="co">#&gt; Calculating cluster cluster4</span>
 <span class="co">#&gt; Calculating cluster cluster5</span>
 <span class="co">#&gt; Calculating cluster cluster6</span>
+<span class="co">#&gt; Calculating cluster cluster7</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>
-<span class="co">#&gt;                 p_val avg_log2FC pct.1 pct.2     p_val_adj  cluster    gene</span>
-<span class="co">#&gt; TM4SF20 2.588275e-153  1.5800250 0.673 0.115 1.035310e-149 cluster1 TM4SF20</span>
-<span class="co">#&gt; PTGDS   1.381409e-144  0.9845550 1.000 0.998 5.525635e-141 cluster1   PTGDS</span>
-<span class="co">#&gt; FN1     1.007995e-124  0.6546525 1.000 1.000 4.031978e-121 cluster1     FN1</span>
-<span class="co">#&gt; UGT2B4  3.644150e-102  0.8796851 1.000 0.988  1.457660e-98 cluster1  UGT2B4</span>
-<span class="co">#&gt; GSTA2   9.755222e-101  1.2415775 0.997 0.843  3.902089e-97 cluster1   GSTA2</span>
-<span class="co">#&gt; APOC1    5.291889e-99  0.3308163 1.000 1.000  2.116756e-95 cluster1   APOC1</span>
+<span class="co">#&gt;                         p_val avg_log2FC pct.1 pct.2     p_val_adj  cluster</span>
+<span class="co">#&gt; ENSG00000110484 6.391976e-207 -2.8930351 0.370 0.806 3.195988e-204 cluster1</span>
+<span class="co">#&gt; ENSG00000124935 1.026265e-126 -2.4420247 0.186 0.613 5.131327e-124 cluster1</span>
+<span class="co">#&gt; ENSG00000171617  1.987680e-91  0.7556269 0.963 0.772  9.938401e-89 cluster1</span>
+<span class="co">#&gt; ENSG00000115756  4.320795e-76  0.9032286 0.748 0.423  2.160398e-73 cluster1</span>
+<span class="co">#&gt; ENSG00000185499  8.148238e-66 -1.6087997 0.189 0.489  4.074119e-63 cluster1</span>
+<span class="co">#&gt; ENSG00000162545  6.860146e-62  0.4809817 0.987 0.900  3.430073e-59 cluster1</span>
+<span class="co">#&gt;                            gene</span>
+<span class="co">#&gt; ENSG00000110484 ENSG00000110484</span>
+<span class="co">#&gt; ENSG00000124935 ENSG00000124935</span>
+<span class="co">#&gt; ENSG00000171617 ENSG00000171617</span>
+<span class="co">#&gt; ENSG00000115756 ENSG00000115756</span>
+<span class="co">#&gt; ENSG00000185499 ENSG00000185499</span>
+<span class="co">#&gt; ENSG00000162545 ENSG00000162545</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span>, verbose<span class="op">=</span><span class="cn">F</span><span class="op">)</span>
-<span class="co">#&gt; Warning: package 'dplyr' was built under R version 4.0.4</span>
+<span class="co">#&gt; Warning: package 'dplyr' was built under R version 4.0.5</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Attaching package: 'dplyr'</span>
-<span class="co">#&gt; The following object is masked from 'package:MASS':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     select</span>
-<span class="co">#&gt; The following object is masked from 'package:Biobase':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     combine</span>
-<span class="co">#&gt; The following objects are masked from 'package:GenomicRanges':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     intersect, setdiff, union</span>
-<span class="co">#&gt; The following object is masked from 'package:GenomeInfoDb':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     intersect</span>
-<span class="co">#&gt; The following objects are masked from 'package:IRanges':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     collapse, desc, intersect, setdiff, slice, union</span>
-<span class="co">#&gt; The following objects are masked from 'package:S4Vectors':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     first, intersect, rename, setdiff, setequal, union</span>
-<span class="co">#&gt; The following objects are masked from 'package:BiocGenerics':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     combine, intersect, setdiff, union</span>
-<span class="co">#&gt; The following object is masked from 'package:matrixStats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     count</span>
 <span class="co">#&gt; The following objects are masked from 'package:stats':</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;     filter, lag</span>
@@ -384,38 +277,40 @@
 <span class="co">#&gt; Registered S3 method overwritten by 'cli':</span>
 <span class="co">#&gt;   method     from         </span>
 <span class="co">#&gt;   print.boxx spatstat.geom</span>
-<span class="co">#&gt; # A tibble: 12 x 7</span>
-<span class="co">#&gt; # Groups:   cluster [6]</span>
-<span class="co">#&gt;        p_val avg_log2FC pct.1 pct.2 p_val_adj cluster  gene   </span>
-<span class="co">#&gt;        &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;    &lt;chr&gt;  </span>
-<span class="co">#&gt;  1 2.59e-153      1.58  0.673 0.115 1.04e-149 cluster1 TM4SF20</span>
-<span class="co">#&gt;  2 9.76e-101      1.24  0.997 0.843 3.90e- 97 cluster1 GSTA2  </span>
-<span class="co">#&gt;  3 9.14e-105      1.14  0.991 0.972 3.66e-101 cluster2 SPP1   </span>
-<span class="co">#&gt;  4 6.69e- 94      1.07  0.993 0.981 2.68e- 90 cluster2 LCN2   </span>
-<span class="co">#&gt;  5 1.27e-167      0.739 1     0.976 5.06e-164 cluster3 CYP3A7 </span>
-<span class="co">#&gt;  6 8.40e-113      0.712 0.983 0.86  3.36e-109 cluster3 SLC22A1</span>
-<span class="co">#&gt;  7 1.09e-206      1.87  0.996 0.783 4.34e-203 cluster4 CPS1   </span>
-<span class="co">#&gt;  8 9.33e-115      1.16  0.915 0.479 3.73e-111 cluster4 TAT    </span>
-<span class="co">#&gt;  9 1.24e- 58      3.00  0.974 0.982 4.98e- 55 cluster5 IGKC   </span>
-<span class="co">#&gt; 10 5.62e- 33      2.78  0.868 0.845 2.25e- 29 cluster5 IGHG3  </span>
-<span class="co">#&gt; 11 3.34e-140      3.55  0.951 0.609 1.34e-136 cluster6 RBP4   </span>
-<span class="co">#&gt; 12 2.54e-102      2.64  0.912 0.581 1.02e- 98 cluster6 IGHA1</span></code></pre></div>
+<span class="co">#&gt; # A tibble: 14 x 7</span>
+<span class="co">#&gt; # Groups:   cluster [7]</span>
+<span class="co">#&gt;        p_val avg_log2FC pct.1 pct.2 p_val_adj cluster  gene           </span>
+<span class="co">#&gt;        &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;    &lt;chr&gt;          </span>
+<span class="co">#&gt;  1 1.99e- 91      0.756 0.963 0.772 9.94e- 89 cluster1 ENSG00000171617</span>
+<span class="co">#&gt;  2 4.32e- 76      0.903 0.748 0.423 2.16e- 73 cluster1 ENSG00000115756</span>
+<span class="co">#&gt;  3 1.49e-126      3.69  0.995 0.79  7.47e-124 cluster2 ENSG00000197971</span>
+<span class="co">#&gt;  4 1.29e-114      3.70  0.963 0.639 6.44e-112 cluster2 ENSG00000123560</span>
+<span class="co">#&gt;  5 8.04e-177      0.962 0.975 0.613 4.02e-174 cluster3 ENSG00000110484</span>
+<span class="co">#&gt;  6 1.58e-145      0.977 0.848 0.393 7.92e-143 cluster3 ENSG00000124935</span>
+<span class="co">#&gt;  7 1.65e-254      2.45  0.91  0.65  8.26e-252 cluster4 ENSG00000131095</span>
+<span class="co">#&gt;  8 4.27e- 66      1.88  0.472 0.261 2.14e- 63 cluster4 ENSG00000171885</span>
+<span class="co">#&gt;  9 6.37e- 10      0.621 0.359 0.25  3.19e-  7 cluster5 ENSG00000152377</span>
+<span class="co">#&gt; 10 5.79e-  8      0.631 0.169 0.093 2.90e-  5 cluster5 ENSG00000158258</span>
+<span class="co">#&gt; 11 4.88e- 43      1.32  0.466 0.179 2.44e- 40 cluster6 ENSG00000183036</span>
+<span class="co">#&gt; 12 4.89e- 40      1.03  0.537 0.23  2.44e- 37 cluster6 ENSG00000155886</span>
+<span class="co">#&gt; 13 9.58e- 36      1.15  0.609 0.42  4.79e- 33 cluster7 ENSG00000145824</span>
+<span class="co">#&gt; 14 1.47e-  6      0.772 0.257 0.181 7.34e-  4 cluster7 ENSG00000173432</span></code></pre></div>
 <p>Visualize single cell expression distributions in each cluster from Seruat.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">genes</span> <span class="op">&lt;-</span> <span class="va">top2</span><span class="op">$</span><span class="va">gene</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">12</span>, by<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">]</span>
 <span class="fu"><a href="https://satijalab.org/seurat/reference/RidgePlot.html">RidgePlot</a></span><span class="op">(</span><span class="va">seus</span>, features <span class="op">=</span> <span class="va">genes</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-<span class="co">#&gt; Picking joint bandwidth of 0.0391</span>
-<span class="co">#&gt; Picking joint bandwidth of 0.184</span>
-<span class="co">#&gt; Picking joint bandwidth of 0.138</span>
-<span class="co">#&gt; Picking joint bandwidth of 0.219</span>
-<span class="co">#&gt; Picking joint bandwidth of 0.223</span>
-<span class="co">#&gt; Picking joint bandwidth of 0.235</span></code></pre></div>
-<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-14-1.png" width="700"> ### Violin plot</p>
+<span class="co">#&gt; Picking joint bandwidth of 0.263</span>
+<span class="co">#&gt; Picking joint bandwidth of 0.236</span>
+<span class="co">#&gt; Picking joint bandwidth of 0.378</span>
+<span class="co">#&gt; Picking joint bandwidth of 0.31</span>
+<span class="co">#&gt; Picking joint bandwidth of 0.188</span>
+<span class="co">#&gt; Picking joint bandwidth of 0.0977</span></code></pre></div>
+<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-15-1.png" width="960"> ### Violin plot</p>
 <p>Visualize single cell expression distributions in each cluster</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="fu"><a href="https://satijalab.org/seurat/reference/VlnPlot.html">VlnPlot</a></span><span class="op">(</span><span class="va">seus</span>, features <span class="op">=</span> <span class="va">genes</span>, ncol<span class="op">=</span><span class="fl">2</span><span class="op">)</span></code></pre></div>
-<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
+<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-16-1.png" width="960"></p>
 </div>
 <div id="feature-plot" class="section level3">
 <h3 class="hasAnchor">
@@ -428,7 +323,7 @@
 <span class="co">#&gt; Warning: All keys should be one or more alphanumeric characters followed by an</span>
 <span class="co">#&gt; underscore '_', setting key to drsctSNE_</span>
 <span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">seus</span>, features <span class="op">=</span> <span class="va">genes</span>, reduction <span class="op">=</span> <span class="st">'tsne'</span> ,ncol<span class="op">=</span><span class="fl">2</span><span class="op">)</span></code></pre></div>
-<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-17-1.png" width="960"></p>
 </div>
 <div id="dot-plots" class="section level3">
 <h3 class="hasAnchor">
@@ -436,14 +331,18 @@
 <p>The size of the dot corresponds to the percentage of cells expressing the feature in each cluster. The color represents the average expression level</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://satijalab.org/seurat/reference/DotPlot.html">DotPlot</a></span><span class="op">(</span><span class="va">seus</span>, features <span class="op">=</span> <span class="va">genes</span><span class="op">)</span></code></pre></div>
-<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
+<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
 </div>
 <div id="heatmap-plot" class="section level3">
 <h3 class="hasAnchor">
 <a href="#heatmap-plot" class="anchor"></a>Heatmap plot</h3>
 <p>Single cell heatmap of feature expression</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># standard scaling (no regression)</span>
+<code class="sourceCode R"><span class="va">top20</span> <span class="op">&lt;-</span>  <span class="va">dat</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/top_n.html">top_n</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">20</span>, wt <span class="op">=</span> <span class="va">avg_log2FC</span><span class="op">)</span>
+<span class="va">genes</span> <span class="op">&lt;-</span> <span class="va">top20</span><span class="op">$</span><span class="va">gene</span>
+<span class="co"># standard scaling (no regression)</span>
 <span class="va">seus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html">ScaleData</a></span><span class="op">(</span><span class="va">seus</span><span class="op">)</span>
 <span class="co">#&gt; Centering and scaling data matrix</span>
 <span class="fu"><a href="https://satijalab.org/seurat/reference/DoHeatmap.html">DoHeatmap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">seus</span>, downsample <span class="op">=</span> <span class="fl">500</span><span class="op">)</span>, features <span class="op">=</span> <span class="va">genes</span>, size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
@@ -451,66 +350,36 @@
 <span class="co">#&gt; object name is dr.sc; see ?make.names for more details on syntax validity</span>
 <span class="co">#&gt; Warning: Cannot add objects with duplicate keys (offending key: DRSC_), setting</span>
 <span class="co">#&gt; key to 'dr.sc_'</span></code></pre></div>
-<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
+<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-19-1.png" width="960"></p>
 </div>
 </div>
-<div id="fit-dr-sc-model-using-2000-spatially-variable-features-and-using-mbic-to-determine-clusters" class="section level2">
+<div id="fit-dr-sc-model-using-480-spatially-variable-features-and-using-mbic-to-determine-clusters" class="section level2">
 <h2 class="hasAnchor">
-<a href="#fit-dr-sc-model-using-2000-spatially-variable-features-and-using-mbic-to-determine-clusters" class="anchor"></a>Fit DR-SC model using 2000 spatially variable features and using MBIC　to determine clusters</h2>
+<a href="#fit-dr-sc-model-using-480-spatially-variable-features-and-using-mbic-to-determine-clusters" class="anchor"></a>Fit DR-SC model using 480 spatially variable features and using MBIC　to determine clusters</h2>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># choose 2000 spatially variable features</span>
-<span class="va">seus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FindSVGs.html">FindSVGs</a></span><span class="op">(</span><span class="va">seu</span>, nfeatures <span class="op">=</span> <span class="fl">2000</span>, verbose <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
-<span class="co">#&gt; ## ===== SPARK-X INPUT INFORMATION ==== </span>
-<span class="co">#&gt; ## number of total samples: 2983 </span>
-<span class="co">#&gt; ## number of total genes: 4000 </span>
-<span class="co">#&gt; ## Running with single core, may take some time </span>
-<span class="co">#&gt; ## Testing With Projection Kernel</span>
-<span class="co">#&gt; ## Testing With Gaussian Kernel 1</span>
-<span class="co">#&gt; ## Testing With Gaussian Kernel 2</span>
-<span class="co">#&gt; ## Testing With Gaussian Kernel 3</span>
-<span class="co">#&gt; ## Testing With Gaussian Kernel 4</span>
-<span class="co">#&gt; ## Testing With Gaussian Kernel 5</span>
-<span class="co">#&gt; ## Testing With Cosine Kernel 1</span>
-<span class="co">#&gt; ## Testing With Cosine Kernel 2</span>
-<span class="co">#&gt; ## Testing With Cosine Kernel 3</span>
-<span class="co">#&gt; ## Testing With Cosine Kernel 4</span>
-<span class="co">#&gt; ## Testing With Cosine Kernel 5</span></code></pre></div>
+<span class="va">seus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FindSVGs.html">FindSVGs</a></span><span class="op">(</span><span class="va">seu</span>, nfeatures <span class="op">=</span> <span class="fl">480</span>, verbose <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></code></pre></div>
 <p>We set the argument variable.type=‘SVGs’ (default option) to use the spatially variable genes.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="co">### Given K</span></a>
-<a class="sourceLine" id="cb20-2" title="2">seus &lt;-<span class="st"> </span><span class="kw">DR.SC</span>(seus, <span class="dt">K_set=</span><span class="dv">3</span><span class="op">:</span><span class="dv">8</span>, <span class="dt">platform =</span> <span class="st">'Visium'</span>, <span class="dt">variable.type=</span><span class="st">'SVGs'</span>, <span class="dt">verbose=</span>F)</a>
-<a class="sourceLine" id="cb20-3" title="3"><span class="co">#&gt; Neighbors were identified for 2982 out of 2983 spots.</span></a>
-<a class="sourceLine" id="cb20-4" title="4"><span class="co">#&gt; Using SVGs to fit DR.SC model since variable.type=SVGs...</span></a>
-<a class="sourceLine" id="cb20-5" title="5"><span class="co">#&gt; Start chooing number of clusters...</span></a>
-<a class="sourceLine" id="cb20-6" title="6"><span class="co">#&gt; The candidate set is:  3 4 5 6 7 8 </span></a>
-<a class="sourceLine" id="cb20-7" title="7"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb20-8" title="8">  <span class="op">|</span><span class="st">                                                                            </span></a>
-<a class="sourceLine" id="cb20-9" title="9"><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</a>
-<a class="sourceLine" id="cb20-10" title="10">  <span class="op">|</span><span class="st">                                                                            </span></a>
-<a class="sourceLine" id="cb20-11" title="11"><span class="st">  </span><span class="er">|==============</span><span class="st">                                                        </span><span class="er">|</span><span class="st">  </span><span class="dv">20</span>%</a>
-<a class="sourceLine" id="cb20-12" title="12">  <span class="op">|</span><span class="st">                                                                            </span></a>
-<a class="sourceLine" id="cb20-13" title="13"><span class="st">  </span><span class="er">|============================</span><span class="st">                                          </span><span class="er">|</span><span class="st">  </span><span class="dv">40</span>%</a>
-<a class="sourceLine" id="cb20-14" title="14">  <span class="op">|</span><span class="st">                                                                            </span></a>
-<a class="sourceLine" id="cb20-15" title="15"><span class="st">  </span><span class="er">|==========================================</span><span class="st">                            </span><span class="er">|</span><span class="st">  </span><span class="dv">60</span>%</a>
-<a class="sourceLine" id="cb20-16" title="16">  <span class="op">|</span><span class="st">                                                                            </span></a>
-<a class="sourceLine" id="cb20-17" title="17"><span class="st">  </span><span class="er">|========================================================</span><span class="st">              </span><span class="er">|</span><span class="st">  </span><span class="dv">80</span>%</a>
-<a class="sourceLine" id="cb20-18" title="18">  <span class="op">|</span><span class="st">                                                                            </span></a>
-<a class="sourceLine" id="cb20-19" title="19"><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</a>
-<a class="sourceLine" id="cb20-20" title="20"><span class="co">#&gt; The best number of cluster is:  5 </span></a>
-<a class="sourceLine" id="cb20-21" title="21"><span class="co">#&gt; Fit DR-SC model...</span></a>
-<a class="sourceLine" id="cb20-22" title="22"><span class="co">#&gt; elasped time is : 234.59 14.13 250.32 NA NA </span></a>
-<a class="sourceLine" id="cb20-23" title="23"><span class="co">#&gt; Finish DR-SC model fitting</span></a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">### Given K</span>
+<span class="va">seus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DR.SC.html">DR.SC</a></span><span class="op">(</span><span class="va">seus</span>, K<span class="op">=</span><span class="fl">3</span><span class="op">:</span><span class="fl">9</span>, platform <span class="op">=</span> <span class="st">'Visium'</span>, verbose<span class="op">=</span><span class="cn">F</span><span class="op">)</span>
+<span class="co">#&gt; Neighbors were identified for 4634 out of 4634 spots.</span>
+<span class="co">#&gt; Fit DR-SC model...</span>
+<span class="co">#&gt; Starting parallel computing intial values...</span>
+<span class="co">#&gt; Finish DR-SC model fitting</span></code></pre></div>
 <p>Plot the MBIC curve</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/mbicPlot.html">mbicPlot</a></span><span class="op">(</span><span class="va">seus</span><span class="op">)</span></code></pre></div>
-<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
+<code class="sourceCode R"><span class="va">seus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectModel.html">selectModel</a></span><span class="op">(</span><span class="va">seus</span>, pen.const <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span>
+<span class="fu"><a href="../reference/mbicPlot.html">mbicPlot</a></span><span class="op">(</span><span class="va">seus</span><span class="op">)</span></code></pre></div>
+<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-22-1.png" width="700"></p>
 <p>Show the spatial scatter plot for clusters</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/spatialPlotClusters.html">spatialPlotClusters</a></span><span class="op">(</span><span class="va">seus</span><span class="op">)</span></code></pre></div>
-<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-22-1.png" width="700"></p>
+<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-23-1.png" width="700"></p>
 <p>Show the tSNE plot based on the extracted features from DR-SC.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/drscPlot.html">drscPlot</a></span><span class="op">(</span><span class="va">seus</span>, dims<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></code></pre></div>
-<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-23-1.png" width="700"></p>
+<p><img src="DR.SC.HCC1_files/figure-html/unnamed-chunk-24-1.png" width="700"></p>
 </div>
 <div id="session-information" class="section level2">
 <h2 class="hasAnchor">
@@ -519,7 +388,7 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; R version 4.0.3 (2020-10-10)</span>
 <span class="co">#&gt; Platform: x86_64-w64-mingw32/x64 (64-bit)</span>
-<span class="co">#&gt; Running under: Windows 10 x64 (build 19043)</span>
+<span class="co">#&gt; Running under: Windows 10 x64 (build 22000)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Matrix products: default</span>
 <span class="co">#&gt; </span>
@@ -531,68 +400,57 @@
 <span class="co">#&gt; [5] LC_TIME=Chinese (Simplified)_China.936    </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; attached base packages:</span>
-<span class="co">#&gt; [1] parallel  stats4    stats     graphics  grDevices utils     datasets </span>
-<span class="co">#&gt; [8] methods   base     </span>
+<span class="co">#&gt; [1] parallel  stats     graphics  grDevices utils     datasets  methods  </span>
+<span class="co">#&gt; [8] base     </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; other attached packages:</span>
-<span class="co">#&gt;  [1] dplyr_1.0.5                 SPARK_1.1.1                </span>
-<span class="co">#&gt;  [3] DR.SC_2.2                   ggplot2_3.3.5              </span>
-<span class="co">#&gt;  [5] RColorBrewer_1.1-2          SeuratObject_4.0.2         </span>
-<span class="co">#&gt;  [7] Seurat_4.0.3                doSNOW_1.0.19              </span>
-<span class="co">#&gt;  [9] snow_0.4-3                  iterators_1.0.13           </span>
-<span class="co">#&gt; [11] foreach_1.5.1               purrr_0.3.4                </span>
-<span class="co">#&gt; [13] MASS_7.3-53.1               SingleCellExperiment_1.12.0</span>
-<span class="co">#&gt; [15] SummarizedExperiment_1.20.0 Biobase_2.50.0             </span>
-<span class="co">#&gt; [17] GenomicRanges_1.42.0        GenomeInfoDb_1.26.7        </span>
-<span class="co">#&gt; [19] IRanges_2.24.1              S4Vectors_0.28.1           </span>
-<span class="co">#&gt; [21] BiocGenerics_0.36.1         MatrixGenerics_1.2.1       </span>
-<span class="co">#&gt; [23] matrixStats_0.58.0          Matrix_1.2-18              </span>
-<span class="co">#&gt; [25] mclust_5.4.7               </span>
+<span class="co">#&gt; [1] dplyr_1.0.7         SeuratObject_4.0.2  Seurat_4.0.5       </span>
+<span class="co">#&gt; [4] DR.SC_2.6           spatstat.geom_2.3-0 spatstat.data_2.1-0</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; loaded via a namespace (and not attached):</span>
-<span class="co">#&gt;   [1] systemfonts_1.0.2      plyr_1.8.6             igraph_1.2.6          </span>
-<span class="co">#&gt;   [4] lazyeval_0.2.2         splines_4.0.3          listenv_0.8.0         </span>
-<span class="co">#&gt;   [7] scattermore_0.7        digest_0.6.27          htmltools_0.5.1.1     </span>
-<span class="co">#&gt;  [10] fansi_0.5.0            magrittr_2.0.1         memoise_2.0.0         </span>
-<span class="co">#&gt;  [13] doParallel_1.0.16      tensor_1.5             cluster_2.1.1         </span>
-<span class="co">#&gt;  [16] ROCR_1.0-11            limma_3.46.0           globals_0.14.0        </span>
-<span class="co">#&gt;  [19] pkgdown_1.6.1          spatstat.sparse_2.0-0  colorspace_2.0-0      </span>
-<span class="co">#&gt;  [22] ggrepel_0.9.1          textshaping_0.3.5      xfun_0.22             </span>
-<span class="co">#&gt;  [25] crayon_1.4.1           RCurl_1.98-1.2         jsonlite_1.7.2        </span>
-<span class="co">#&gt;  [28] spatstat.data_2.1-0    survival_3.2-7         zoo_1.8-9             </span>
-<span class="co">#&gt;  [31] glue_1.4.2             polyclip_1.10-0        gtable_0.3.0          </span>
-<span class="co">#&gt;  [34] zlibbioc_1.36.0        XVector_0.30.0         leiden_0.3.7          </span>
-<span class="co">#&gt;  [37] DelayedArray_0.16.0    future.apply_1.7.0     abind_1.4-5           </span>
-<span class="co">#&gt;  [40] scales_1.1.1           DBI_1.1.1              miniUI_0.1.1.1        </span>
-<span class="co">#&gt;  [43] Rcpp_1.0.7             viridisLite_0.4.0      xtable_1.8-4          </span>
-<span class="co">#&gt;  [46] reticulate_1.18        spatstat.core_2.0-0    matlab_1.0.2          </span>
-<span class="co">#&gt;  [49] htmlwidgets_1.5.3      httr_1.4.2             ellipsis_0.3.2        </span>
-<span class="co">#&gt;  [52] ica_1.0-2              farver_2.1.0           pkgconfig_2.0.3       </span>
-<span class="co">#&gt;  [55] sass_0.3.1             uwot_0.1.10            deldir_0.2-10         </span>
-<span class="co">#&gt;  [58] utf8_1.2.1             labeling_0.4.2         tidyselect_1.1.1      </span>
-<span class="co">#&gt;  [61] rlang_0.4.11           reshape2_1.4.4         later_1.1.0.1         </span>
-<span class="co">#&gt;  [64] munsell_0.5.0          tools_4.0.3            cachem_1.0.4          </span>
-<span class="co">#&gt;  [67] cli_3.0.1              generics_0.1.0         ggridges_0.5.3        </span>
-<span class="co">#&gt;  [70] evaluate_0.14          stringr_1.4.0          fastmap_1.1.0         </span>
-<span class="co">#&gt;  [73] yaml_2.2.1             ragg_1.1.3             goftest_1.2-2         </span>
-<span class="co">#&gt;  [76] knitr_1.31             fs_1.5.0               fitdistrplus_1.1-3    </span>
-<span class="co">#&gt;  [79] RANN_2.6.1             pbapply_1.4-3          future_1.21.0         </span>
-<span class="co">#&gt;  [82] nlme_3.1-152           mime_0.10              pracma_2.3.3          </span>
-<span class="co">#&gt;  [85] rstudioapi_0.13        compiler_4.0.3         plotly_4.9.3          </span>
-<span class="co">#&gt;  [88] png_0.1-7              spatstat.utils_2.1-0   tibble_3.1.2          </span>
-<span class="co">#&gt;  [91] bslib_0.2.4            stringi_1.7.3          highr_0.8             </span>
-<span class="co">#&gt;  [94] RSpectra_0.16-0        desc_1.3.0             lattice_0.20-41       </span>
-<span class="co">#&gt;  [97] vctrs_0.3.8            CompQuadForm_1.4.3     pillar_1.6.1          </span>
-<span class="co">#&gt; [100] lifecycle_1.0.0        spatstat.geom_2.0-1    lmtest_0.9-38         </span>
-<span class="co">#&gt; [103] jquerylib_0.1.3        RcppAnnoy_0.0.18       data.table_1.14.0     </span>
-<span class="co">#&gt; [106] cowplot_1.1.1          bitops_1.0-6           irlba_2.3.3           </span>
-<span class="co">#&gt; [109] httpuv_1.5.5           patchwork_1.1.1        R6_2.5.0              </span>
-<span class="co">#&gt; [112] promises_1.2.0.1       KernSmooth_2.23-18     gridExtra_2.3         </span>
-<span class="co">#&gt; [115] parallelly_1.23.0      codetools_0.2-18       assertthat_0.2.1      </span>
-<span class="co">#&gt; [118] rprojroot_2.0.2        withr_2.4.2            sctransform_0.3.2     </span>
-<span class="co">#&gt; [121] GenomeInfoDbData_1.2.4 mgcv_1.8-34            grid_4.0.3            </span>
-<span class="co">#&gt; [124] rpart_4.1-15           tidyr_1.1.3            rmarkdown_2.7         </span>
-<span class="co">#&gt; [127] Rtsne_0.15             shiny_1.6.0</span></code></pre></div>
+<span class="co">#&gt;   [1] Rtsne_0.15            colorspace_2.0-2      deldir_1.0-6         </span>
+<span class="co">#&gt;   [4] ellipsis_0.3.2        ggridges_0.5.3        mclust_5.4.8         </span>
+<span class="co">#&gt;   [7] rprojroot_2.0.2       fs_1.5.2              rstudioapi_0.13      </span>
+<span class="co">#&gt;  [10] farver_2.1.0          leiden_0.3.9          GiRaF_1.0.1          </span>
+<span class="co">#&gt;  [13] listenv_0.8.0         ggrepel_0.9.1         RSpectra_0.16-0      </span>
+<span class="co">#&gt;  [16] fansi_0.5.0           codetools_0.2-18      splines_4.0.3        </span>
+<span class="co">#&gt;  [19] cachem_1.0.6          knitr_1.37            polyclip_1.10-0      </span>
+<span class="co">#&gt;  [22] jsonlite_1.7.2        ica_1.0-2             cluster_2.1.1        </span>
+<span class="co">#&gt;  [25] png_0.1-7             uwot_0.1.10           spatstat.sparse_2.0-0</span>
+<span class="co">#&gt;  [28] sctransform_0.3.2     shiny_1.7.1           compiler_4.0.3       </span>
+<span class="co">#&gt;  [31] httr_1.4.2            assertthat_0.2.1      Matrix_1.2-18        </span>
+<span class="co">#&gt;  [34] fastmap_1.1.0         lazyeval_0.2.2        cli_3.0.1            </span>
+<span class="co">#&gt;  [37] limma_3.46.0          later_1.3.0           htmltools_0.5.2      </span>
+<span class="co">#&gt;  [40] tools_4.0.3           igraph_1.2.6          gtable_0.3.0         </span>
+<span class="co">#&gt;  [43] glue_1.4.2            reshape2_1.4.4        RANN_2.6.1           </span>
+<span class="co">#&gt;  [46] Rcpp_1.0.7            scattermore_0.7       jquerylib_0.1.4      </span>
+<span class="co">#&gt;  [49] pkgdown_1.6.1         vctrs_0.3.8           nlme_3.1-152         </span>
+<span class="co">#&gt;  [52] lmtest_0.9-38         xfun_0.29             stringr_1.4.0        </span>
+<span class="co">#&gt;  [55] globals_0.14.0        mime_0.12             miniUI_0.1.1.1       </span>
+<span class="co">#&gt;  [58] CompQuadForm_1.4.3    lifecycle_1.0.1       irlba_2.3.3          </span>
+<span class="co">#&gt;  [61] goftest_1.2-2         future_1.23.0         MASS_7.3-53.1        </span>
+<span class="co">#&gt;  [64] zoo_1.8-9             scales_1.1.1          spatstat.core_2.0-0  </span>
+<span class="co">#&gt;  [67] ragg_1.1.3            promises_1.2.0.1      spatstat.utils_2.2-0 </span>
+<span class="co">#&gt;  [70] RColorBrewer_1.1-2    yaml_2.2.2            gridExtra_2.3        </span>
+<span class="co">#&gt;  [73] memoise_2.0.0         reticulate_1.18       pbapply_1.5-0        </span>
+<span class="co">#&gt;  [76] ggplot2_3.3.5         sass_0.4.0            rpart_4.1-15         </span>
+<span class="co">#&gt;  [79] stringi_1.7.5         highr_0.9             S4Vectors_0.28.1     </span>
+<span class="co">#&gt;  [82] desc_1.3.0            BiocGenerics_0.36.1   rlang_0.4.11         </span>
+<span class="co">#&gt;  [85] pkgconfig_2.0.3       systemfonts_1.0.3     matrixStats_0.58.0   </span>
+<span class="co">#&gt;  [88] evaluate_0.14         lattice_0.20-41       tensor_1.5           </span>
+<span class="co">#&gt;  [91] ROCR_1.0-11           purrr_0.3.4           labeling_0.4.2       </span>
+<span class="co">#&gt;  [94] patchwork_1.1.1       htmlwidgets_1.5.4     cowplot_1.1.1        </span>
+<span class="co">#&gt;  [97] tidyselect_1.1.1      parallelly_1.30.0     RcppAnnoy_0.0.18     </span>
+<span class="co">#&gt; [100] plyr_1.8.6            magrittr_2.0.1        R6_2.5.1             </span>
+<span class="co">#&gt; [103] generics_0.1.1        DBI_1.1.2             withr_2.4.3          </span>
+<span class="co">#&gt; [106] mgcv_1.8-34           pillar_1.6.5          fitdistrplus_1.1-6   </span>
+<span class="co">#&gt; [109] abind_1.4-5           survival_3.2-7        tibble_3.1.5         </span>
+<span class="co">#&gt; [112] future.apply_1.8.1    crayon_1.4.2          KernSmooth_2.23-18   </span>
+<span class="co">#&gt; [115] utf8_1.2.2            plotly_4.10.0         rmarkdown_2.11       </span>
+<span class="co">#&gt; [118] grid_4.0.3            data.table_1.14.2     digest_0.6.28        </span>
+<span class="co">#&gt; [121] xtable_1.8-4          tidyr_1.1.4           httpuv_1.5.5         </span>
+<span class="co">#&gt; [124] textshaping_0.3.5     stats4_4.0.3          munsell_0.5.0        </span>
+<span class="co">#&gt; [127] viridisLite_0.4.0     bslib_0.3.1</span></code></pre></div>
 </div>
   </div>
 
@@ -607,7 +465,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Wei Liu.</p>
+  <p>Developed by Wei Liu, Yi Yang, Xingjie Shi, Jin Liu.</p>
 </div>
 
 <div class="pkgdown">

@@ -41,7 +41,7 @@ seu <- FindSVGs(seu)
 
 # use SVGs to fit DR.SC model
 # maxIter = 2 is only used for illustration, and user can use default.
-seu1 <- DR.SC(seu, K=4,platform = 'ST', variable.type = 'SVGs',maxIter = 2,verbose=FALSE)
+seu1 <- DR.SC(seu, K=4,platform = 'ST', maxIter = 2,verbose=FALSE)
 drscPlot(seu1)
 }
 \keyword{tSNE}

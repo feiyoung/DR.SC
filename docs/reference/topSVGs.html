@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DR.SC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.6</span>
       </span>
     </div>
 
@@ -85,6 +85,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/DR-SC.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -95,10 +98,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/DR.SC.HCC1.html">DR-SC: HCC1 Data Analysis</a>
+      <a href="../articles/DR.SC.HCC1.html">DR-SC: DLPFC Data Analysis</a>
     </li>
     <li>
-      <a href="../articles/DR.SC.Simu.html">DR-SC: installation and simulation</a>
+      <a href="../articles/DR.SC.Simu.html">DR-SC: simulation</a>
     </li>
   </ul>
 </li>
@@ -150,9 +153,7 @@
     <p>return a <a href='https://rdrr.io/r/base/character.html'>character</a> vector including the names of SVGs.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    
-  
-
+    <p>None</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Wei Liu</p>
@@ -161,29 +162,15 @@
     <p>nothing</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>topSVGs, SPARK, sparkx</p></div>
+    <div class='dont-index'><p>topSVGs</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>  <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gendata_RNAExp.html'>gendata_RNAExp</a></span><span class='op'>(</span>height<span class='op'>=</span><span class='fl'>40</span>, width<span class='op'>=</span><span class='fl'>40</span>,p<span class='op'>=</span><span class='fl'>1000</span>, K<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: The following arguments are not used: row.names</span></div><div class='input'>  <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='FindSVGs.html'>FindSVGs</a></span><span class='op'>(</span><span class='va'>seu</span>, nfeatures<span class='op'>=</span><span class='fl'>800</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Find the spatially variables genes by SPARK-X...
-#&gt; ## ===== SPARK-X INPUT INFORMATION ==== 
-#&gt; ## number of total samples: 1600 
-#&gt; ## number of total genes: 1000 
-#&gt; ## Running with single core, may take some time 
-#&gt; ## Testing With Projection Kernel
-#&gt; ## Testing With Gaussian Kernel 1
-#&gt; ## Testing With Gaussian Kernel 2
-#&gt; ## Testing With Gaussian Kernel 3
-#&gt; ## Testing With Gaussian Kernel 4
-#&gt; ## Testing With Gaussian Kernel 5
-#&gt; ## Testing With Cosine Kernel 1
-#&gt; ## Testing With Cosine Kernel 2
-#&gt; ## Testing With Cosine Kernel 3
-#&gt; ## Testing With Cosine Kernel 4
-#&gt; ## Testing With Cosine Kernel 5</div><div class='input'>  <span class='op'>(</span><span class='va'>genes</span> <span class='op'>&lt;-</span> <span class='fu'>topSVGs</span><span class='op'>(</span><span class='va'>seu</span>, ntop<span class='op'>=</span><span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;  [1] "gene-1"  "gene-2"  "gene-3"  "gene-4"  "gene-5"  "gene-6"  "gene-7" 
-#&gt;  [8] "gene-8"  "gene-9"  "gene-10"</div></pre>
+    <pre class="examples"><div class='input'>  <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gendata_RNAExp.html'>gendata_RNAExp</a></span><span class='op'>(</span>height<span class='op'>=</span><span class='fl'>20</span>, width<span class='op'>=</span><span class='fl'>20</span>,p<span class='op'>=</span><span class='fl'>200</span>, K<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
+  <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='FindSVGs.html'>FindSVGs</a></span><span class='op'>(</span><span class='va'>seu</span>, nfeatures<span class='op'>=</span><span class='fl'>100</span>, verbose<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+  <span class='op'>(</span><span class='va'>genes</span> <span class='op'>&lt;-</span> <span class='fu'>topSVGs</span><span class='op'>(</span><span class='va'>seu</span>, ntop<span class='op'>=</span><span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] "gene61"  "gene4"   "gene78"  "gene137" "gene59"  "gene192" "gene133"
+#&gt;  [8] "gene82"  "gene196" "gene197"</div><div class='input'>  
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -195,7 +182,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Wei Liu.</p>
+  <p>Developed by Wei Liu, Yi Yang, Xingjie Shi, Jin Liu.</p>
 </div>
 
 <div class="pkgdown">

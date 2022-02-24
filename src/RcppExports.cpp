@@ -90,20 +90,20 @@ BEGIN_RCPP
 END_RCPP
 }
 // icmem_heterCpp
-Rcpp:: List icmem_heterCpp(const arma::mat& X, const arma::sp_mat& Adj, const arma::ivec& y_int, const arma::mat& Mu_int, const arma::mat& W_int, const arma::cube& Sigma_int, const arma::vec& Lam_vec_int, const arma::vec& alpha, const double& beta_int, const arma::vec& beta_grid, const int& maxIter_ICM, const int& maxIter, const double& epsLogLik, const int& verbose, const bool& homo, const bool& diagSigmak);
-RcppExport SEXP _DR_SC_icmem_heterCpp(SEXP XSEXP, SEXP AdjSEXP, SEXP y_intSEXP, SEXP Mu_intSEXP, SEXP W_intSEXP, SEXP Sigma_intSEXP, SEXP Lam_vec_intSEXP, SEXP alphaSEXP, SEXP beta_intSEXP, SEXP beta_gridSEXP, SEXP maxIter_ICMSEXP, SEXP maxIterSEXP, SEXP epsLogLikSEXP, SEXP verboseSEXP, SEXP homoSEXP, SEXP diagSigmakSEXP) {
+Rcpp:: List icmem_heterCpp(const arma::mat& X, const arma::sp_mat& Adj, const arma::imat& y_int, Rcpp::List& Mu_intList, const arma::mat& W_int, Rcpp::List& Sigma_intList, arma::vec& Lam_vec_int, Rcpp::List& alphaList, const arma::vec& beta_int, const arma::vec& beta_grid, const int& maxIter_ICM, const int& maxIter, const double& epsLogLik, const int& verbose, const bool& homo, const bool& diagSigmak, const int maxK, const int minK, const int coreNum);
+RcppExport SEXP _DR_SC_icmem_heterCpp(SEXP XSEXP, SEXP AdjSEXP, SEXP y_intSEXP, SEXP Mu_intListSEXP, SEXP W_intSEXP, SEXP Sigma_intListSEXP, SEXP Lam_vec_intSEXP, SEXP alphaListSEXP, SEXP beta_intSEXP, SEXP beta_gridSEXP, SEXP maxIter_ICMSEXP, SEXP maxIterSEXP, SEXP epsLogLikSEXP, SEXP verboseSEXP, SEXP homoSEXP, SEXP diagSigmakSEXP, SEXP maxKSEXP, SEXP minKSEXP, SEXP coreNumSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
     Rcpp::traits::input_parameter< const arma::sp_mat& >::type Adj(AdjSEXP);
-    Rcpp::traits::input_parameter< const arma::ivec& >::type y_int(y_intSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type Mu_int(Mu_intSEXP);
+    Rcpp::traits::input_parameter< const arma::imat& >::type y_int(y_intSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List& >::type Mu_intList(Mu_intListSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type W_int(W_intSEXP);
-    Rcpp::traits::input_parameter< const arma::cube& >::type Sigma_int(Sigma_intSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type Lam_vec_int(Lam_vec_intSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type alpha(alphaSEXP);
-    Rcpp::traits::input_parameter< const double& >::type beta_int(beta_intSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List& >::type Sigma_intList(Sigma_intListSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type Lam_vec_int(Lam_vec_intSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List& >::type alphaList(alphaListSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type beta_int(beta_intSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type beta_grid(beta_gridSEXP);
     Rcpp::traits::input_parameter< const int& >::type maxIter_ICM(maxIter_ICMSEXP);
     Rcpp::traits::input_parameter< const int& >::type maxIter(maxIterSEXP);
@@ -111,28 +111,34 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const int& >::type verbose(verboseSEXP);
     Rcpp::traits::input_parameter< const bool& >::type homo(homoSEXP);
     Rcpp::traits::input_parameter< const bool& >::type diagSigmak(diagSigmakSEXP);
-    rcpp_result_gen = Rcpp::wrap(icmem_heterCpp(X, Adj, y_int, Mu_int, W_int, Sigma_int, Lam_vec_int, alpha, beta_int, beta_grid, maxIter_ICM, maxIter, epsLogLik, verbose, homo, diagSigmak));
+    Rcpp::traits::input_parameter< const int >::type maxK(maxKSEXP);
+    Rcpp::traits::input_parameter< const int >::type minK(minKSEXP);
+    Rcpp::traits::input_parameter< const int >::type coreNum(coreNumSEXP);
+    rcpp_result_gen = Rcpp::wrap(icmem_heterCpp(X, Adj, y_int, Mu_intList, W_int, Sigma_intList, Lam_vec_int, alphaList, beta_int, beta_grid, maxIter_ICM, maxIter, epsLogLik, verbose, homo, diagSigmak, maxK, minK, coreNum));
     return rcpp_result_gen;
 END_RCPP
 }
 // EMmPCpp_heter
-Rcpp:: List EMmPCpp_heter(const arma::mat& X, const arma::vec& Pi_int, const arma::mat& Mu_int, const arma::mat& W_int, const arma::cube& Sigma_int, const arma::vec& Lam_vec_int, const int& maxIter, const double& epsLogLik, const bool& verbose, const bool& homo, const bool& diagSigmak);
-RcppExport SEXP _DR_SC_EMmPCpp_heter(SEXP XSEXP, SEXP Pi_intSEXP, SEXP Mu_intSEXP, SEXP W_intSEXP, SEXP Sigma_intSEXP, SEXP Lam_vec_intSEXP, SEXP maxIterSEXP, SEXP epsLogLikSEXP, SEXP verboseSEXP, SEXP homoSEXP, SEXP diagSigmakSEXP) {
+Rcpp:: List EMmPCpp_heter(const arma::mat& X, Rcpp::List& Pi_int, Rcpp::List& Mu_int, const arma::mat& W_int, Rcpp::List& Sigma_int, arma::vec& Lam_vec_int, const int& maxIter, const double& epsLogLik, const bool& verbose, const bool& homo, const bool& diagSigmak, const int& maxK, const int& minK, const int& coreNum);
+RcppExport SEXP _DR_SC_EMmPCpp_heter(SEXP XSEXP, SEXP Pi_intSEXP, SEXP Mu_intSEXP, SEXP W_intSEXP, SEXP Sigma_intSEXP, SEXP Lam_vec_intSEXP, SEXP maxIterSEXP, SEXP epsLogLikSEXP, SEXP verboseSEXP, SEXP homoSEXP, SEXP diagSigmakSEXP, SEXP maxKSEXP, SEXP minKSEXP, SEXP coreNumSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type Pi_int(Pi_intSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type Mu_int(Mu_intSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List& >::type Pi_int(Pi_intSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List& >::type Mu_int(Mu_intSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type W_int(W_intSEXP);
-    Rcpp::traits::input_parameter< const arma::cube& >::type Sigma_int(Sigma_intSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type Lam_vec_int(Lam_vec_intSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List& >::type Sigma_int(Sigma_intSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type Lam_vec_int(Lam_vec_intSEXP);
     Rcpp::traits::input_parameter< const int& >::type maxIter(maxIterSEXP);
     Rcpp::traits::input_parameter< const double& >::type epsLogLik(epsLogLikSEXP);
     Rcpp::traits::input_parameter< const bool& >::type verbose(verboseSEXP);
     Rcpp::traits::input_parameter< const bool& >::type homo(homoSEXP);
     Rcpp::traits::input_parameter< const bool& >::type diagSigmak(diagSigmakSEXP);
-    rcpp_result_gen = Rcpp::wrap(EMmPCpp_heter(X, Pi_int, Mu_int, W_int, Sigma_int, Lam_vec_int, maxIter, epsLogLik, verbose, homo, diagSigmak));
+    Rcpp::traits::input_parameter< const int& >::type maxK(maxKSEXP);
+    Rcpp::traits::input_parameter< const int& >::type minK(minKSEXP);
+    Rcpp::traits::input_parameter< const int& >::type coreNum(coreNumSEXP);
+    rcpp_result_gen = Rcpp::wrap(EMmPCpp_heter(X, Pi_int, Mu_int, W_int, Sigma_int, Lam_vec_int, maxIter, epsLogLik, verbose, homo, diagSigmak, maxK, minK, coreNum));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -169,8 +175,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_DR_SC_getPairDist", (DL_FUNC) &_DR_SC_getPairDist, 1},
     {"_DR_SC_calYenergy2D_sp", (DL_FUNC) &_DR_SC_calYenergy2D_sp, 5},
     {"_DR_SC_obj_beta", (DL_FUNC) &_DR_SC_obj_beta, 6},
-    {"_DR_SC_icmem_heterCpp", (DL_FUNC) &_DR_SC_icmem_heterCpp, 16},
-    {"_DR_SC_EMmPCpp_heter", (DL_FUNC) &_DR_SC_EMmPCpp_heter, 11},
+    {"_DR_SC_icmem_heterCpp", (DL_FUNC) &_DR_SC_icmem_heterCpp, 19},
+    {"_DR_SC_EMmPCpp_heter", (DL_FUNC) &_DR_SC_EMmPCpp_heter, 14},
     {"_DR_SC_calculateWeight", (DL_FUNC) &_DR_SC_calculateWeight, 2},
     {"_DR_SC_wpcaCpp", (DL_FUNC) &_DR_SC_wpcaCpp, 3},
     {NULL, NULL, 0}

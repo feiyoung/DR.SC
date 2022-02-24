@@ -18,45 +18,46 @@ knitr::opts_chunk$set(
 
 ## Generate the simulated data
 First, we generate the spatial transcriptomics data with lattice neighborhood, i.e. ST platform by using the function `gendata_RNAExp` in `DR.SC` package.
-```{r  eval=FALSE}
+```{r  eval = FALSE}
+library(DR.SC)
 seu <- gendata_RNAExp(height=30, width=30,p=500, K=4)
 head(seu@meta.data)
 ```
 ## Fit DR-SC using simulated data
 
 ### Fit DR-SC based on highly variable genes(HVGs)
-For function `DR.SC`, users can specify the number of clusters $K$ or set `K=NULL` by using modified BIC(MBIC) to determine $K$. First, we try using user-specified number of clusters. Then we show the version chosen by MBIC.
-```{r  eval=FALSE}
+For function `DR.SC`, users can specify the number of clusters $K$ or set `K` to be an integer vector by using modified BIC(MBIC) to determine $K$. First, we try using user-specified number of clusters. Then we show the version chosen by MBIC.
+```{r  eval = FALSE}
 ### Given K
 library(Seurat)
 seu <- NormalizeData(seu)
 # choose 2000 variable features using Seurat
 seu <- FindVariableFeatures(seu, nfeatures = 400)
-seu2 <- DR.SC(seu, K=4, platform = 'ST', verbose=F)
+seu2 <- DR.SC(seu, K=4, platform = 'ST',  verbose=F)
 ```
 
 Using ARI to check the performance of clustering
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 mclust::adjustedRandIndex(seu2$spatial.drsc.cluster, seu$true_clusters)
 ```
 
 Show the spatial scatter plot for clusters
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 spatialPlotClusters(seu2)
 ```
 
 Show the tSNE plot based on the extracted features from DR-SC.
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 drscPlot(seu2)
 ```
 Show the UMAP plot based on the extracted features from DR-SC.
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 drscPlot(seu2, visu.method = 'UMAP')
 ```
 
 Use MBIC to choose number of clusters:
-```{r  eval=FALSE}
-seu2 <- DR.SC(seu, q=10, K=NULL, K_set =2:6, platform = 'ST', verbose=F)
+```{r  eval = FALSE}
+seu2 <- DR.SC(seu, q=10, K=2:6, platform = 'ST', verbose=F)
 mbicPlot(seu2)
 ```
 
@@ -65,37 +66,43 @@ mbicPlot(seu2)
 
 ### Fit DR-SC based on spatially variable genes(SVGs)
 First, we select the spatilly variable genes using funciton `FindSVGs`.
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 ### Given K
 seu <- NormalizeData(seu, verbose=F)
 # choose 400 spatially variable features using FindSVGs
 seus <- FindSVGs(seu, nfeatures = 400, verbose = F)
-seu2 <- DR.SC(seus, K=4, platform = 'ST',variable.type='SVGs', verbose=F)
+seu2 <- DR.SC(seus, K=4, platform = 'ST', verbose=F)
 ```
 
 Using ARI to check the performance of clustering
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 mclust::adjustedRandIndex(seu2$spatial.drsc.cluster, seu$true_clusters)
 ```
 ### DR-SC can enhance visualization
 Show the spatial scatter plot for clusters
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 spatialPlotClusters(seu2)
 ```
 
 Show the tSNE plot based on the extracted features from DR-SC.
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 drscPlot(seu2)
 ```
 Show the UMAP plot based on the extracted features from DR-SC.
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 drscPlot(seu2, visu.method = 'UMAP')
 ```
 
 ### DR-SC can automatically determine the number of clusters
 Use MBIC to choose number of clusters:
-```{r  eval=FALSE}
-seu2 <- DR.SC(seus, q=10, K=NULL, K_set =2:6, platform = 'ST', variable.type='SVGs', verbose=F)
+```{r  eval = FALSE}
+seu2 <- DR.SC(seus, q=10, K=2:6, platform = 'ST',  verbose=F)
+mbicPlot(seu2)
+# or plot BIC or AIC
+# mbicPlot(seu2, criteria = 'BIC')
+# mbicPlot(seu2, criteria = 'AIC')
+# tune pen.const
+seu2 <- selectModel(seu2, pen.const = 0.7)
 mbicPlot(seu2)
 ```
 
@@ -106,7 +113,7 @@ mbicPlot(seu2)
 Conduct visualization of marker gene expression.
 ### Ridge plots 
 Visualize single cell expression distributions in each cluster from Seruat.
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 dat <- FindAllMarkers(seu2)
 suppressPackageStartupMessages(library(dplyr) )
 # Find the top 1 marker genes, user can change n to access more marker genes
@@ -117,13 +124,13 @@ RidgePlot(seu2, features = genes, ncol = 2)
 ```
 ### Violin plot
 Visualize single cell expression distributions in each cluster
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 VlnPlot(seu2, features = genes, ncol=2)
 ```
 ### Feature plot
 We extract tSNE based on the features from DR-SC and then visualize feature expression in the low-dimensional space
  
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 seu2 <- RunTSNE(seu2, reduction="dr-sc", reduction.key='drsctSNE_')
 FeaturePlot(seu2, features = genes, reduction = 'tsne' ,ncol=2)
 
@@ -133,13 +140,13 @@ FeaturePlot(seu2, features = genes, reduction = 'tsne' ,ncol=2)
 ### Dot plots 
 The size of the dot corresponds to the percentage of cells expressing the
 feature in each cluster. The color represents the average expression level
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 DotPlot(seu2, features = genes)
 ```
 
 ### Heatmap plot
 Single cell heatmap of feature expression
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 # standard scaling (no regression)
 dat %>%group_by(cluster) %>%
     top_n(n = 30, wt = avg_log2FC) -> top
@@ -155,6 +162,6 @@ DoHeatmap(subset(seu2, downsample = 500),features = genes, size = 5)
 
 
 ## Session information
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 sessionInfo()
 ```

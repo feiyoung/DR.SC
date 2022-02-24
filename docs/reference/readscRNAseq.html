@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DR.SC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.6</span>
       </span>
     </div>
 
@@ -85,6 +85,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/DR-SC.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -95,10 +98,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/DR.SC.HCC1.html">DR-SC: HCC1 Data Analysis</a>
+      <a href="../articles/DR.SC.HCC1.html">DR-SC: DLPFC Data Analysis</a>
     </li>
     <li>
-      <a href="../articles/DR.SC.Simu.html">DR-SC: installation and simulation</a>
+      <a href="../articles/DR.SC.Simu.html">DR-SC: simulation</a>
     </li>
   </ul>
 </li>
@@ -144,6 +147,10 @@
       <th>features</th>
       <td><p>a string, Name or remote URL of the features/genes file</p></td>
     </tr>
+    <tr>
+      <th>...</th>
+      <td><p>the arguments passing to <a href='https://satijalab.org/seurat/reference/ReadMtx.html'>ReadMtx</a></p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -154,9 +161,7 @@
     <p>return a Seurat object including expression matrix.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    
-  
-
+    <p>None</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Wei Liu</p>
@@ -165,17 +170,16 @@
     <p>nothing</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'>
-  
-</div>
+    <div class='dont-index'><p>None</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>  <span class='co'>### Not run</span>
-  <span class='co'>## setwd("D/GSM3755564/")</span>
-  <span class='co'># seu &lt;- readscRNAseq(mtx="GSM3755564_16_Liver_Treg_matrix.mtx.gz",</span>
-  <span class='co'>#                     features='GSM3755564_16_Liver_Treg_genes.tsv.gz',</span>
-  <span class='co'>#                     cells='GSM3755564_16_Liver_Treg_barcodes.tsv.gz' )</span>
-  <span class='co'># seu</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='co'>### set the file directory, then read it.</span>
+  <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'>readscRNAseq</span><span class='op'>(</span>mtx<span class='op'>=</span><span class='st'>"GSM3755564_16_Liver_Treg_matrix.mtx.gz"</span>,
+                       features<span class='op'>=</span><span class='st'>'GSM3755564_16_Liver_Treg_genes.tsv.gz'</span>,
+                       cells<span class='op'>=</span><span class='st'>'GSM3755564_16_Liver_Treg_barcodes.tsv.gz'</span> <span class='op'>)</span>
+  <span class='va'>seu</span>
+  <span class='op'>}</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -188,7 +192,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Wei Liu.</p>
+  <p>Developed by Wei Liu, Yi Yang, Xingjie Shi, Jin Liu.</p>
 </div>
 
 <div class="pkgdown">

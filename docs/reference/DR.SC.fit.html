@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Joint dimension reduction and spatial clustering — DR.SC.fit • DR.SC</title>
+<title>Joint dimension reduction and spatial clustering — DR.SC_fit • DR.SC</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Joint dimension reduction and spatial clustering — DR.SC.fit" />
+<meta property="og:title" content="Joint dimension reduction and spatial clustering — DR.SC_fit" />
 <meta property="og:description" content="Joint dimension reduction and spatial clustering for scRNA-seq and spatial transcriptomics data" />
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DR.SC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.6</span>
       </span>
     </div>
 
@@ -85,6 +85,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/DR-SC.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -95,10 +98,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/DR.SC.HCC1.html">DR-SC: HCC1 Data Analysis</a>
+      <a href="../articles/DR.SC.HCC1.html">DR-SC: DLPFC Data Analysis</a>
     </li>
     <li>
-      <a href="../articles/DR.SC.Simu.html">DR-SC: installation and simulation</a>
+      <a href="../articles/DR.SC.Simu.html">DR-SC: simulation</a>
     </li>
   </ul>
 </li>
@@ -127,17 +130,21 @@
     <p>Joint dimension reduction and spatial clustering for scRNA-seq and spatial transcriptomics data</p>
     </div>
 
-    <pre class="usage"><span class='fu'>DR.SC.fit</span><span class='op'>(</span><span class='va'>X</span>,Adj_sp<span class='op'>=</span><span class='cn'>NULL</span>, q<span class='op'>=</span><span class='fl'>15</span>, K<span class='op'>=</span> <span class='cn'>NULL</span>,
-        error.heter<span class='op'>=</span> <span class='cn'>T</span>, K_set <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>10</span><span class='op'>)</span>, beta_grid<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0.5</span>, <span class='fl'>5</span>, by<span class='op'>=</span><span class='fl'>0.5</span><span class='op'>)</span>,
-        maxIter<span class='op'>=</span><span class='fl'>30</span>, epsLogLik<span class='op'>=</span><span class='fl'>1e-5</span>, verbose<span class='op'>=</span><span class='cn'>F</span>, maxIter_ICM<span class='op'>=</span><span class='fl'>6</span>,pen.const<span class='op'>=</span><span class='fl'>1</span>,
-        wpca.int<span class='op'>=</span><span class='cn'>F</span>, parallel<span class='op'>=</span><span class='st'>'doSNOW'</span>, num_core<span class='op'>=</span><span class='fl'>5</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>DR.SC_fit</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>K</span>, Adj_sp<span class='op'>=</span><span class='cn'>NULL</span>, q<span class='op'>=</span><span class='fl'>15</span>,
+             error.heter<span class='op'>=</span> <span class='cn'>TRUE</span>, beta_grid<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0.5</span>, <span class='fl'>5</span>, by<span class='op'>=</span><span class='fl'>0.5</span><span class='op'>)</span>,
+             maxIter<span class='op'>=</span><span class='fl'>25</span>, epsLogLik<span class='op'>=</span><span class='fl'>1e-5</span>, verbose<span class='op'>=</span><span class='cn'>FALSE</span>, maxIter_ICM<span class='op'>=</span><span class='fl'>6</span>,
+             wpca.int<span class='op'>=</span><span class='cn'>FALSE</span>, coreNum <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>K</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>X</th>
-      <td><p>an optional sparse matrix with class <code>dgCMatrix</code>, specify the log-normalization gene expression matrix used for DR-SC model.</p></td>
+      <td><p>a  sparse matrix with class <code>dgCMatrix</code> or <code>matrix</code>, specify the log-normalization gene expression matrix used for DR-SC model.</p></td>
+    </tr>
+    <tr>
+      <th>K</th>
+      <td><p>a positive  integer allowing scalar or vector, specify the number of clusters in model fitting.</p></td>
     </tr>
     <tr>
       <th>Adj_sp</th>
@@ -148,16 +155,8 @@
       <td><p>a positive integer, specify the number of latent features to be extracted, default as 15.</p></td>
     </tr>
     <tr>
-      <th>K</th>
-      <td><p>a positive  integer, specify the number of clusters, default as <code>NULL</code>. When <code>K=NULL</code>, it is automatically selected by MBIC criteria.</p></td>
-    </tr>
-    <tr>
-      <th>K_set</th>
-      <td><p>a vector of positive integer, means the candidates of number of clusters used for MBIC.</p></td>
-    </tr>
-    <tr>
       <th>error.heter</th>
-      <td><p>an optional logical value, whether use the heterogenous error for DR-SC model, default as <code>TRUE</code>. If <code>error.heter=FALSE</code>, then the homogenuous error is used for model.</p></td>
+      <td><p>an optional logical value, whether use the heterogenous error for DR-SC model, default as <code>TRUE</code>. If <code>error.heter=FALSE</code>, then the homogenuous error is used for probabilistic PCA model in DR-SC.</p></td>
     </tr>
     <tr>
       <th>beta_grid</th>
@@ -180,20 +179,12 @@
       <td><p>an optional positive value, represents the maximum iterations of ICM.</p></td>
     </tr>
     <tr>
-      <th>pen.const</th>
-      <td><p>an optional positive value, the adjusted constant used in the MBIC criteria. It usually takes value between 0.1 to 1.</p></td>
-    </tr>
-    <tr>
       <th>wpca.int</th>
-      <td><p>an optional logical value, means whether use the weighted PCA to obtain the initial values of loadings and other paramters, default as <code>FALSE</code> which means the conventional PCA  is used.</p></td>
+      <td><p>an optional logical value, means whether use the weighted PCA to obtain the initial values of loadings and other paramters, default as <code>FALSE</code> which means the ordinary PCA  is used.</p></td>
     </tr>
     <tr>
-      <th>parallel</th>
-      <td><p>a optional string, specify the parallel way to choose the number of clusters by MBIC. We provide three methods: 1. <code>parallel="doSNOW"</code> uses <code>doSNOW</code> R package to conduct the parallel schema; 2. <code>parallel="parrallel"</code> uses <code>parrallel</code> R package to conduct the parallel schema; 3.<code>parallel=NULL</code> doesn't use parallel computation.</p></td>
-    </tr>
-    <tr>
-      <th>num_core</th>
-      <td><p>an optional positive integer, means the cores used in parallel computating.</p></td>
+      <th>coreNum</th>
+      <td><p>an optional positive integer, means the number of thread used in parallel computating.</p></td>
     </tr>
     </table>
 
@@ -202,7 +193,12 @@
     <p>Nothing</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>DR.SC.fit returns a <a href='https://rdrr.io/r/base/list.html'>list</a> with the following components:</p>
+    <p>DR.SC_fit returns a <a href='https://rdrr.io/r/base/list.html'>list</a> with class "drscObject" with the following three components:</p>
+<dt>Objdrsc</dt><dd><p>a list including the model fitting results, in which the number of elements is same as the length of K.</p></dd>
+  <dt>out_param</dt><dd><p>a numeric matrix used for model selection in MBIC.</p></dd>
+  <dt>K_set</dt><dd><p>a scalar or vector equal to input argument K.</p></dd>
+  
+In addition, each element of "Objdrsc" is a list with the following comoponents:
 <dt>cluster</dt><dd><p>inferred class labels</p></dd>
 <dt>hZ</dt><dd><p>extracted latent features.</p></dd>
 <dt>beta</dt><dd><p>estimated smoothing parameter</p></dd>
@@ -210,13 +206,11 @@
 <dt>Sigma</dt><dd><p>covariance matrix of mixtures components.</p></dd>
 <dt>W</dt><dd><p>estimated loading matrix</p></dd>
 <dt>Lam_vec</dt><dd><p>estimated variance of errors in probabilistic PCA model</p></dd>
-<dt>loglik</dt><dd><p>pseudo observed log-likelihood</p></dd>
+<dt>loglik</dt><dd><p>pseudo observed log-likelihood.</p></dd>
 
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    
-  
-
+    <p><a href='https://www.biorxiv.org/content/10.1101/2021.12.25.474153v4'>Wei Liu, Xu Liao, Yi Yang, Huazhen Lin, Joe Yeong, Xiang Zhou, Xingjie Shi and Jin Liu. (2022) Joint dimension reduction and clustering analysis for single-cell RNA-seq and spatial transcriptomics data</a></p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Wei Liu</p>
@@ -225,29 +219,25 @@
     <p>nothing</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'>
-
-</div>
+    <div class='dont-index'><p>None</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## we generate the spatial transcriptomics data with lattice neighborhood, i.e. ST platform.</span>
-<span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gendata_RNAExp.html'>gendata_RNAExp</a></span><span class='op'>(</span>height<span class='op'>=</span><span class='fl'>30</span>, width<span class='op'>=</span><span class='fl'>30</span>,p<span class='op'>=</span><span class='fl'>500</span>, K<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Loading required package: GiRaF</span></div><div class='output co'>#&gt; <span class='warning'>Warning: package 'GiRaF' was built under R version 4.0.4</span></div><div class='output co'>#&gt; <span class='warning'>Warning: The following arguments are not used: row.names</span></div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://satijalab.org/seurat'>Seurat</a></span><span class='op'>)</span>
-<span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://satijalab.org/seurat/reference/NormalizeData.html'>NormalizeData</a></span><span class='op'>(</span><span class='va'>seu</span><span class='op'>)</span>
-<span class='co'># choose 2000 variable features using Seurat</span>
-<span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://satijalab.org/seurat/reference/FindVariableFeatures.html'>FindVariableFeatures</a></span><span class='op'>(</span><span class='va'>seu</span>, nfeatures <span class='op'>=</span> <span class='fl'>2000</span><span class='op'>)</span>
-<span class='co'># users define the adjoint matrix</span>
+<span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gendata_RNAExp.html'>gendata_RNAExp</a></span><span class='op'>(</span>height<span class='op'>=</span><span class='fl'>10</span>, width<span class='op'>=</span><span class='fl'>10</span>,p<span class='op'>=</span><span class='fl'>50</span>, K<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://satijalab.org/seurat'>Seurat</a></span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Attaching SeuratObject</span></div><div class='input'><span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://satijalab.org/seurat/reference/NormalizeData.html'>NormalizeData</a></span><span class='op'>(</span><span class='va'>seu</span>, verbose<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='co'># choose 40 highly variable features using FindVariableFeatures in Seurat</span>
+<span class='co'># seu &lt;- FindVariableFeatures(seu, nfeatures = 40)</span>
+<span class='co'># or choose 40 spatailly variable features using FindSVGs in DR.SC</span>
+<span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='FindSVGs.html'>FindSVGs</a></span><span class='op'>(</span><span class='va'>seu</span>, nfeatures <span class='op'>=</span> <span class='fl'>40</span>, verbose<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='co'># users define the adjacency matrix</span>
 <span class='va'>Adj_sp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getAdj.html'>getAdj</a></span><span class='op'>(</span><span class='va'>seu</span>, platform <span class='op'>=</span> <span class='st'>'ST'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Neighbors were identified for 900 out of 900 spots.</span></div><div class='input'><span class='va'>var.features</span> <span class='op'>&lt;-</span> <span class='va'>seu</span><span class='op'>@</span><span class='va'>assays</span><span class='op'>$</span><span class='va'>RNA</span><span class='op'>@</span><span class='va'>var.features</span>
-<span class='va'>X</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='fu'><a href='https://satijalab.org/seurat/reference/LogNormalize.html'>LogNormalize</a></span><span class='op'>(</span><span class='va'>seu</span><span class='op'>@</span><span class='va'>assays</span><span class='op'>$</span><span class='va'>RNA</span><span class='op'>@</span><span class='va'>counts</span><span class='op'>[</span><span class='va'>var.features</span>,<span class='op'>]</span>,<span class='op'>)</span><span class='op'>)</span>
-<span class='va'>drscList</span> <span class='op'>&lt;-</span> <span class='fu'>DR.SC.fit</span><span class='op'>(</span><span class='va'>X</span>,Adj_sp<span class='op'>=</span><span class='va'>Adj_sp</span> ,K<span class='op'>=</span><span class='fl'>4</span>,  verbose<span class='op'>=</span><span class='cn'>T</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Fit DR-SC model...
-#&gt; -------------------Calculate inital values------------- 
-#&gt; -------------------Finish computing inital values------------- 
-#&gt; -------------------Starting  EM algortihm------------- 
-#&gt; -------------------Complete!------------- 
-#&gt; elasped time is : 16.28 1.05 17.24 NA NA 
-#&gt; Finish DR-SC model fitting</div></pre>
+</div><div class='output co'>#&gt; <span class='message'>Neighbors were identified for 100 out of 100 spots.</span></div><div class='input'><span class='va'>var.features</span> <span class='op'>&lt;-</span> <span class='va'>seu</span><span class='op'>@</span><span class='va'>assays</span><span class='op'>$</span><span class='va'>RNA</span><span class='op'>@</span><span class='va'>var.features</span>
+<span class='va'>X</span> <span class='op'>&lt;-</span> <span class='fu'>Matrix</span><span class='fu'>::</span><span class='fu'>t</span><span class='op'>(</span><span class='va'>seu</span><span class='op'>[[</span><span class='st'>"RNA"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>@</span><span class='va'>data</span><span class='op'>[</span><span class='va'>var.features</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='co'># maxIter = 2 is only used for illustration, and user can use default.</span>
+<span class='va'>drscList</span> <span class='op'>&lt;-</span> <span class='fu'>DR.SC_fit</span><span class='op'>(</span><span class='va'>X</span>,Adj_sp<span class='op'>=</span><span class='va'>Adj_sp</span>, K<span class='op'>=</span><span class='fl'>4</span>, maxIter<span class='op'>=</span><span class='fl'>2</span>, verbose<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Fit DR-SC model...</span></div><div class='output co'>#&gt; <span class='message'>-------------------Calculate inital values-------------</span></div><div class='output co'>#&gt; <span class='message'>-------------------Finish computing inital values------------- </span></div><div class='output co'>#&gt; <span class='message'>-------------------Starting  ICM-EM algortihm-------------</span></div><div class='output co'>#&gt; iter = 2, loglik= -984.500549, dloglik=1.000000 </div><div class='output co'>#&gt; <span class='message'>-------------------Complete!-------------</span></div><div class='output co'>#&gt; <span class='message'>elasped time is :0.11</span></div><div class='output co'>#&gt; <span class='message'>Finish DR-SC model fitting</span></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -259,7 +249,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Wei Liu.</p>
+  <p>Developed by Wei Liu, Yi Yang, Xingjie Shi, Jin Liu.</p>
 </div>
 
 <div class="pkgdown">

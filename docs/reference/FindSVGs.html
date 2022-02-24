@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DR.SC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.6</span>
       </span>
     </div>
 
@@ -85,6 +85,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/DR-SC.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -95,10 +98,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/DR.SC.HCC1.html">DR-SC: HCC1 Data Analysis</a>
+      <a href="../articles/DR.SC.HCC1.html">DR-SC: DLPFC Data Analysis</a>
     </li>
     <li>
-      <a href="../articles/DR.SC.Simu.html">DR-SC: installation and simulation</a>
+      <a href="../articles/DR.SC.Simu.html">DR-SC: simulation</a>
     </li>
   </ul>
 </li>
@@ -127,7 +130,7 @@
     <p>Identifies features that have spatially variation along spots.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>FindSVGs</span><span class='op'>(</span><span class='va'>seu</span>, nfeatures<span class='op'>=</span><span class='fl'>2000</span>,num_core<span class='op'>=</span><span class='fl'>1</span>, verbose<span class='op'>=</span><span class='cn'>T</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>FindSVGs</span><span class='op'>(</span><span class='va'>seu</span>, nfeatures<span class='op'>=</span><span class='fl'>2000</span>, covariates<span class='op'>=</span><span class='cn'>NULL</span>, num_core<span class='op'>=</span><span class='fl'>1</span>, verbose<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -138,7 +141,11 @@
     </tr>
     <tr>
       <th>nfeatures</th>
-      <td><p>a positive integer, means how many highly variable or spatially variable genes to be chosen. If there are less than 2000 features in seu, then all features are identified.</p></td>
+      <td><p>a positive integer, means how many spatially variable genes to be chosen. If there are less than 2000 features in seu, then all features are identified.</p></td>
+    </tr>
+    <tr>
+      <th>covariates</th>
+      <td><p>a covariate matrix named control variable matrix whose number of rows is equal to the number of columns of seu.</p></td>
     </tr>
     <tr>
       <th>num_core</th>
@@ -146,7 +153,7 @@
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>an optional logical value, whether output the mediate information.</p></td>
+      <td><p>an optional logical value, whether output the related information.</p></td>
     </tr>
     </table>
 
@@ -155,42 +162,24 @@
     <p>Nothing</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>return a revised Seurat object by adding a column named "is.SVGs" in the meta.features  of default Assay.</p>
+    <p>return a revised Seurat object by adding three columns named "is.SVGs", "order.SVGs" and "adjusted.pval.SVGs" in the meta.features  of default Assay.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    
-  
-
-    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
-
-    <p>Wei Liu</p>
+    <p>Zhu, J., Sun, S., Zhou, X.: Spark-x: non-parametric modeling enables scalable and robust detection of spatialexpression patterns for large spatial transcriptomic studies. Genome Biology 22(1), 1–25 (2021)</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>nothing</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='topSVGs.html'>topSVGs</a>, SPARK, sparkx</p></div>
+    <div class='dont-index'><p><a href='topSVGs.html'>topSVGs</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>  <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gendata_RNAExp.html'>gendata_RNAExp</a></span><span class='op'>(</span>height<span class='op'>=</span><span class='fl'>40</span>, width<span class='op'>=</span><span class='fl'>40</span>,p<span class='op'>=</span><span class='fl'>1000</span>, K<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: The following arguments are not used: row.names</span></div><div class='input'>  <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'>FindSVGs</span><span class='op'>(</span><span class='va'>seu</span>, nfeatures<span class='op'>=</span><span class='fl'>800</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Find the spatially variables genes by SPARK-X...
-#&gt; ## ===== SPARK-X INPUT INFORMATION ==== 
-#&gt; ## number of total samples: 1600 
-#&gt; ## number of total genes: 1000 
-#&gt; ## Running with single core, may take some time 
-#&gt; ## Testing With Projection Kernel
-#&gt; ## Testing With Gaussian Kernel 1
-#&gt; ## Testing With Gaussian Kernel 2
-#&gt; ## Testing With Gaussian Kernel 3
-#&gt; ## Testing With Gaussian Kernel 4
-#&gt; ## Testing With Gaussian Kernel 5
-#&gt; ## Testing With Cosine Kernel 1
-#&gt; ## Testing With Cosine Kernel 2
-#&gt; ## Testing With Cosine Kernel 3
-#&gt; ## Testing With Cosine Kernel 4
-#&gt; ## Testing With Cosine Kernel 5</div><div class='input'>  <span class='fu'><a href='topSVGs.html'>topSVGs</a></span><span class='op'>(</span><span class='va'>seu</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "gene-1" "gene-2" "gene-3" "gene-4" "gene-5"</div></pre>
+    <pre class="examples"><div class='input'>  <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gendata_RNAExp.html'>gendata_RNAExp</a></span><span class='op'>(</span>height<span class='op'>=</span><span class='fl'>20</span>, width<span class='op'>=</span><span class='fl'>20</span>,p<span class='op'>=</span><span class='fl'>200</span>, K<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
+  
+  <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'>FindSVGs</span><span class='op'>(</span><span class='va'>seu</span>, nfeatures<span class='op'>=</span><span class='fl'>100</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Find the spatially variables genes by SPARK-X...</span></div><div class='output co'>#&gt; <span class='message'>## ===== SPARK-X INPUT INFORMATION ====</span></div><div class='output co'>#&gt; <span class='message'>## number of total samples: 400</span></div><div class='output co'>#&gt; <span class='message'>## number of total genes: 200</span></div><div class='output co'>#&gt; <span class='message'>## Running with single core, may take some time </span></div><div class='output co'>#&gt; <span class='message'>## Testing With Projection Kernel</span></div><div class='output co'>#&gt; <span class='message'>## Testing With Gaussian Kernel 1</span></div><div class='output co'>#&gt; <span class='message'>## Testing With Gaussian Kernel 2</span></div><div class='output co'>#&gt; <span class='message'>## Testing With Gaussian Kernel 3</span></div><div class='output co'>#&gt; <span class='message'>## Testing With Gaussian Kernel 4</span></div><div class='output co'>#&gt; <span class='message'>## Testing With Gaussian Kernel 5</span></div><div class='output co'>#&gt; <span class='message'>## Testing With Cosine Kernel 1</span></div><div class='output co'>#&gt; <span class='message'>## Testing With Cosine Kernel 2</span></div><div class='output co'>#&gt; <span class='message'>## Testing With Cosine Kernel 3</span></div><div class='output co'>#&gt; <span class='message'>## Testing With Cosine Kernel 4</span></div><div class='output co'>#&gt; <span class='message'>## Testing With Cosine Kernel 5</span></div><div class='input'>  <span class='fu'><a href='topSVGs.html'>topSVGs</a></span><span class='op'>(</span><span class='va'>seu</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "gene91"  "gene99"  "gene31"  "gene61"  "gene106"</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -202,7 +191,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Wei Liu.</p>
+  <p>Developed by Wei Liu, Yi Yang, Xingjie Shi, Jin Liu.</p>
 </div>
 
 <div class="pkgdown">

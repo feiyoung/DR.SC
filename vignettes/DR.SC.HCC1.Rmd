@@ -1,10 +1,10 @@
 ---
-title: 'DR-SC: HCC1 Data Analysis'
+title: 'DR-SC: DLPFC Data Analysis'
 author: "Wei Liu"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{DR-SC HCC1}
+  %\VignetteIndexEntry{DR-SC DLPFC}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -17,84 +17,83 @@ knitr::opts_chunk$set(
 ```
 
 The package can be loaded with the command:
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 library("DR.SC")
 ```
 
 
 ## Fit DR-SC using real data HCC1
 ### load the data HCC1 in package DR.SC
-```{r  eval=FALSE,message=FALSE, warning=FALSE}
-data("HCC1", package = 'DR.SC')
+```{r  eval = FALSE,message=FALSE, warning=FALSE}
+data("dlpfc151510", package = 'DR.SC')
 ```
 
 ### Data preprocessing
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 library(Seurat)
 # standard log-normalization
-HCC1 <- NormalizeData(HCC1, verbose = F)
-# choose 2000 highly variable features
-seu <- FindVariableFeatures(HCC1, nfeatures = 1000, verbose = F)
+dlpfc151510 <- NormalizeData(dlpfc151510, verbose = F)
+# choose 500 highly variable features
+seu <- FindVariableFeatures(dlpfc151510, nfeatures = 500, verbose = F)
 ```
 
 ## Fit DR-SC model using 1000 highly variable features
 We set the argument variable.type='HVGs' (default option) to use the highly variable genes.
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 ### Given K
-seu <- DR.SC(seu, K=6, platform = 'Visium',nfeatures=1000, variable.type = 'HVGs',verbose=F)
+seu <- DR.SC(seu, K=7, platform = 'Visium', verbose=F)
 ```
 
 ### Visualization
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 spatialPlotClusters(seu)
 ```
 
 
 Show the tSNE plot based on the extracted features from DR-SC.
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 drscPlot(seu)
 ```
 
 Show the UMAP plot based on the extracted features from DR-SC.
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 drscPlot(seu, visu.method = 'UMAP')
 ```
 
-## Fit DR-SC model using 1000 spatially variable features
+## Fit DR-SC model using 480 spatially variable features
 
-```{r  eval=FALSE}
-# choose 2000 spatially variable features
-seus <- FindSVGs(seu, nfeatures = 1000)
+```{r  eval = FALSE}
+# choose 480 spatially variable features
+seus <- FindSVGs(seu, nfeatures = 480)
 ```
 
 We set the argument variable.type='SVGs' (default option) to use the spatially variable genes.
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 ### Given K
-seus <- DR.SC(seus, K=6, platform = 'Visium', nfeatures=1000, 
-              variable.type='SVGs', verbose=T)
+seus <- DR.SC(seus, K=7, platform = 'Visium', verbose=T)
 ```
 
 ### Visualization
 Show the spatial scatter plot for clusters
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 spatialPlotClusters(seus)
 ```
 
 
 Show the tSNE plot based on the extracted features from DR-SC.
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 drscPlot(seus)
 ```
 Show the UMAP plot based on the extracted features from DR-SC.
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 drscPlot(seus, visu.method = 'UMAP')
 ```
 
 
 ### Ridge plots 
 Find the marker genes in SVGs for each clusters
-```{r  eval=FALSE}
-SVGs <- topSVGs(seus, ntop = 1000)
+```{r  eval = FALSE}
+SVGs <- topSVGs(seus, ntop = 400)
 dat <- FindAllMarkers(seus, features = SVGs)
 head(dat)
 library(dplyr, verbose=F)
@@ -105,14 +104,14 @@ top2
 ```
 
 Visualize single cell expression distributions in each cluster from Seruat.
-```{r  eval=FALSE, fig.height=6, fig.width=10}
+```{r  eval = FALSE, fig.height=6, fig.width=10}
 genes <- top2$gene[seq(1, 12, by=2)]
 RidgePlot(seus, features = genes, ncol = 2)
 ```
 ### Violin plot
 
 Visualize single cell expression distributions in each cluster
-```{r  eval=FALSE, fig.height=6, fig.width=10}
+```{r  eval = FALSE, fig.height=8, fig.width=10}
 
 VlnPlot(seus, features = genes, ncol=2)
 ```
@@ -120,7 +119,7 @@ VlnPlot(seus, features = genes, ncol=2)
 ### Feature plot
 We extract tSNE based on the features from DR-SC and then visualize feature expression in the low-dimensional space
  
-```{r  eval=FALSE, fig.height=6, fig.width=10}
+```{r  eval = FALSE, fig.height=8, fig.width=10}
 seus <- RunTSNE(seus, reduction="dr-sc", reduction.key='drsc_tSNE_')
 FeaturePlot(seus, features = genes, reduction = 'tsne' ,ncol=2)
 
@@ -130,14 +129,14 @@ FeaturePlot(seus, features = genes, reduction = 'tsne' ,ncol=2)
 ### Dot plots 
 The size of the dot corresponds to the percentage of cells expressing the
 feature in each cluster. The color represents the average expression level
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 DotPlot(seus, features = genes)
 ```
 
 ### Heatmap plot
 
 Single cell heatmap of feature expression
-```{r  eval=FALSE}
+```{r  eval = FALSE, fig.height=8, fig.width=10}
 top20 <-  dat %>%
   group_by(cluster) %>%
   top_n(n = 20, wt = avg_log2FC)
@@ -147,36 +146,37 @@ seus <- ScaleData(seus)
 DoHeatmap(subset(seus, downsample = 500), features = genes, size = 5)
 ```
 
-## Fit DR-SC model using 2000 spatially variable features and using MBIC　to determine clusters
+## Fit DR-SC model using 480 spatially variable features and using MBIC　to determine clusters
 
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 # choose 2000 spatially variable features
-seus <- FindSVGs(seu, nfeatures = 2000, verbose = F)
+seus <- FindSVGs(seu, nfeatures = 480, verbose = F)
 ```
 
 We set the argument variable.type='SVGs' (default option) to use the spatially variable genes.
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 ### Given K
-seus <- DR.SC(seus, K_set=3:8, platform = 'Visium', variable.type='SVGs', verbose=F)
+seus <- DR.SC(seus, K=3:9, platform = 'Visium', verbose=F)
 ```
 
 Plot the MBIC curve 
-```{r  eval=FALSE}
+```{r  eval = FALSE}
+seus <- selectModel(seus, pen.const = 0.8)
 mbicPlot(seus)
 ```
 
 Show the spatial scatter plot for clusters
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 spatialPlotClusters(seus)
 ```
 
 Show the tSNE plot based on the extracted features from DR-SC.
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 drscPlot(seus, dims=1:10)
 ```
 
 
 ## Session information
-```{r  eval=FALSE}
+```{r  eval = FALSE}
 sessionInfo()
 ```

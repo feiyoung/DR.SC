@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DR.SC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.6</span>
       </span>
     </div>
 
@@ -85,6 +85,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/DR-SC.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -95,10 +98,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/DR.SC.HCC1.html">DR-SC: HCC1 Data Analysis</a>
+      <a href="../articles/DR.SC.HCC1.html">DR-SC: DLPFC Data Analysis</a>
     </li>
     <li>
-      <a href="../articles/DR.SC.Simu.html">DR-SC: installation and simulation</a>
+      <a href="../articles/DR.SC.Simu.html">DR-SC: simulation</a>
     </li>
   </ul>
 </li>
@@ -128,7 +131,7 @@
     </div>
 
     <pre class="usage"><span class='fu'>gendata_RNAExp</span><span class='op'>(</span>height<span class='op'>=</span><span class='fl'>30</span>, width<span class='op'>=</span><span class='fl'>30</span>, platform<span class='op'>=</span><span class='st'>"ST"</span>, p <span class='op'>=</span><span class='fl'>100</span>, q<span class='op'>=</span><span class='fl'>10</span>, K<span class='op'>=</span><span class='fl'>7</span>, 
-                            G<span class='op'>=</span><span class='fl'>4</span>,sigma2<span class='op'>=</span><span class='fl'>1</span>, tau<span class='op'>=</span><span class='fl'>8</span>, seed<span class='op'>=</span><span class='fl'>1</span>, view<span class='op'>=</span><span class='cn'>F</span><span class='op'>)</span></pre>
+                            G<span class='op'>=</span><span class='fl'>4</span>,sigma2<span class='op'>=</span><span class='fl'>1</span>, tau<span class='op'>=</span><span class='fl'>8</span>, seed<span class='op'>=</span><span class='fl'>1</span>, view<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -139,7 +142,7 @@
     </tr>
     <tr>
       <th>platform</th>
-      <td><p>Set the platform for the simulated data.</p></td>
+      <td><p>set the platform for the simulated data, only support 'ST' and 'scRNAseq'.</p></td>
     </tr>
     <tr>
       <th>p</th>
@@ -157,6 +160,22 @@
       <th>seed</th>
       <td><p>random seed for generate data</p></td>
     </tr>
+    <tr>
+      <th>G</th>
+      <td><p>the number of neighbors. The latter must be one of G = 4 or G = 8, which respectively correspond to a first order and a second order dependency structure. By default, G = 4.</p></td>
+    </tr>
+    <tr>
+      <th>sigma2</th>
+      <td><p>Variance of error term in probabilitic PCA model.</p></td>
+    </tr>
+    <tr>
+      <th>tau</th>
+      <td><p>a positive factor of mixture mean values.</p></td>
+    </tr>
+    <tr>
+      <th>view</th>
+      <td><p>Logical value indicating whether the draw should be printed. Do not display the optional borders.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -167,9 +186,7 @@
     <p>return a "Seurat" object. If <code>platform="ST"</code>, then the metadata of this Seurat object will include two columns with names "row" and "col" which are the spatial coordinates; If <code>platform="scRNAseq"</code>, then the metadata of this Seurat object will not have them.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    
-  
-
+    <p>None</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Wei Liu</p>
@@ -178,24 +195,22 @@
     <p>nothing</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'>
-
-</div>
+    <div class='dont-index'><p>None</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>## we generate the spatial transcriptomics data with lattice neighborhood, i.e. ST platform.</span>
-<span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'>gendata_RNAExp</span><span class='op'>(</span>height<span class='op'>=</span><span class='fl'>30</span>, width<span class='op'>=</span><span class='fl'>30</span>,p<span class='op'>=</span><span class='fl'>500</span>, K<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: The following arguments are not used: row.names</span></div><div class='input'><span class='va'>seu</span>
+    <pre class="examples"><div class='input'>
+<span class='co'>## we generate the spatial transcriptomics data with lattice neighborhood, i.e. ST platform.</span>
+<span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'>gendata_RNAExp</span><span class='op'>(</span>height<span class='op'>=</span><span class='fl'>20</span>, width<span class='op'>=</span><span class='fl'>20</span>,p<span class='op'>=</span><span class='fl'>200</span>, K<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
+<span class='va'>seu</span>
 </div><div class='output co'>#&gt; An object of class Seurat 
-#&gt; 500 features across 900 samples within 1 assay 
-#&gt; Active assay: RNA (500 features, 0 variable features)</div><div class='input'>
+#&gt; 200 features across 400 samples within 1 assay 
+#&gt; Active assay: RNA (200 features, 0 variable features)</div><div class='input'>
 <span class='co'>## generate scRNAseq data</span>
-<span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'>gendata_RNAExp</span><span class='op'>(</span>height<span class='op'>=</span><span class='fl'>30</span>, width<span class='op'>=</span><span class='fl'>30</span>, platform<span class='op'>=</span><span class='st'>"scRNAseq"</span>, p<span class='op'>=</span><span class='fl'>500</span>, K<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: The following arguments are not used: row.names</span></div><div class='input'><span class='va'>seu</span>
+<span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'>gendata_RNAExp</span><span class='op'>(</span>height<span class='op'>=</span><span class='fl'>20</span>, width<span class='op'>=</span><span class='fl'>20</span>, platform<span class='op'>=</span><span class='st'>"scRNAseq"</span>, p<span class='op'>=</span><span class='fl'>100</span>, K<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
+<span class='va'>seu</span>
 </div><div class='output co'>#&gt; An object of class Seurat 
-#&gt; 500 features across 900 samples within 1 assay 
-#&gt; Active assay: RNA (500 features, 0 variable features)</div><div class='input'>
-</div></pre>
+#&gt; 100 features across 400 samples within 1 assay 
+#&gt; Active assay: RNA (100 features, 0 variable features)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -207,7 +222,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Wei Liu.</p>
+  <p>Developed by Wei Liu, Yi Yang, Xingjie Shi, Jin Liu.</p>
 </div>
 
 <div class="pkgdown">

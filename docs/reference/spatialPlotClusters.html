@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DR.SC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.6</span>
       </span>
     </div>
 
@@ -85,6 +85,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/DR-SC.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -95,10 +98,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/DR.SC.HCC1.html">DR-SC: HCC1 Data Analysis</a>
+      <a href="../articles/DR.SC.HCC1.html">DR-SC: DLPFC Data Analysis</a>
     </li>
     <li>
-      <a href="../articles/DR.SC.Simu.html">DR-SC: installation and simulation</a>
+      <a href="../articles/DR.SC.Simu.html">DR-SC: simulation</a>
     </li>
   </ul>
 </li>
@@ -146,9 +149,7 @@
     <p>return a ggplot2 object.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    
-  
-
+    <p>None</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Wei Liu</p>
@@ -157,38 +158,19 @@
     <p>nothing</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'>
-
-</div>
+    <div class='dont-index'><p>None</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## we generate the spatial transcriptomics data with lattice neighborhood, i.e. ST platform.</span>
-<span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gendata_RNAExp.html'>gendata_RNAExp</a></span><span class='op'>(</span>height<span class='op'>=</span><span class='fl'>30</span>, width<span class='op'>=</span><span class='fl'>30</span>,p<span class='op'>=</span><span class='fl'>500</span>, K<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: The following arguments are not used: row.names</span></div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://satijalab.org/seurat'>Seurat</a></span><span class='op'>)</span>
-<span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://satijalab.org/seurat/reference/NormalizeData.html'>NormalizeData</a></span><span class='op'>(</span><span class='va'>seu</span><span class='op'>)</span>
-<span class='co'># choose spatially variable features using Seurat</span>
-<span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='FindSVGs.html'>FindSVGs</a></span><span class='op'>(</span><span class='va'>seu</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Find the spatially variables genes by SPARK-X...
-#&gt; ## ===== SPARK-X INPUT INFORMATION ==== 
-#&gt; ## number of total samples: 900 
-#&gt; ## number of total genes: 500 
-#&gt; ## Running with single core, may take some time 
-#&gt; ## Testing With Projection Kernel
-#&gt; ## Testing With Gaussian Kernel 1
-#&gt; ## Testing With Gaussian Kernel 2
-#&gt; ## Testing With Gaussian Kernel 3
-#&gt; ## Testing With Gaussian Kernel 4
-#&gt; ## Testing With Gaussian Kernel 5
-#&gt; ## Testing With Cosine Kernel 1
-#&gt; ## Testing With Cosine Kernel 2
-#&gt; ## Testing With Cosine Kernel 3
-#&gt; ## Testing With Cosine Kernel 4
-#&gt; ## Testing With Cosine Kernel 5</div><div class='input'><span class='co'># use SVGs to fit DR.SC model</span>
-<span class='va'>seu1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='DR.SC.html'>DR.SC</a></span><span class='op'>(</span><span class='va'>seu</span>, K<span class='op'>=</span><span class='fl'>4</span>,platform <span class='op'>=</span> <span class='st'>'ST'</span>, variable.type <span class='op'>=</span> <span class='st'>'SVGs'</span>,verbose<span class='op'>=</span><span class='cn'>F</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Neighbors were identified for 900 out of 900 spots.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: nrow(seu) is less than nfeatures, so assign nfeatures with nrow(seu)!</span></div><div class='output co'>#&gt; Using SVGs to fit DR.SC model since variable.type=SVGs...
-#&gt; Fit DR-SC model...
-#&gt; elasped time is : 11.94 0.65 12.46 NA NA 
-#&gt; Finish DR-SC model fitting</div><div class='input'><span class='fu'>spatialPlotClusters</span><span class='op'>(</span><span class='va'>seu1</span><span class='op'>)</span>
+    <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gendata_RNAExp.html'>gendata_RNAExp</a></span><span class='op'>(</span>height<span class='op'>=</span><span class='fl'>10</span>, width<span class='op'>=</span><span class='fl'>10</span>,p<span class='op'>=</span><span class='fl'>50</span>, K<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
+    <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://satijalab.org/seurat'>Seurat</a></span><span class='op'>)</span>
+    <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://satijalab.org/seurat/reference/NormalizeData.html'>NormalizeData</a></span><span class='op'>(</span><span class='va'>seu</span><span class='op'>)</span>
+    <span class='co'># choose spatially variable features using Seurat</span>
+    <span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'><a href='FindSVGs.html'>FindSVGs</a></span><span class='op'>(</span><span class='va'>seu</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Find the spatially variables genes by SPARK-X...</span></div><div class='output co'>#&gt; <span class='message'>## ===== SPARK-X INPUT INFORMATION ====</span></div><div class='output co'>#&gt; <span class='message'>## number of total samples: 100</span></div><div class='output co'>#&gt; <span class='message'>## number of total genes: 50</span></div><div class='output co'>#&gt; <span class='message'>## Running with single core, may take some time </span></div><div class='output co'>#&gt; <span class='message'>## Testing With Projection Kernel</span></div><div class='output co'>#&gt; <span class='message'>## Testing With Gaussian Kernel 1</span></div><div class='output co'>#&gt; <span class='message'>## Testing With Gaussian Kernel 2</span></div><div class='output co'>#&gt; <span class='message'>## Testing With Gaussian Kernel 3</span></div><div class='output co'>#&gt; <span class='message'>## Testing With Gaussian Kernel 4</span></div><div class='output co'>#&gt; <span class='message'>## Testing With Gaussian Kernel 5</span></div><div class='output co'>#&gt; <span class='message'>## Testing With Cosine Kernel 1</span></div><div class='output co'>#&gt; <span class='message'>## Testing With Cosine Kernel 2</span></div><div class='output co'>#&gt; <span class='message'>## Testing With Cosine Kernel 3</span></div><div class='output co'>#&gt; <span class='message'>## Testing With Cosine Kernel 4</span></div><div class='output co'>#&gt; <span class='message'>## Testing With Cosine Kernel 5</span></div><div class='input'>    <span class='co'># use SVGs to fit DR.SC model</span>
+    <span class='co'># maxIter = 2 is only used for illustration, and user can use default.</span>
+    <span class='va'>seu1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='DR.SC.html'>DR.SC</a></span><span class='op'>(</span><span class='va'>seu</span>, K<span class='op'>=</span><span class='fl'>4</span>,platform <span class='op'>=</span> <span class='st'>'ST'</span>, maxIter<span class='op'>=</span><span class='fl'>2</span>,verbose<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Neighbors were identified for 100 out of 100 spots.</span></div><div class='output co'>#&gt; <span class='message'>Fit DR-SC model...</span></div><div class='output co'>#&gt; <span class='message'>Finish DR-SC model fitting</span></div><div class='input'>    <span class='fu'>spatialPlotClusters</span><span class='op'>(</span><span class='va'>seu1</span><span class='op'>)</span>
 </div><div class='img'><img src='spatialPlotClusters-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -201,7 +183,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Wei Liu.</p>
+  <p>Developed by Wei Liu, Yi Yang, Xingjie Shi, Jin Liu.</p>
 </div>
 
 <div class="pkgdown">

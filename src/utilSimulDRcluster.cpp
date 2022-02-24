@@ -54,8 +54,8 @@ void multi_det_SkCpp2(const arma::mat& X, const arma::vec& Lam_vec0,
   
   // method B: use SVD to compute |Srk.i()|
   svd(U, s, V, Sigmak);
-  WC12 = W0 * (U * diagmat(sqrt(s)));
-  WC12 =WC12% repmat(1.0/sqrt(Lam_vec0), 1, q);  // O(pq)  // change to sparse matrix multiplication.
+  WC12 = W0 * (U.each_row() % trans(sqrt(s))); //yangyi
+  WC12 =WC12.each_col() % (1.0/sqrt(Lam_vec0));  // O(pq)  // change to sparse matrix multiplication.
   vec d = svd(WC12);
   logdSk = -accu(log(1 +  d%d)) - accu(log(Lam_vec0));
   // method A: directly compuate log|Srki|
@@ -68,8 +68,8 @@ void multi_det_SkCpp2(const arma::mat& X, const arma::vec& Lam_vec0,
   // tmp2 = X_tk * WC12;
   // mSk  = sum(tmp2 % tmp2, 1);
   svd(U, s, V, Ck.i());
-  WC12 = W0 * (U * diagmat(sqrt(s))); // O(p*q^2)
-  WC12 = WC12 % repmat(1.0/sqrt(Lam_vec0), 1, q);  // O(pq)
+  WC12 = W0 * (U.each_row() % trans(sqrt(s))); // O(p*q^2) //yangyi
+  WC12 = WC12.each_col() % (1.0/sqrt(Lam_vec0));  // O(pq)
   X_tk = (X - repmat(Muk* W0.t(), n, 1)) % trans(repmat(1.0/sqrt(Lam_vec0), 1, n));  // change to sparse matrix multiplication.
   tmp1 = sum(X_tk % X_tk, 1);
   tmp2 = X_tk * WC12;
@@ -94,12 +94,13 @@ void multi_det_SkCpp(const arma::mat& X, const arma::vec& Lam_vec0, const arma::
   
   svd(U, s, V, Ck.i());
   
-  WC12 = W0 * (U * diagmat(sqrt(s)));
-  WC12 = sp_mat(diagmat(1/sqrt(Lam_vec0))) * WC12; // sparse matrix multiplication to speed up
+  WC12 = W0 * (U.each_row() % trans(sqrt(s))); //yangyi
+  WC12 =  (1/sqrt(Lam_vec0)) % WC12.each_col() ; // sparse matrix multiplication to speed up
   vec d = svd(WC12);
   //dSk = arma::as_scalar(prod(1- d % d)) / prod(Lam_vec0);
   logdSk = accu(log(1 - d%d)) - accu(log(Lam_vec0));
-  X_tk = (X - repmat(Muk* W0.t(), n, 1)) * sp_mat(diagmat(1/sqrt(Lam_vec0))) ;
+  mat tmp = (X - repmat(Muk* W0.t(), n, 1));
+  X_tk = tmp.each_row()%trans(1/sqrt(Lam_vec0));
   tmp1 = sum(X_tk % X_tk, 1);
   tmp2 = X_tk * WC12;
   tmp3 = sum(tmp2 % tmp2, 1);
@@ -118,7 +119,7 @@ vec decomp(const mat& Cki, const mat& W0){
   vec s, tmp1;
   mat U, V, WC12;
   svd(U, s, V, Cki);
-  WC12 = W0 * (U * diagmat(sqrt(s)));
+  WC12 = W0 * (U.each_row() % trans(sqrt(s)));
   tmp1 = sum(WC12 % WC12, 1);
   return tmp1;
 }  
@@ -148,7 +149,7 @@ cube update_Sigma0(const mat& R, const cube& Ez, const cube& Ci, const mat& Mu,
   int k, K= R.n_cols, q= Mu.n_cols, n= R.n_rows;
   cube Sigma0(q,q,K);
   for(k = 0; k<K; ++k){
-    Sigma0.slice(k) = trans(Ez.slice(k) - repmat(Mu.row(k), n, 1)) * sp_mat(diagmat(R.col(k))) * (Ez.slice(k) - repmat(Mu.row(k), n, 1)) + N(k)*  Ci.slice(k);
+    Sigma0.slice(k) = (trans(Ez.slice(k) - repmat(Mu.row(k), n, 1)) % trans(repmat(R.col(k), 1, q))) * (Ez.slice(k) - repmat(Mu.row(k), n, 1)) + N(k)*  Ci.slice(k);
     if(diagSigmak){
       Sigma0.slice(k) = diagmat(Sigma0.slice(k)) / N(k);
     }else{
@@ -211,9 +212,9 @@ double Q_fun(const mat& X, const mat& R,  const cube& Ez, const arma::cube& Ci,
       Ezzt = Ci.slice(k) + Ezik * Ezik.t();
       
       tmp_scalar =  0.5* accu(log(Lam_vec0)) + 0.5* accu( (X.row(i) % X.row(i)) / Lam_vec0.t()) +
-        0.5 * arma::as_scalar(trace(W0.t()* diagmat(1.0/Lam_vec0)*W0* Ezzt)- 2* X.row(i)* diagmat(1.0/Lam_vec0)*W0*Ezik);
-      Q +=  - R(i,k) * tmp_scalar + R(i,k)*(log(Pi0(k)) -  0.5* log(det(tmpSig))- 0.5* trace(tmpSig.i()*
-        Ezzt)+ arma::as_scalar(Mu0.row(k) * tmpSig.i()*(Ezik- 0.5*trans(Mu0.row(k)))));
+        0.5 * arma::as_scalar(accu(W0.t()%trans(repmat(1.0/Lam_vec0, 1, q))*W0 % Ezzt.t())- 2* (X.row(i)% (1.0/Lam_vec0))*W0*Ezik);
+      Q +=  - R(i,k) * tmp_scalar + R(i,k)*(log(Pi0(k)) -  0.5* log(det(tmpSig))- 0.5* accu(inv_sympd(tmpSig)%
+        Ezzt.t())+ arma::as_scalar(Mu0.row(k) * solve(tmpSig, (Ezik- 0.5*trans(Mu0.row(k)))))); //yangyi
     }
   }
   return Q;

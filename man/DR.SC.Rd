@@ -6,32 +6,27 @@
   Joint dimension reduction and spatial clustering for scRNA-seq and spatial transcriptomics data
 }
 \usage{
-### S3 method for class "Seurat"
-DR.SC(seu, q=15, K=NULL, platform= "Visium",
-       nfeatures=2000,K_set = seq(2, 10), variable.type="HVGs", ...)
+
+\method{DR.SC}{Seurat}(seu, K, q=15,  platform= "Visium",...)
 }
 \arguments{
   \item{seu}{an object of class "Seurat". The details of this object are given under 'Details'.}
   \item{q}{a positive integer, specify the number of latent features to be extracted, default as 15.}
-  \item{K}{a positive  integer, specify the number of clusters, default as \code{NULL}. When \code{K=NULL}, it is automatically selected by MBIC criteria.}
+  \item{K}{a positive  integer or integer vector, specify the number of clusters. When \code{K} is a vector, it is automatically selected by MBIC criteria. Users can also use BIC and AIC  to select K or refine model with MBIC by argument \code{pen.const} in the function \link{selectModel}.}
   \item{platform}{a string, specify the platform of the provided data, default as "Visium". There are more platforms to be chosen, including ("Visuim", "ST", "seqfish", 'merfish', 'slide-seqv2', 'seqscope', 'hdst') and "scRNAseq", where the first group means there are spatial coordinates information in the metadata of seu, named "row" and "col" and a Hidden Markov random field is used to model the spatial coordinates, and the last one "scRNAseq" means there is no spatial information in object seu and a multinomial model is used to model the unobserved class labels. The platform helps to calculate the adjacency matrix.}
-  \item{nfeatures}{a positive integer, means how many highly variable or spatially variable genes used for DR-SC model, default as 2000. If there are less than 2000 features in seu, then all features are used for DR-SC model.}
-  \item{K_set}{an optional vector of positive integer, means the candidates of number of clusters used for MBIC.}
-  \item{variable.type}{an optional string, specify whether use highly variable genes (HVGs) or spatially variable genes (SVGs) to fit DR-SC model, default as "HVGs".}
   \item{...}{Other arguments to pass into \link{DR.SC_fit} function.}
 }
 \details{
   seu is an object named \code{Seurat}, thich can easily created by R package \link{Seurat}.
 If the data is collected by the spatial transcriptomics technologies such as 10X Visium, ST, seqFISH, MERFISH and  Slide-seq, then there are spatial coordinates information in the metadata of seu, named "row" and "col". DR-SC model uses a Hidden Markov random field to model the spatial coordinates.  If the data is collected by the single cell RNA sequencing techonologies which means there is no spatial information in object seu then a multinomial model is used to model the unobserved class labels. 
 
-Moreover, if \code{variable.type=='HVGs'}, \link{FindVariableFeatures} function in \link{Seurat} is used to find the highly variable genes automatically; if \code{variable.type=='SVGs'}, \link{FindSVGs} function in \link{DR.SC} is used to find the spatially variable genes automatically.
 }
 \value{
   DR.SC returns a revised  \code{Seurat} object. There are two revisions in the seu. 1. the metadata is added a new column named \code{spatial.drsc.cluster} that represents the clustering results from DR-SC model, and the \code{Idents(seu)} is assigned with \code{spatial.drsc.cluster}. 2. a DimReduc object named \code{dr-sc} is added in the slot \code{reductions}, which represents the features extracted by DR-SC model.
 
 }
 \references{
-  None
+ \href{https://www.biorxiv.org/content/10.1101/2021.12.25.474153v4}{Wei Liu, Xu Liao, Yi Yang, Huazhen Lin, Joe Yeong, Xiang Zhou, Xingjie Shi and Jin Liu. (2022) Joint dimension reduction and clustering analysis for single-cell RNA-seq and spatial transcriptomics data}
 }
 \author{
 Wei Liu
@@ -57,7 +52,7 @@ seu <- NormalizeData(seu, verbose=FALSE)
 seu <- FindSVGs(seu, nfeatures = 40, verbose=FALSE)
 # use SVGs to fit DR.SC model
 # maxIter = 2 is only used for illustration, and user can use default.
-seu1 <- DR.SC(seu, K=4,platform = 'ST', maxIter=2,variable.type = 'SVGs',verbose=TRUE)
+seu1 <- DR.SC(seu, K=4,platform = 'ST', maxIter=2, verbose=TRUE)
 
 }
 \keyword{Dimension reduction}

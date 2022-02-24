@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DR.SC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.6</span>
       </span>
     </div>
 
@@ -84,6 +84,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/DR-SC.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -94,10 +97,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/DR.SC.HCC1.html">DR-SC: HCC1 Data Analysis</a>
+      <a href="../articles/DR.SC.HCC1.html">DR-SC: DLPFC Data Analysis</a>
     </li>
     <li>
-      <a href="../articles/DR.SC.Simu.html">DR-SC: installation and simulation</a>
+      <a href="../articles/DR.SC.Simu.html">DR-SC: simulation</a>
     </li>
   </ul>
 </li>
@@ -143,13 +146,13 @@
       <tr>
         
         <td>
-          <p><code><a href="DR.SC.fit.html">DR.SC.fit()</a></code> </p>
+          <p><code><a href="DR.SC.fit.html">DR.SC_fit()</a></code> </p>
         </td>
         <td><p>Joint dimension reduction and spatial clustering</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="DR.SC.html">DR.SC</a></code> </p>
+          <p><code><a href="DR.SC.html">DR.SC(<i>&lt;Seurat&gt;</i>)</a></code> </p>
         </td>
         <td><p>Joint dimension reduction and spatial clustering</p></td>
       </tr><tr>
@@ -175,7 +178,31 @@
         <td>
           <p><code><a href="getAdj.html">getAdj()</a></code> </p>
         </td>
-        <td><p>Calculate the Adjoint matrix given the spatial coordinates</p></td>
+        <td><p>Calculate the adjacency matrix given the spatial coordinates</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getAdj_auto.html">getAdj_auto()</a></code> </p>
+        </td>
+        <td><p>Calculate adjacency matrix by automatically choosing radius</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getAdj_manual.html">getAdj_manual()</a></code> </p>
+        </td>
+        <td><p>Calculate adjacency matrix by user-specified radius</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getneighborhood_fast.html">getneighborhood_fast()</a></code> </p>
+        </td>
+        <td><p>getneighborhood_fast</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="HCC1.html">dlpfc151510</a></code> </p>
+        </td>
+        <td><p>A human dorsolateral prefrontal cortex data</p></td>
       </tr><tr>
         
         <td>
@@ -203,9 +230,27 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="selectModel.html">selectModel()</a></code> </p>
+        </td>
+        <td><p>Select the number of clusters</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="spatialPlotClusters.html">spatialPlotClusters()</a></code> </p>
         </td>
         <td><p>Spatial coordinates plot visualization</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sp_means_Rcpp.html">sp_means_Rcpp()</a></code> </p>
+        </td>
+        <td><p>Calculate column-wise or row-wise mean</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sp_sums_Rcpp.html">sp_sums_Rcpp()</a></code> </p>
+        </td>
+        <td><p>Calculate column-wise or row-wise sum</p></td>
       </tr><tr>
         
         <td>
@@ -227,7 +272,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Wei Liu.</p>
+  <p>Developed by Wei Liu, Yi Yang, Xingjie Shi, Jin Liu.</p>
 </div>
 
 <div class="pkgdown">

@@ -1,8 +1,8 @@
-\name{HCC1}
-\alias{HCC1}
-\title{A liver dataset on Visium platform}
+\name{dlpfc151510}
+\alias{dlpfc151510}
+\title{A human dorsolateral prefrontal cortex data}
 \description{
-  A liver dataset measured on the  Visium platform, which invcludes 2983 spots and 2000 genes.
+  A human dorsolateral prefrontal cortex dataset measured on the  Visium platform, which invcludes 4634 spots and 500 genes, a subset of raw dataset at https://github.com/LieberInstitute/spatialLIBD.
 }
 
 \references{
@@ -15,5 +15,5 @@
   nothing
 }
 \examples{
-  data("HCC1")
+  data("dlpfc151510")
 }
