@@ -179,7 +179,7 @@ sparkx.sksg <- function (igene, expmat, xmat, scaleinfo, numDim, lambda_K, loc_i
     numCell
   Zsort <- sort(lambda_G * lambda_K, decreasing = TRUE)
   results_score <- try(davies(scoredavies, Zsort))
-  if (class(results_score) != "try-error") {
+  if (!inherits(results_score, "try-error")) { # class(results_score) != "try-error"
     pout <- results_score$Qq
     if (pout <= 0) {
       pout <- liu(scoredavies, Zsort)
@@ -195,7 +195,7 @@ sparkx_pval<-function (igene, lambda_G, lambda_K, allstat)
 {
   Zsort <- sort(lambda_G[igene] * lambda_K, decreasing = TRUE)
   results_score <- try(davies(allstat[igene], Zsort))
-  if (class(results_score) != "try-error") {
+  if (!inherits(results_score, "try-error")) { # class(results_score) != "try-error"
     pout <- results_score$Qq
     if (pout <= 0) {
       pout <- liu(allstat[igene], Zsort)

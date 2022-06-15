@@ -13,7 +13,7 @@
   \item{seu}{an object of class "Seurat". The details of this object are given under 'Details'.}
   \item{q}{a positive integer, specify the number of latent features to be extracted, default as 15.}
   \item{K}{a positive  integer or integer vector, specify the number of clusters. When \code{K} is a vector, it is automatically selected by MBIC criteria. Users can also use BIC and AIC  to select K or refine model with MBIC by argument \code{pen.const} in the function \link{selectModel}.}
-  \item{platform}{a string, specify the platform of the provided data, default as "Visium". There are more platforms to be chosen, including ("Visuim", "ST", "seqfish", 'merfish', 'slide-seqv2', 'seqscope', 'hdst') and "scRNAseq", where the first group means there are spatial coordinates information in the metadata of seu, named "row" and "col" and a Hidden Markov random field is used to model the spatial coordinates, and the last one "scRNAseq" means there is no spatial information in object seu and a multinomial model is used to model the unobserved class labels. The platform helps to calculate the adjacency matrix.}
+  \item{platform}{a string, specify the platform of the provided data, default as "Visium". There are more platforms to be chosen, including ("Visuim", "ST", "seqfish", 'merfish', 'slide-seqv2') and "scRNAseq", where the first group means there are spatial coordinates information in the metadata of seu, named "row" and "col" and a Hidden Markov random field is used to model the spatial coordinates, and the last one "scRNAseq" means there is no spatial information in object seu and a multinomial model is used to model the unobserved class labels. The platform helps to calculate the adjacency matrix.}
   \item{...}{Other arguments to pass into \link{DR.SC_fit} function.}
 }
 \details{
@@ -26,7 +26,7 @@ If the data is collected by the spatial transcriptomics technologies such as 10X
 
 }
 \references{
- \href{https://www.biorxiv.org/content/10.1101/2021.12.25.474153v4}{Wei Liu, Xu Liao, Yi Yang, Huazhen Lin, Joe Yeong, Xiang Zhou, Xingjie Shi and Jin Liu. (2022) Joint dimension reduction and clustering analysis for single-cell RNA-seq and spatial transcriptomics data}
+ Wei Liu, Xu Liao, Yi Yang, Huazhen Lin, Joe Yeong, Xiang Zhou*, Xingjie Shi* and Jin Liu* (2022). Joint dimension reduction and clustering analysis of single-cell RNA-seq and spatial transcriptomics data, Nucleic Acids Research
 }
 \author{
 Wei Liu

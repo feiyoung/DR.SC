@@ -1,9 +1,9 @@
 {
-    "path" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src",
-    "sortOrder" : [
+    "path": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/R",
+    "sortOrder": [
         {
-            "ascending" : true,
-            "columnIndex" : 2
+            "columnIndex": 2,
+            "ascending": true
         }
     ]
 }

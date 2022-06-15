@@ -366,7 +366,7 @@ topSVGs <- function(seu, ntop=5){
 DR.SC_fit <- function(X, K, Adj_sp=NULL, q=15,
                             error.heter= TRUE, beta_grid=seq(0.5, 5, by=0.5),
                             maxIter=25, epsLogLik=1e-5, verbose=FALSE, maxIter_ICM=6,
-                            wpca.int=FALSE, coreNum = length(K)){
+                            wpca.int=FALSE, coreNum = 5){
   if (!(inherits(X, "dgCMatrix") || inherits(X, "matrix")))
     stop("X must be dgCMatrix object or matrix object")
   if(is.null(colnames(X))) colnames(X) <- paste0('gene', 1:ncol(X))
@@ -376,7 +376,7 @@ DR.SC_fit <- function(X, K, Adj_sp=NULL, q=15,
     warning(paste0('There are ', sum(sd_zeros==0), ' zero-variance genes that will be removed!\n'))
     X <- X[, sd_zeros !=0]
   }
-   
+  if(length(K)==1) coreNum <- 1 
 
   message("Fit DR-SC model...\n")
   resList <- drsc(X,Adj_sp = Adj_sp, q=q, K=K, error.heter= error.heter, 
@@ -462,7 +462,7 @@ extractInfModel <- function(resList){
 ### to evaluate Z and y in multi-K.
 drsc <- function(X,Adj_sp = NULL, q, K, error.heter= TRUE, beta_grid=seq(0.5, 5, by=0.5),
                            maxIter=30, epsLogLik=1e-5, verbose=FALSE, maxIter_ICM=6,
-                           alpha=FALSE, wpca.int=TRUE, diagSigmak=FALSE, coreNum = length(K)){
+                           alpha=FALSE, wpca.int=TRUE, diagSigmak=FALSE, coreNum = 5){
   
   n <- nrow(X); p <- ncol(X)
   X <- scale(X, scale=FALSE)
@@ -486,12 +486,14 @@ drsc <- function(X,Adj_sp = NULL, q, K, error.heter= TRUE, beta_grid=seq(0.5, 5,
   nK <- length(K)
   if(nK>1){
     message("Starting parallel computing intial values...")
-    ## set the number of cores in evaluating initial values by comparing nK with Cores*0.8
-    num_core <- ifelse(nK <= detectCores()*0.8, nK,  detectCores()*0.5)
+    ## set the number of cores in evaluating initial values
+    num_core <- coreNum
     if(Sys.info()[1]=="Windows"){
       cl <- makeCluster(num_core)
-    }else{
+    }else if(Sys.info()[1]=='Linux'){
       cl <- makeCluster(num_core, type="FORK")
+    }else{
+      cl <- makeCluster(num_core)
     }
     intList <- parLapply(cl, X=K, parfun_int, Z=hZ, alpha=alpha)
     stopCluster(cl)
@@ -814,29 +816,39 @@ getAdj_reg <- function(pos, platform ='Visisum'){
     return(Adj_sp)
 }
 
-getAdj_auto <- function(pos){
+getAdj_auto <- function(pos, lower.med=4, upper.med=6, radius.upper= 100){
   if (!inherits(pos, "matrix"))
     stop("method is only for  matrix object!")
   
   
+
   radius.lower <- 1
-  radius.upper <- 50
+  Adj_sp <- getneighborhood_fast(pos, radius=radius.upper)
+  Med <- summary(Matrix::rowSums(Adj_sp))['Median']
+  if(Med < lower.med) stop("The radius.upper is too smaller that cannot find median neighbors greater than 4.")
   start.radius <- 1
   Med <- 0
   message("Find the adjacency matrix by bisection method...")
-  while(!(Med >= 4 && Med <=6)){ # ensure that each spot has about 4~6 neighborhoods in median.
+  maxIter <- 30
+  k <- 1
+  while(!(Med >= lower.med && Med <=upper.med)){ # ensure that each spot has about 4~6 neighborhoods in median.
     
     Adj_sp <- getneighborhood_fast(pos, radius=start.radius)
     Med <- summary(Matrix::rowSums(Adj_sp))['Median']
-    if(Med < 4){
+    if(Med < lower.med){
       radius.lower <- start.radius
       start.radius <- (radius.lower + radius.upper)/2
-    }else if(Med >6){
+    }else if(Med >upper.med){
       radius.upper <- start.radius
       start.radius <- (radius.lower + radius.upper)/2
     }
     message("Current radius is ", round(start.radius, 2))
     message("Median of neighborhoods is ", Med)
+    if(k > maxIter) {
+      message("Reach the maximum iteration but can not find a proper radius!")
+      break;
+    }
+    k <- k + 1
   }
   
   return(Adj_sp)

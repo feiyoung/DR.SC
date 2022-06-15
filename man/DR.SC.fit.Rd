@@ -8,7 +8,7 @@
   DR.SC_fit(X, K, Adj_sp=NULL, q=15,
              error.heter= TRUE, beta_grid=seq(0.5, 5, by=0.5),
              maxIter=25, epsLogLik=1e-5, verbose=FALSE, maxIter_ICM=6,
-             wpca.int=FALSE, coreNum = length(K))
+             wpca.int=FALSE, coreNum = 5)
 }
 \arguments{
  \item{X}{a  sparse matrix with class \code{dgCMatrix} or \code{matrix}, specify the log-normalization gene expression matrix used for DR-SC model.}
@@ -22,7 +22,7 @@
   \item{verbose}{an optional logical value, whether output the information of the ICM-EM algorithm.}
   \item{maxIter_ICM}{an optional positive value, represents the maximum iterations of ICM.}
   \item{wpca.int}{an optional logical value, means whether use the weighted PCA to obtain the initial values of loadings and other paramters, default as \code{FALSE} which means the ordinary PCA  is used.}
-  \item{coreNum}{an optional positive integer, means the number of thread used in parallel computating.}
+  \item{coreNum}{an optional positive integer, means the number of thread used in parallel computating, default as 5. If the length of K is one, then coreNum will be set as 1 automatically.}
 }
 \details{
   Nothing
@@ -44,7 +44,7 @@ In addition, each element of "Objdrsc" is a list with the following comoponents:
 \item{loglik}{pseudo observed log-likelihood.}
 }
 \references{
-\href{https://www.biorxiv.org/content/10.1101/2021.12.25.474153v4}{Wei Liu, Xu Liao, Yi Yang, Huazhen Lin, Joe Yeong, Xiang Zhou, Xingjie Shi and Jin Liu. (2022) Joint dimension reduction and clustering analysis for single-cell RNA-seq and spatial transcriptomics data}
+Wei Liu, Xu Liao, Yi Yang, Huazhen Lin, Joe Yeong, Xiang Zhou*, Xingjie Shi* and Jin Liu* (2022). Joint dimension reduction and clustering analysis of single-cell RNA-seq and spatial transcriptomics data, Nucleic Acids Research
 }
 \author{
 Wei Liu

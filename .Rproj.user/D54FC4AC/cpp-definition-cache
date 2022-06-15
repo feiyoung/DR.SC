@@ -1,350 +1,349 @@
 [
     {
-        "definitions" : [
+        "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/getNB_fast.cpp",
+        "file_last_write": 1637323248.0,
+        "definitions": [
             {
-                "column" : 15,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/getNB_fast.cpp",
-                "kind" : 6,
-                "line" : 21,
-                "name" : "getneighborhood_fast(const arma::mat, double)",
-                "parent_name" : "",
-                "usr" : "c:@F@getneighborhood_fast#1$@N@arma@S@Mat>#d#d#"
+                "usr": "c:@F@getneighborhood_fast#1$@N@arma@S@Mat>#d#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "getneighborhood_fast(const arma::mat, double)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/getNB_fast.cpp",
+                "line": 21,
+                "column": 15
             },
             {
-                "column" : 11,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/getNB_fast.cpp",
-                "kind" : 6,
-                "line" : 50,
-                "name" : "sp_means_Rcpp(arma::sp_mat, bool)",
-                "parent_name" : "",
-                "usr" : "c:@F@sp_means_Rcpp#$@N@arma@S@SpMat>#d#b#"
+                "usr": "c:@F@sp_means_Rcpp#$@N@arma@S@SpMat>#d#b#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "sp_means_Rcpp(arma::sp_mat, bool)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/getNB_fast.cpp",
+                "line": 50,
+                "column": 11
             },
             {
-                "column" : 11,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/getNB_fast.cpp",
-                "kind" : 6,
-                "line" : 75,
-                "name" : "sp_sums_Rcpp(arma::sp_mat, bool)",
-                "parent_name" : "",
-                "usr" : "c:@F@sp_sums_Rcpp#$@N@arma@S@SpMat>#d#b#"
+                "usr": "c:@F@sp_sums_Rcpp#$@N@arma@S@SpMat>#d#b#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "sp_sums_Rcpp(arma::sp_mat, bool)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/getNB_fast.cpp",
+                "line": 75,
+                "column": 11
             }
-        ],
-        "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/getNB_fast.cpp",
-        "file_last_write" : 1637323248.000000
+        ]
     },
     {
-        "definitions" : [
+        "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job.cpp",
+        "file_last_write": 1645101932.0,
+        "definitions": [
             {
-                "column" : 16,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job.cpp",
-                "kind" : 7,
-                "line" : 19,
-                "name" : "loop_by_K_drsc(int)",
-                "parent_name" : "par_DRSC",
-                "usr" : "c:@S@par_DRSC@F@loop_by_K_drsc#I#"
+                "usr": "c:@S@par_DRSC@F@loop_by_K_drsc#I#",
+                "kind": 7,
+                "parent_name": "par_DRSC",
+                "name": "loop_by_K_drsc(int)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job.cpp",
+                "line": 19,
+                "column": 16
             },
             {
-                "column" : 15,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job.cpp",
-                "kind" : 7,
-                "line" : 74,
-                "name" : "next_drsc",
-                "parent_name" : "par_DRSC",
-                "usr" : "c:@S@par_DRSC@F@next_drsc#"
+                "usr": "c:@S@par_DRSC@F@next_drsc#",
+                "kind": 7,
+                "parent_name": "par_DRSC",
+                "name": "next_drsc",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job.cpp",
+                "line": 74,
+                "column": 15
             },
             {
-                "column" : 16,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job.cpp",
-                "kind" : 7,
-                "line" : 83,
-                "name" : "update_by_thread_drsc(int)",
-                "parent_name" : "par_DRSC",
-                "usr" : "c:@S@par_DRSC@F@update_by_thread_drsc#I#"
+                "usr": "c:@S@par_DRSC@F@update_by_thread_drsc#I#",
+                "kind": 7,
+                "parent_name": "par_DRSC",
+                "name": "update_by_thread_drsc(int)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job.cpp",
+                "line": 83,
+                "column": 16
             }
-        ],
-        "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job.cpp",
-        "file_last_write" : 1645101932.000000
+        ]
     },
     {
-        "definitions" : [
+        "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job.h",
+        "file_last_write": 1645102554.0,
+        "definitions": [
             {
-                "column" : 7,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job.h",
-                "kind" : 2,
-                "line" : 16,
-                "name" : "par_DRSC",
-                "parent_name" : "",
-                "usr" : "c:@S@par_DRSC"
+                "usr": "c:@S@par_DRSC",
+                "kind": 2,
+                "parent_name": "",
+                "name": "par_DRSC",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job.h",
+                "line": 16,
+                "column": 7
             }
-        ],
-        "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job.h",
-        "file_last_write" : 1645102554.000000
+        ]
     },
     {
-        "definitions" : [
+        "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job2.cpp",
+        "file_last_write": 1645101939.0,
+        "definitions": [
             {
-                "column" : 23,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job2.cpp",
-                "kind" : 7,
-                "line" : 19,
-                "name" : "loop_by_K_drsc(int)",
-                "parent_name" : "par_DRSC_nonspa",
-                "usr" : "c:@S@par_DRSC_nonspa@F@loop_by_K_drsc#I#"
+                "usr": "c:@S@par_DRSC_nonspa@F@loop_by_K_drsc#I#",
+                "kind": 7,
+                "parent_name": "par_DRSC_nonspa",
+                "name": "loop_by_K_drsc(int)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job2.cpp",
+                "line": 19,
+                "column": 23
             },
             {
-                "column" : 22,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job2.cpp",
-                "kind" : 7,
-                "line" : 57,
-                "name" : "next_drsc",
-                "parent_name" : "par_DRSC_nonspa",
-                "usr" : "c:@S@par_DRSC_nonspa@F@next_drsc#"
+                "usr": "c:@S@par_DRSC_nonspa@F@next_drsc#",
+                "kind": 7,
+                "parent_name": "par_DRSC_nonspa",
+                "name": "next_drsc",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job2.cpp",
+                "line": 57,
+                "column": 22
             },
             {
-                "column" : 23,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job2.cpp",
-                "kind" : 7,
-                "line" : 66,
-                "name" : "update_by_thread_drsc(int)",
-                "parent_name" : "par_DRSC_nonspa",
-                "usr" : "c:@S@par_DRSC_nonspa@F@update_by_thread_drsc#I#"
+                "usr": "c:@S@par_DRSC_nonspa@F@update_by_thread_drsc#I#",
+                "kind": 7,
+                "parent_name": "par_DRSC_nonspa",
+                "name": "update_by_thread_drsc(int)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job2.cpp",
+                "line": 66,
+                "column": 23
             }
-        ],
-        "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job2.cpp",
-        "file_last_write" : 1645101939.000000
+        ]
     },
     {
-        "definitions" : [
+        "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job2.h",
+        "file_last_write": 1645663972.0,
+        "definitions": [
             {
-                "column" : 7,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job2.h",
-                "kind" : 2,
-                "line" : 16,
-                "name" : "par_DRSC_nonspa",
-                "parent_name" : "",
-                "usr" : "c:@S@par_DRSC_nonspa"
+                "usr": "c:@S@par_DRSC_nonspa",
+                "kind": 2,
+                "parent_name": "",
+                "name": "par_DRSC_nonspa",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job2.h",
+                "line": 16,
+                "column": 7
             }
-        ],
-        "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/mt_paral_job2.h",
-        "file_last_write" : 1645663972.000000
+        ]
     },
     {
-        "definitions" : [
+        "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster.h",
+        "file_last_write": 1644821423.0,
+        "definitions": [
             {
-                "column" : 8,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster.h",
-                "kind" : 3,
-                "line" : 15,
-                "name" : "Objdrsc",
-                "parent_name" : "",
-                "usr" : "c:@S@Objdrsc"
+                "usr": "c:@S@Objdrsc",
+                "kind": 3,
+                "parent_name": "",
+                "name": "Objdrsc",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster.h",
+                "line": 15,
+                "column": 8
             },
             {
-                "column" : 8,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster.h",
-                "kind" : 3,
-                "line" : 34,
-                "name" : "Objdrsc_nonspa",
-                "parent_name" : "",
-                "usr" : "c:@S@Objdrsc_nonspa"
+                "usr": "c:@S@Objdrsc_nonspa",
+                "kind": 3,
+                "parent_name": "",
+                "name": "Objdrsc_nonspa",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster.h",
+                "line": 34,
+                "column": 8
             }
-        ],
-        "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster.h",
-        "file_last_write" : 1644821423.000000
+        ]
     },
     {
-        "definitions" : [
+        "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
+        "file_last_write": 1645101963.0,
+        "definitions": [
             {
-                "column" : 11,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
-                "kind" : 6,
-                "line" : 40,
-                "name" : "getPairDist(const arma::mat)",
-                "parent_name" : "",
-                "usr" : "c:@F@getPairDist#1$@N@arma@S@Mat>#d#"
+                "usr": "c:@F@getPairDist#1$@N@arma@S@Mat>#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "getPairDist(const arma::mat)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
+                "line": 40,
+                "column": 11
             },
             {
-                "column" : 8,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
-                "kind" : 6,
-                "line" : 57,
-                "name" : "get_spNbs(arma::ivec, const arma::sp_mat &)",
-                "parent_name" : "",
-                "usr" : "c:@F@get_spNbs#$@N@arma@S@Col>#K#&1$@N@arma@S@SpMat>#d#"
+                "usr": "c:@F@get_spNbs#$@N@arma@S@Col>#K#&1$@N@arma@S@SpMat>#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "get_spNbs(arma::ivec, const arma::sp_mat &)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
+                "line": 57,
+                "column": 8
             },
             {
-                "column" : 11,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
-                "kind" : 6,
-                "line" : 86,
-                "name" : "calYenergy2D_sp(const arma::ivec &, const arma::sp_mat &, int, const arma::vec, const double)",
-                "parent_name" : "",
-                "usr" : "c:@F@calYenergy2D_sp#&1$@N@arma@S@Col>#K#&1$@N@arma@S@SpMat>#d#I#1$@N@arma@S@Col>#d#1d#"
+                "usr": "c:@F@calYenergy2D_sp#&1$@N@arma@S@Col>#K#&1$@N@arma@S@SpMat>#d#I#1$@N@arma@S@Col>#d#1d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "calYenergy2D_sp(const arma::ivec &, const arma::sp_mat &, int, const arma::vec, const double)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
+                "line": 86,
+                "column": 11
             },
             {
-                "column" : 8,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
-                "kind" : 6,
-                "line" : 134,
-                "name" : "obj_beta(const arma::ivec &, const arma::mat &, const arma::sp_mat &, int, const arma::vec, const double)",
-                "parent_name" : "",
-                "usr" : "c:@F@obj_beta#&1$@N@arma@S@Col>#K#&1$@N@arma@S@Mat>#d#&1$@N@arma@S@SpMat>#d#I#1$@N@arma@S@Col>#d#1d#"
+                "usr": "c:@F@obj_beta#&1$@N@arma@S@Col>#K#&1$@N@arma@S@Mat>#d#&1$@N@arma@S@SpMat>#d#I#1$@N@arma@S@Col>#d#1d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "obj_beta(const arma::ivec &, const arma::mat &, const arma::sp_mat &, int, const arma::vec, const double)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
+                "line": 134,
+                "column": 8
             },
             {
-                "column" : 6,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
-                "kind" : 6,
-                "line" : 142,
-                "name" : "runICM_sp(const arma::mat &, arma::ivec &, const arma::mat &, const arma::vec &, const arma::mat &, const arma::cube &, const arma::sp_mat &, const arma::vec &, const arma::vec &, double &, int, arma::mat &, arma::cube &, arma::cube &, double &)",
-                "parent_name" : "",
-                "usr" : "c:@F@runICM_sp#&1$@N@arma@S@Mat>#d#&$@N@arma@S@Col>#K#S0_#&1$@N@arma@S@Col>#d#S0_#&1$@N@arma@S@Cube>#d#&1$@N@arma@S@SpMat>#d#S4_#S4_#&d#I#&S1_#&S7_#S12_#S10_#"
+                "usr": "c:@F@runICM_sp#&1$@N@arma@S@Mat>#d#&$@N@arma@S@Col>#K#S0_#&1$@N@arma@S@Col>#d#S0_#&1$@N@arma@S@Cube>#d#&1$@N@arma@S@SpMat>#d#S4_#S4_#&d#I#&S1_#&S7_#S12_#S10_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "runICM_sp(const arma::mat &, arma::ivec &, const arma::mat &, const arma::vec &, const arma::mat &, const arma::cube &, const arma::sp_mat &, const arma::vec &, const arma::vec &, double &, int, arma::mat &, arma::cube &, arma::cube &, double &)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
+                "line": 142,
+                "column": 6
             },
             {
-                "column" : 9,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
-                "kind" : 6,
-                "line" : 240,
-                "name" : "drsc(const arma::mat &, const arma::sp_mat &, arma::ivec &, arma::mat &, arma::cube &, arma::mat &, arma::vec &, arma::vec &, double &, arma::vec &, int &, int &, double &, bool &, bool &, bool &)",
-                "parent_name" : "",
-                "usr" : "c:@F@drsc#&1$@N@arma@S@Mat>#d#&1$@N@arma@S@SpMat>#d#&$@N@arma@S@Col>#K#&S1_#&$@N@arma@S@Cube>#d#S6_#&$@N@arma@S@Col>#d#S9_#&d#S9_#&I#S12_#S11_#&b#S13_#S13_#"
+                "usr": "c:@F@drsc#&1$@N@arma@S@Mat>#d#&1$@N@arma@S@SpMat>#d#&$@N@arma@S@Col>#K#&S1_#&$@N@arma@S@Cube>#d#S6_#&$@N@arma@S@Col>#d#S9_#&d#S9_#&I#S12_#S11_#&b#S13_#S13_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "drsc(const arma::mat &, const arma::sp_mat &, arma::ivec &, arma::mat &, arma::cube &, arma::mat &, arma::vec &, arma::vec &, double &, arma::vec &, int &, int &, double &, bool &, bool &, bool &)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
+                "line": 240,
+                "column": 9
             },
             {
-                "column" : 13,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
-                "kind" : 6,
-                "line" : 368,
-                "name" : "icmem_heterCpp(const arma::mat &, const arma::sp_mat &, const arma::imat &, Rcpp::List &, const arma::mat &, Rcpp::List &, arma::vec &, Rcpp::List &, const arma::vec &, const arma::vec &, const int &, const int &, const double &, const int &, const bool &, const bool &, const int, const int, const int)",
-                "parent_name" : "",
-                "usr" : "c:@F@icmem_heterCpp#&1$@N@arma@S@Mat>#d#&1$@N@arma@S@SpMat>#d#&1$@N@arma@S@Mat>#K#&I#S0_#S6_#&$@N@arma@S@Col>#d#S6_#&1S8_#S9_#&1I#S10_#&1d#S10_#&1b#S12_#1I#1I#1I#"
+                "usr": "c:@F@icmem_heterCpp#&1$@N@arma@S@Mat>#d#&1$@N@arma@S@SpMat>#d#&1$@N@arma@S@Mat>#K#&I#S0_#S6_#&$@N@arma@S@Col>#d#S6_#&1S8_#S9_#&1I#S10_#&1d#S10_#&1b#S12_#1I#1I#1I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "icmem_heterCpp(const arma::mat &, const arma::sp_mat &, const arma::imat &, Rcpp::List &, const arma::mat &, Rcpp::List &, arma::vec &, Rcpp::List &, const arma::vec &, const arma::vec &, const int &, const int &, const double &, const int &, const bool &, const bool &, const int, const int, const int)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
+                "line": 368,
+                "column": 13
             },
             {
-                "column" : 6,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
-                "kind" : 6,
-                "line" : 449,
-                "name" : "runEstep(const arma::mat &, const arma::mat &, const arma::vec &, const arma::mat &, const arma::cube &, const arma::vec &, arma::mat &, arma::cube &, arma::cube &, double &)",
-                "parent_name" : "",
-                "usr" : "c:@F@runEstep#&1$@N@arma@S@Mat>#d#S0_#&1$@N@arma@S@Col>#d#S0_#&1$@N@arma@S@Cube>#d#S2_#&S1_#&S5_#S7_#&d#"
+                "usr": "c:@F@runEstep#&1$@N@arma@S@Mat>#d#S0_#&1$@N@arma@S@Col>#d#S0_#&1$@N@arma@S@Cube>#d#S2_#&S1_#&S5_#S7_#&d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "runEstep(const arma::mat &, const arma::mat &, const arma::vec &, const arma::mat &, const arma::cube &, const arma::vec &, arma::mat &, arma::cube &, arma::cube &, double &)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
+                "line": 449,
+                "column": 6
             },
             {
-                "column" : 16,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
-                "kind" : 6,
-                "line" : 501,
-                "name" : "drsc_nonspa(const arma::mat &, const arma::vec &, const arma::mat &, const arma::mat &, const arma::cube &, const arma::vec &, const int &, const double &, const bool &, const bool &, const bool &)",
-                "parent_name" : "",
-                "usr" : "c:@F@drsc_nonspa#&1$@N@arma@S@Mat>#d#&1$@N@arma@S@Col>#d#S0_#S0_#&1$@N@arma@S@Cube>#d#S2_#&1I#&1d#&1b#S8_#S8_#"
+                "usr": "c:@F@drsc_nonspa#&1$@N@arma@S@Mat>#d#&1$@N@arma@S@Col>#d#S0_#S0_#&1$@N@arma@S@Cube>#d#S2_#&1I#&1d#&1b#S8_#S8_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "drsc_nonspa(const arma::mat &, const arma::vec &, const arma::mat &, const arma::mat &, const arma::cube &, const arma::vec &, const int &, const double &, const bool &, const bool &, const bool &)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
+                "line": 501,
+                "column": 16
             },
             {
-                "column" : 13,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
-                "kind" : 6,
-                "line" : 642,
-                "name" : "EMmPCpp_heter(const arma::mat &, Rcpp::List &, Rcpp::List &, const arma::mat &, Rcpp::List &, arma::vec &, const int &, const double &, const bool &, const bool &, const bool &, const int &, const int &, const int &)",
-                "parent_name" : "",
-                "usr" : "c:@F@EMmPCpp_heter#&1$@N@arma@S@Mat>#d#&I#S2_#S0_#S2_#&$@N@arma@S@Col>#d#&1I#&1d#&1b#S7_#S7_#S5_#S5_#S5_#"
+                "usr": "c:@F@EMmPCpp_heter#&1$@N@arma@S@Mat>#d#&I#S2_#S0_#S2_#&$@N@arma@S@Col>#d#&1I#&1d#&1b#S7_#S7_#S5_#S5_#S5_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "EMmPCpp_heter(const arma::mat &, Rcpp::List &, Rcpp::List &, const arma::mat &, Rcpp::List &, arma::vec &, const int &, const double &, const bool &, const bool &, const bool &, const int &, const int &, const int &)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
+                "line": 642,
+                "column": 13
             }
-        ],
-        "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/simulDRcluster_main.cpp",
-        "file_last_write" : 1645101963.000000
+        ]
     },
     {
-        "definitions" : [
+        "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
+        "file_last_write": 1644571256.0,
+        "definitions": [
             {
-                "column" : 6,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
-                "kind" : 6,
-                "line" : 43,
-                "name" : "multi_det_SkCpp2(const arma::mat &, const arma::vec &, const arma::mat &, const arma::mat &, const arma::rowvec, const arma::mat &, double &, arma::vec &)",
-                "parent_name" : "",
-                "usr" : "c:@F@multi_det_SkCpp2#&1$@N@arma@S@Mat>#d#&1$@N@arma@S@Col>#d#S0_#S0_#1$@N@arma@S@Row>#d#S0_#&d#&S3_#"
+                "usr": "c:@F@multi_det_SkCpp2#&1$@N@arma@S@Mat>#d#&1$@N@arma@S@Col>#d#S0_#S0_#1$@N@arma@S@Row>#d#S0_#&d#&S3_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "multi_det_SkCpp2(const arma::mat &, const arma::vec &, const arma::mat &, const arma::mat &, const arma::rowvec, const arma::mat &, double &, arma::vec &)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
+                "line": 43,
+                "column": 6
             },
             {
-                "column" : 6,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
-                "kind" : 6,
-                "line" : 81,
-                "name" : "multi_det_SkCpp(const arma::mat &, const arma::vec &, const arma::mat &, const arma::mat &, const arma::rowvec, double &, arma::vec &)",
-                "parent_name" : "",
-                "usr" : "c:@F@multi_det_SkCpp#&1$@N@arma@S@Mat>#d#&1$@N@arma@S@Col>#d#S0_#S0_#1$@N@arma@S@Row>#d#&d#&S3_#"
+                "usr": "c:@F@multi_det_SkCpp#&1$@N@arma@S@Mat>#d#&1$@N@arma@S@Col>#d#S0_#S0_#1$@N@arma@S@Row>#d#&d#&S3_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "multi_det_SkCpp(const arma::mat &, const arma::vec &, const arma::mat &, const arma::mat &, const arma::rowvec, double &, arma::vec &)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
+                "line": 81,
+                "column": 6
             },
             {
-                "column" : 5,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
-                "kind" : 6,
-                "line" : 118,
-                "name" : "decomp(const arma::mat &, const arma::mat &)",
-                "parent_name" : "",
-                "usr" : "c:@F@decomp#&1$@N@arma@S@Mat>#d#S0_#"
+                "usr": "c:@F@decomp#&1$@N@arma@S@Mat>#d#S0_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "decomp(const arma::mat &, const arma::mat &)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
+                "line": 118,
+                "column": 5
             },
             {
-                "column" : 5,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
-                "kind" : 6,
-                "line" : 134,
-                "name" : "update_W0(const arma::mat &, const arma::mat &, const arma::cube &, const arma::cube &, const arma::vec &)",
-                "parent_name" : "",
-                "usr" : "c:@F@update_W0#&1$@N@arma@S@Mat>#d#S0_#&1$@N@arma@S@Cube>#d#S2_#&1$@N@arma@S@Col>#d#"
+                "usr": "c:@F@update_W0#&1$@N@arma@S@Mat>#d#S0_#&1$@N@arma@S@Cube>#d#S2_#&1$@N@arma@S@Col>#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "update_W0(const arma::mat &, const arma::mat &, const arma::cube &, const arma::cube &, const arma::vec &)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
+                "line": 134,
+                "column": 5
             },
             {
-                "column" : 6,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
-                "kind" : 6,
-                "line" : 147,
-                "name" : "update_Sigma0(const arma::mat &, const arma::cube &, const arma::cube &, const arma::mat &, const arma::vec &, const bool &)",
-                "parent_name" : "",
-                "usr" : "c:@F@update_Sigma0#&1$@N@arma@S@Mat>#d#&1$@N@arma@S@Cube>#d#S2_#S0_#&1$@N@arma@S@Col>#d#&1b#"
+                "usr": "c:@F@update_Sigma0#&1$@N@arma@S@Mat>#d#&1$@N@arma@S@Cube>#d#S2_#S0_#&1$@N@arma@S@Col>#d#&1b#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "update_Sigma0(const arma::mat &, const arma::cube &, const arma::cube &, const arma::mat &, const arma::vec &, const bool &)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
+                "line": 147,
+                "column": 6
             },
             {
-                "column" : 5,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
-                "kind" : 6,
-                "line" : 164,
-                "name" : "update_Lam(const arma::mat &, const arma::mat &, const arma::mat &, const arma::cube &, const arma::cube &, const bool &)",
-                "parent_name" : "",
-                "usr" : "c:@F@update_Lam#&1$@N@arma@S@Mat>#d#S0_#S0_#&1$@N@arma@S@Cube>#d#S2_#&1b#"
+                "usr": "c:@F@update_Lam#&1$@N@arma@S@Mat>#d#S0_#S0_#&1$@N@arma@S@Cube>#d#S2_#&1b#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "update_Lam(const arma::mat &, const arma::mat &, const arma::mat &, const arma::cube &, const arma::cube &, const bool &)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
+                "line": 164,
+                "column": 5
             },
             {
-                "column" : 8,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
-                "kind" : 6,
-                "line" : 197,
-                "name" : "Q_fun(const arma::mat &, const arma::mat &, const arma::cube &, const arma::cube &, const arma::mat &, const arma::mat &, const arma::cube &, const arma::vec &, const arma::vec &)",
-                "parent_name" : "",
-                "usr" : "c:@F@Q_fun#&1$@N@arma@S@Mat>#d#S0_#&1$@N@arma@S@Cube>#d#S2_#S0_#S0_#S2_#&1$@N@arma@S@Col>#d#S4_#"
+                "usr": "c:@F@Q_fun#&1$@N@arma@S@Mat>#d#S0_#&1$@N@arma@S@Cube>#d#S2_#S0_#S0_#S2_#&1$@N@arma@S@Col>#d#S4_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "Q_fun(const arma::mat &, const arma::mat &, const arma::cube &, const arma::cube &, const arma::mat &, const arma::mat &, const arma::cube &, const arma::vec &, const arma::vec &)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
+                "line": 197,
+                "column": 8
             }
-        ],
-        "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.cpp",
-        "file_last_write" : 1644571256.000000
+        ]
     },
     {
-        "definitions" : [
-        ],
-        "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.h",
-        "file_last_write" : 1637323124.000000
+        "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/utilSimulDRcluster.h",
+        "file_last_write": 1637323124.0,
+        "definitions": []
     },
     {
-        "definitions" : [
+        "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/wpca.cpp",
+        "file_last_write": 1637323084.0,
+        "definitions": [
             {
-                "column" : 11,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/wpca.cpp",
-                "kind" : 6,
-                "line" : 21,
-                "name" : "calculateWeight(const arma::mat &, const int &)",
-                "parent_name" : "",
-                "usr" : "c:@F@calculateWeight#&1$@N@arma@S@Mat>#d#&1I#"
+                "usr": "c:@F@calculateWeight#&1$@N@arma@S@Mat>#d#&1I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "calculateWeight(const arma::mat &, const int &)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/wpca.cpp",
+                "line": 21,
+                "column": 11
             },
             {
-                "column" : 12,
-                "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/wpca.cpp",
-                "kind" : 6,
-                "line" : 32,
-                "name" : "wpcaCpp(const arma::mat &, const int &, const bool &)",
-                "parent_name" : "",
-                "usr" : "c:@F@wpcaCpp#&1$@N@arma@S@Mat>#d#&1I#&1b#"
+                "usr": "c:@F@wpcaCpp#&1$@N@arma@S@Mat>#d#&1I#&1b#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "wpcaCpp(const arma::mat &, const int &, const bool &)",
+                "file": "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/wpca.cpp",
+                "line": 32,
+                "column": 12
             }
-        ],
-        "file" : "D:/LearnFiles/Research paper/ProPCA/RcppCode/DR.SC/src/wpca.cpp",
-        "file_last_write" : 1637323084.000000
+        ]
     }
 ]

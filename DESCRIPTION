@@ -1,8 +1,8 @@
 Type: Package
 Package: DR.SC
 Title: Joint Dimension Reduction and Spatial Clustering
-Version: 2.6
-Date: 2022-02-17
+Version: 2.9
+Date: 2022-05-27
 Authors@R: 
     c(person(given = "Wei",
              family = "Liu",
@@ -11,17 +11,14 @@ Authors@R:
       person(given = "Yi",
              family = "Yang",
              role = c("aut")),
-      person(given = "Xingjie",
-             family = "Shi",
-             role = "aut"),
       person(given = "Jin",
              family = "Liu",
              role = "aut"))
-Author: Wei Liu [aut, cre], Yi Yang [aut], Xingjie Shi [aut], Jin Liu [aut]
+Author: Wei Liu [aut, cre], Yi Yang [aut],  Jin Liu [aut]
 Maintainer: Wei Liu <wei.liu@duke-nus.edu.sg>
 Description: Joint dimension reduction and spatial clustering is conducted for
     Single-cell RNA sequencing and spatial transcriptomics data, and more details can be referred to 
-    Wei Liu, Xu Liao, Yi Yang, Huazhen Lin, Joe Yeong, Xiang Zhou, Xingjie Shi and Jin Liu. (2022) <doi:10.1101/2021.12.25.474153>. It is not only computationally efficient and scalable to the sample size increment, but also is capable of choosing the smoothness parameter and the number of clusters as well.
+    Wei Liu, Xu Liao, Yi Yang, Huazhen Lin, Joe Yeong, Xiang Zhou, Xingjie Shi and Jin Liu. (2022) <doi:10.1093/nar/gkac219>. It is not only computationally efficient and scalable to the sample size increment, but also is capable of choosing the smoothness parameter and the number of clusters as well.
 License: GPL-3
 Depends: 
     parallel,
