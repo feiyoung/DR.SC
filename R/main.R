@@ -682,13 +682,11 @@ getAdj.Seurat <- function(obj, platform ='Visium'){
     ## L1 radius of 1 (spots above, right, below, and left)
     offsets <- data.frame(x.offset=c( 0, 1, 0, -1),
                           y.offset=c(-1, 0, 1,  0))
-  }else if(tolower(platform) %in% c("seqfish", 'merfish', 'slide-seqv2', 'seqscope', 'hdst')){
+  }else{
     pos <- as.matrix(cbind(row=obj$row, col=obj$col))
     Adj_sp <- getAdj_auto(pos)
     
     return(Adj_sp)
-  }else {
-    stop("getAdj: Unsupported platform \"", platform, "\".")
   }
   
   ## Get array coordinates (and label by index of spot in SCE)
@@ -808,7 +806,7 @@ find_neighbors <- function(pos, platform=c('ST', "Visium")) {
   ij <- which(D != 0, arr.ind = T)
   ij
 }
-getAdj_reg <- function(pos, platform ='Visisum'){
+getAdj_reg <- function(pos, platform ='Visium'){
     # require(Matrix)
     ij <- find_neighbors(pos, platform)
     n <- nrow(pos)
