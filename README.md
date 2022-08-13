@@ -19,7 +19,7 @@ analysis, and visualization. Users can:
 * Identify clusters
 * Extract low-dimensional embeddings
 * Find significant  gene markers
-* Visualize clusters and gene expression 2-dim using spatial coordinates or tSNE and UMAP
+* Visualize clusters and gene expression using spatial coordinates or 2-dim tSNE and UMAP
 
 To further investigate transcriptomic properties, combining the results from DR.SC and other packages, users can:
 
