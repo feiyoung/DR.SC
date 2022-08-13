@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 ```
 
 The package can be loaded with the command:
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 library("DR.SC")
 ```
 
@@ -29,12 +29,12 @@ To fit DR-SC model, we first require to create a Seurat object with meta.data in
 We start this tutorial with creating the Seurat object. Users who are familar with Seurat object, can skip this subsection and go to next subsection.
 
 First, we load the subset data of DLPFC 151510, dlpfc151510. Although it is saved as a Seurat object prepared for DR-SC, we re-create the Seurat object to show how to prepare the Seurat object for DR-SC. 
-```{r  eval = TRUE,message=FALSE, warning=FALSE}
+```{r  eval = FALSE,message=FALSE, warning=FALSE}
 data("dlpfc151510", package = 'DR.SC')
 
 ```
 Second, we create a Seurat object using the count matrix in dlpfc151510 and the spatial coordinates in the meta.data slot.
-```{r  eval = TRUE,message=FALSE, warning=FALSE}
+```{r  eval = FALSE,message=FALSE, warning=FALSE}
 library(Seurat)
 count <- dlpfc151510@assays$RNA@counts
 meta_data <- data.frame(row=dlpfc151510@meta.data$row, col=dlpfc151510@meta.data$col, annotation=dlpfc151510$annotation)
@@ -49,7 +49,7 @@ Until now, the data preparation with Seurat object format  is finished, and we c
 
 ### Data preprocessing
 This preprocessing includes Log-normalization and feature selection. Here we select highly variable genes for example first. The selected genes' names are saved in "seu@assays$RNA@var.features"
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 
 # standard log-normalization
 dlpfc151510 <- NormalizeData(dlpfc151510, verbose = F)
@@ -60,54 +60,54 @@ seu@assays$RNA@var.features[1:10]
 
 ## Fit DR-SC model using 500 highly variable features
 We fit the DR-SC model by using the highly variable genes.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 ### Given K
 seu <- DR.SC(seu, K=7, platform = 'Visium', verbose=F)
 ```
 
 ### Visualization
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 spatialPlotClusters(seu)
 ```
 
 
 Show the tSNE plot based on the extracted features from DR-SC.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 drscPlot(seu)
 ```
 
 Show the UMAP plot based on the extracted features from DR-SC.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 drscPlot(seu, visu.method = 'UMAP')
 ```
 
 ## Fit DR-SC model using 480 spatially variable features
 In spatially resolved transcriptomics data analysis, we recommend users using the spatially variable genes for analysis. We embeded the method SPARK-X (developed by Xiang Zhou's Lab) into DR.SC package, which can be called using `FindSVGs`. The selected genes' names are also saved in "seus@assays$RNA@var.features" and the order is determined by the statistical significance, where the gene with highest significance ranks first. We note there are some difference between SVGs and HVGs.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 # choose 480 spatially variable features
 seus <- FindSVGs(seu, nfeatures = 480)
 seus@assays$RNA@var.features[1:10]
 ```
 
 We fit DR-SC model by  using the selected spatially variable genes.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 ### Given K
 seus <- DR.SC(seus, K=7, platform = 'Visium', verbose=T)
 ```
 
 ### Visualization
 Next, we show the application of DR-SC in visualization. First, we can visualize the  clusters from DR-SC on the spatial coordinates.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 spatialPlotClusters(seus)
 ```
 
 
 We can also visualize the clusters from DR-SC on the two-dimensional tSNE based on the extracted features from DR-SC.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 drscPlot(seus)
 ```
 Similarly, can also visualize the clusters from DR-SC on the two-dimensional UMAP based on the extracted features from DR-SC.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 drscPlot(seus, visu.method = 'UMAP')
 ```
 
@@ -115,7 +115,7 @@ Since DR.SC uses the Seurat object to save results, all visualization functions 
 ### Ridge plots 
 we show the application of DR-SC in differential expression analysis.
 Find the marker genes in SVGs for each clusters. 
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 SVGs <- topSVGs(seus, ntop = 400)
 dat <- FindAllMarkers(seus, features = SVGs)
 head(dat)
@@ -127,14 +127,14 @@ top2
 ```
 
 Visualize single cell expression distributions in each cluster from Seruat.
-```{r  eval = TRUE, fig.height=6, fig.width=10}
+```{r  eval = FALSE, fig.height=6, fig.width=10}
 genes <- top2$gene[seq(1, 12, by=2)]
 RidgePlot(seus, features = genes, ncol = 2)
 ```
 ### Violin plot
 
 Visualize single cell expression distributions in each cluster
-```{r  eval = TRUE, fig.height=8, fig.width=10}
+```{r  eval = FALSE, fig.height=8, fig.width=10}
 
 VlnPlot(seus, features = genes, ncol=2)
 ```
@@ -142,7 +142,7 @@ VlnPlot(seus, features = genes, ncol=2)
 ### Feature plot
 We extract tSNE based on the features from DR-SC and then visualize feature expression in the low-dimensional space
  
-```{r  eval = TRUE, fig.height=8, fig.width=10}
+```{r  eval = FALSE, fig.height=8, fig.width=10}
 seus <- RunTSNE(seus, reduction="dr-sc", reduction.key='drsc_tSNE_')
 FeaturePlot(seus, features = genes, reduction = 'tsne' ,ncol=2)
 
@@ -152,14 +152,14 @@ FeaturePlot(seus, features = genes, reduction = 'tsne' ,ncol=2)
 ### Dot plots 
 The size of the dot corresponds to the percentage of cells expressing the
 feature in each cluster. The color represents the average expression level
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 DotPlot(seus, features = genes)
 ```
 
 ### Heatmap plot
 
 Single cell heatmap of feature expression
-```{r  eval = TRUE, fig.height=8, fig.width=10}
+```{r  eval = FALSE, fig.height=8, fig.width=10}
 top20 <-  dat %>%
   group_by(cluster) %>%
   top_n(n = 20, wt = avg_log2FC)
@@ -171,35 +171,35 @@ DoHeatmap(subset(seus, downsample = 500), features = genes, size = 5)
 
 ## Fit DR-SC model using 480 spatially variable features and using MBIC　to determine clusters
 
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 # choose spatially variable features
 seus <- FindSVGs(seu, nfeatures = 480, verbose = F)
 ```
 
 We set the argument variable.type='SVGs' (default option) to use the spatially variable genes.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 ### Given K
 seus <- DR.SC(seus, K=3:9, platform = 'Visium', verbose=F)
 ```
 
 Plot the MBIC curve 
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 seus <- selectModel(seus, pen.const = 0.8)
 mbicPlot(seus)
 ```
 
 Show the spatial scatter plot for clusters
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 spatialPlotClusters(seus)
 ```
 
 Show the tSNE plot based on the extracted features from DR-SC.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 drscPlot(seus, dims=1:10)
 ```
 
 
 ## Session information
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 sessionInfo()
 ```
