@@ -48,8 +48,8 @@ For usage examples and guided walkthroughs, check the `vignettes` directory of t
 * [Toy example](https://feiyoung.github.io/DR.SC/articles/DR.SC.Simu.html)
 * [DLPFC data analysis](https://feiyoung.github.io/DR.SC/articles/DR.SC.DLPFC.html)
 
-## Setup on Linux or MacOS system
-For running big data, users can use the following system command to set the C_stack unlimited in case of `R Error: C stack usage is too close to the limit`.
+## Setup on Linux  system
+For parallel compuation based on Rcpp on Linux, users require to use the following system command to set the C_stack unlimited in case of `R Error: C stack usage is too close to the limit`.
 ```{Linux}
 ulimit -s unlimited
 ```
