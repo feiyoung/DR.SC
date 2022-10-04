@@ -3,7 +3,7 @@ DR-SC: Joint dimension reduction and spatial clustering for single-cell/spatial 
 
 DR.SC (Method name is DR-SC) is a package for analyzing  spatially resolved transcriptomics (SRT) datasets, developed by the Jin Liu's lab. It is not only computationally efficient and scalable to the sample size increment, but also is capable of choosing the smoothness parameter and the number of clusters as well.
 
-Check out our [NAR paper](https://doi.org/10.1093/nar/gkac219) for a more complete description of the methods and analyses. 
+Check out our [NAR paper](https://doi.org/10.1093/nar/gkac219) and our [Package vignette](https://feiyoung.github.io/DR.SC/index.html)  for a more complete description of the methods and analyses. 
 
 DR.SC can be used to analyze experimental dataset from different technologies with different resolutions, for instance:
 
@@ -57,4 +57,10 @@ ulimit -s unlimited
 # Demonstration
 
 For an example of typical DR.SC usage, please see our [Package vignette](https://feiyoung.github.io/DR.SC/index.html) for a demonstration and overview of the functions included in DR.SC.
+
+
+# News
+DR.SC version 3.0
+
+* Add the  approximated PCA to speed up the computation for initial values; see functions `DR.SC` and `DR.SC_fit`.
 

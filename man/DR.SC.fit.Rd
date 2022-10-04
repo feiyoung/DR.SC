@@ -8,7 +8,7 @@
   DR.SC_fit(X, K, Adj_sp=NULL, q=15,
              error.heter= TRUE, beta_grid=seq(0.5, 5, by=0.5),
              maxIter=25, epsLogLik=1e-5, verbose=FALSE, maxIter_ICM=6,
-             wpca.int=FALSE, coreNum = 5)
+             wpca.int=FALSE, int.model="EEE", approxPCA=FALSE, coreNum = 5)
 }
 \arguments{
  \item{X}{a  sparse matrix with class \code{dgCMatrix} or \code{matrix}, specify the log-normalization gene expression matrix used for DR-SC model.}
@@ -22,6 +22,8 @@
   \item{verbose}{an optional logical value, whether output the information of the ICM-EM algorithm.}
   \item{maxIter_ICM}{an optional positive value, represents the maximum iterations of ICM.}
   \item{wpca.int}{an optional logical value, means whether use the weighted PCA to obtain the initial values of loadings and other paramters, default as \code{FALSE} which means the ordinary PCA  is used.}
+  \item{int.model}{an optional string, specify which Gaussian mixture model is used in evaluting the initial values for DR-SC, default as "EEE"; and see Mclust for more models' names.}
+  \item{approxPCA}{an optional logical value, whether use approximated PCA to speed up the computation for initial values.}
   \item{coreNum}{an optional positive integer, means the number of thread used in parallel computating, default as 5. If the length of K is one, then coreNum will be set as 1 automatically.}
 }
 \details{

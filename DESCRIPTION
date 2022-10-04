@@ -1,8 +1,8 @@
 Type: Package
 Package: DR.SC
 Title: Joint Dimension Reduction and Spatial Clustering
-Version: 2.9
-Date: 2022-05-27
+Version: 3.0
+Date: 2022-09-19
 Authors@R: 
     c(person(given = "Wei",
              family = "Liu",
@@ -26,6 +26,7 @@ Depends:
     R (>= 4.0.0)
 Imports: 
     CompQuadForm,
+    irlba,
     cowplot,
     ggplot2,
     GiRaF,

@@ -24,7 +24,7 @@ S3method("RunWPCA","dgCMatrix")
 
 import(parallel)
 import(spatstat.geom)
-
+importFrom(irlba, irlba) 
 importFrom(MASS, mvrnorm)
 importFrom(ggplot2, ggplot, aes, aes_string, geom_line, ylab,geom_point,
            theme,element_blank,element_text,scale_color_manual)
