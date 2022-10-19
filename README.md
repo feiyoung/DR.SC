@@ -1,4 +1,13 @@
 # DR.SC
+
+=========================================================================
+<!-- badges: start -->
+
+[![](https://www.r-pkg.org/badges/version-ago/DR.SC)](https://cran.r-project.org/package=DR.SC)
+[![](https://cranlogs.r-pkg.org/badges/DR.SC?color=orange)](https://cran.r-project.org/package=DR.SC)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/DR.SC?color=orange)](https://cran.r-project.org/package=DR.SC)
+<!-- badges: end -->
+
 DR-SC: Joint dimension reduction and spatial clustering for single-cell/spatial transcriptomics data 
 
 DR.SC (Method name is DR-SC) is a package for analyzing  spatially resolved transcriptomics (SRT) datasets, developed by the Jin Liu's lab. It is not only computationally efficient and scalable to the sample size increment, but also is capable of choosing the smoothness parameter and the number of clusters as well.
