@@ -2,7 +2,7 @@ Type: Package
 Package: DR.SC
 Title: Joint Dimension Reduction and Spatial Clustering
 Version: 3.0
-Date: 2022-09-19
+Date: 2022-11-13
 Authors@R: 
     c(person(given = "Wei",
              family = "Liu",
@@ -51,3 +51,5 @@ VignetteBuilder:
 Encoding: UTF-8
 NeedsCompilation: yes
 RoxygenNote: 7.1.1
+URL: https://github.com/feiyoung/DR.SC
+BugReports: https://github.com/feiyoung/DR.SC/issues

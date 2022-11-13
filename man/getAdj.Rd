@@ -7,18 +7,16 @@
 }
 \usage{
 
-  getAdj(obj, platform ='Visium')
-  ## getAdj(obj, platform = c('Visium', 'ST', "seqfish", 
-  ## 'merfish', 'slide-seqv2', 'seqscope'))
-  \method{getAdj}{Seurat}(obj,platform ='Visium')
+  \method{getAdj}{Seurat}(obj, platform = c('Visium', "ST", "Other_SRT"), ...) 
   
 }
 \arguments{
   \item{obj}{an object with class "Seurat", there are spatial coordinates information in the metadata of obj, named "row" and "col", where first column is x-axis coordinate, the second column is y-axis coordinate. \link{getAdj_manual} and \link{getAdj_auto}  supports multi-dimensional spatial coordinates with a matrix as input.}
-  \item{platform}{a string, specify the platform of the provided data, default as "Visium". There are many platforms to be supported, including ("Visuim", "ST", "SeqFISH", 'merFISH', 'slide-seqv2', 'seqscope', "HDST"), which means there are spatial coordinates information in the metadata of seu, named "row" and "col". The platform helps to calculate the adjacency matrix by defining the neighborhoods.}
+  \item{platform}{a string, specify the platform of the provided data, default as "Visium". There are more platforms to be chosen, including ("Visuim", "ST", "Other_SRT"), which means there are spatial coordinates information in the metadata of obj, named "row" and "col". The platform helps to calculate the adjacency matrix by defining the neighborhoods.}
+  \item{...}{Other arguments to pass into \link{getAdj_auto} function.}
 }
 \details{
-  For lattice grids, i.e., two-dimensional coordinates, the interior spot has four neighbors (left, right, up and down),the boundary spot has three neighbors, and the spot in the corner has two neighbors. For hexagon grids, such as spatial coordinate in 10X Visium platform, the interior spot has six neighbors. More flexible definition can be used if there are some additional information. And then use \link{getAdj_manual} function to evalute the adjacency matrix as a input for \link{DR.SC_fit} to run DR-SC model.
+  For lattice grids in ST platform (ST), the interior spot has four neighbors (left, right, up and down),the boundary spot has three neighbors, and the spot in the corner has two neighbors. For hexagon grids, such as spatial coordinate in 10X Visium platform (Visium), the interior spot has six neighbors. For the irregular coordinates in other platforms (Other_SRT), Euclidean distance is adopted to decide whether a spot is an neighbor of another spot. For example, if the Euclidean distance between spot A and B is less than a radius, then A is taken as the neighbourhood of B. See functions \link{getAdj_auto} and \link{getAdj_manual} for more details.
 }
 \value{
    Return a \code{dgCMatrix} object recording the information of neighborhoods about each spot.

@@ -30,7 +30,7 @@ importFrom(ggplot2, ggplot, aes, aes_string, geom_line, ylab,geom_point,
            theme,element_blank,element_text,scale_color_manual)
 importFrom(CompQuadForm, davies, liu)
 importFrom("methods", "as", "is")
-importFrom("stats", "p.adjust", "pcauchy", "quantile", "sd")
+importFrom("stats", "p.adjust", "pcauchy", "quantile", "sd", "dist")
 importFrom(stats,rnorm, rmultinom, cov,cor)
 importFrom("utils", "read.csv", "read.table", "setTxtProgressBar",
              "txtProgressBar")

@@ -2,6 +2,8 @@
 # usethis::use_data(HCC1)
 # Run to build the website
 # pkgdown::build_site()
+# R CMD check --as-cran DR.SC_3.0.tar.gz
+
 ### Generate data without spatial dependence.
 gendata_noSp <- function(n=100, p =100, q=15, K = 8,  alpha=10, sigma2=1, seed=1){
   
@@ -388,15 +390,16 @@ DR.SC_fit <- function(X, K, Adj_sp=NULL, q=15,
   
   return(resList)
 }
-DR.SC <- function(seu, K, q=15,  platform= "Visium", ...) {
+DR.SC <- function(seu, K, q=15,  platform= c('Visium', "ST", "Other_SRT", "scRNAseq"), ...) {
   UseMethod("DR.SC")
 }
   
-DR.SC.Seurat <- function(seu, K, q=15,  platform= "Visium", ...){
+DR.SC.Seurat <- function(seu, K, q=15,  platform= c('Visium', "ST", "Other_SRT", "scRNAseq"), ...){
   # require(Seurat)
   if (!inherits(seu, "Seurat"))
     stop("method is only for Seurat objects")
   
+  platform <- match.arg(platform)
   if(platform == 'scRNAseq'){
     Adj_sp <- NULL
   }else{
@@ -678,26 +681,30 @@ selectModel.Seurat <- function(obj,  criteria = 'MBIC', pen.const=1){
   return(obj)
 }
 
-getAdj <- function(obj,platform ='Visium') UseMethod("getAdj")
+getAdj <- function(obj, platform = c('Visium', "ST", "Other_SRT"), ...) UseMethod("getAdj")
 
-getAdj.Seurat <- function(obj, platform ='Visium'){
+getAdj.Seurat <- function(obj, platform = c('Visium', "ST", "Other_SRT"), ...){
   
   if (!inherits(obj, "Seurat"))
     stop("method is only for Seurat or matrix objects")
   # require(Matrix)
-  if (platform == "Visium") {
+  
+  platform <- match.arg(platform)
+  if (tolower(platform) == "visium") {
     ## Spots to left and right, two above, two below
     offsets <- data.frame(x.offset=c(-2, 2, -1,  1, -1, 1),
                           y.offset=c( 0, 0, -1, -1,  1, 1))
-  } else if (platform == "ST") {
+  } else if (tolower(platform) == "st") {
     ## L1 radius of 1 (spots above, right, below, and left)
     offsets <- data.frame(x.offset=c( 0, 1, 0, -1),
                           y.offset=c(-1, 0, 1,  0))
-  }else{
+  }else if(tolower(platform) == 'other_srt'){
     pos <- as.matrix(cbind(row=obj$row, col=obj$col))
-    Adj_sp <- getAdj_auto(pos)
+    Adj_sp <- getAdj_auto(pos, ...)
     
     return(Adj_sp)
+  }else{
+    stop("getAdj: Unsupported platform \"", platform, "\".")
   }
   
   ## Get array coordinates (and label by index of spot in SCE)
@@ -755,11 +762,11 @@ getAdj.Seurat <- function(obj, platform ='Visium'){
 find_neighbors <- function(pos, platform=c('ST', "Visium")) {
   # require(purrr)
   # require()
-  if (platform == "Visium") {
+  if (tolower(platform) == "visium") {
     ## Spots to left and right, two above, two below
     offsets <- data.frame(x.offset=c(-2, 2, -1,  1, -1, 1),
                           y.offset=c( 0, 0, -1, -1,  1, 1))
-  } else if (platform == "ST") {
+  } else if (tolower(platform) == "st") {
     ## L1 radius of 1 (spots above, right, below, and left)
     offsets <- data.frame(x.offset=c( 0, 1, 0, -1),
                           y.offset=c(-1, 0, 1,  0))
@@ -825,13 +832,19 @@ getAdj_reg <- function(pos, platform ='Visium'){
     return(Adj_sp)
 }
 
-getAdj_auto <- function(pos, lower.med=4, upper.med=6, radius.upper= 100){
+getAdj_auto <- function(pos, lower.med=4, upper.med=6, radius.upper= NULL){
   if (!inherits(pos, "matrix"))
     stop("method is only for  matrix object!")
   
   
-
-  radius.lower <- 1
+  ## Automatically determine the upper radius
+  n_spots <- nrow(pos)
+  idx <- sample(n_spots, min(100, n_spots))
+  dis <- dist(pos[idx,])
+  if(is.null(radius.upper)){
+    radius.upper <- max(dis)
+  }
+  radius.lower <- min(dis[dis>0])
   Adj_sp <- getneighborhood_fast(pos, radius=radius.upper)
   Med <- summary(Matrix::rowSums(Adj_sp))['Median']
   if(Med < lower.med) stop("The radius.upper is too smaller that cannot find median neighbors greater than 4.")
