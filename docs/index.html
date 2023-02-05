@@ -35,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">DR.SC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0</span>
       </span>
     </div>
 
@@ -63,7 +63,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/feiyoung/DR.SC/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -79,11 +86,36 @@
 <div class="section level1">
 <div class="page-header"><h1 id="drsc">DR.SC<a class="anchor" aria-label="anchor" href="#drsc"></a>
 </h1></div>
-<p>DR.SC: Joint dimension reduction and spatial clustering for single-cell/spatial transcriptomics data</p>
-</div>
-<div class="section level1">
-<h1 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h1>
+<p>========================================================================= <!-- badges: start --></p>
+<p><a href="https://cran.r-project.org/package=DR.SC" class="external-link"><embed src="https://www.r-pkg.org/badges/version-ago/DR.SC"></embed></a> <a href="https://cran.r-project.org/package=DR.SC" class="external-link"><embed src="https://cranlogs.r-pkg.org/badges/DR.SC?color=orange"></embed></a> <a href="https://cran.r-project.org/package=DR.SC" class="external-link"><embed src="https://cranlogs.r-pkg.org/badges/grand-total/DR.SC?color=orange"></embed></a> <!-- badges: end --></p>
+<p>DR-SC: Joint dimension reduction and spatial clustering for single-cell/spatial transcriptomics data</p>
+<p>DR.SC (Method name is DR-SC) is a package for analyzing spatially resolved transcriptomics (SRT) datasets, developed by the Jin Liu’s lab. It is not only computationally efficient and scalable to the sample size increment, but also is capable of choosing the smoothness parameter and the number of clusters as well.</p>
+<p>Check out our <a href="https://doi.org/10.1093/nar/gkac219" class="external-link">NAR paper</a> and our <a href="https://feiyoung.github.io/DR.SC/index.html" class="external-link">Package vignette</a> for a more complete description of the methods and analyses.</p>
+<p>DR.SC can be used to analyze experimental dataset from different technologies with different resolutions, for instance:</p>
+<ul>
+<li>ST plaform</li>
+<li>10X Visium platform</li>
+<li>SeqFISH, MerFISH, etc</li>
+<li>Slide-seq, Slide-seqV2, etc.</li>
+<li>Other platforms…</li>
+</ul>
+<p>Once DR-SC model is fitted, the package provides functionality for further data exploration, analysis, and visualization. Users can:</p>
+<ul>
+<li>Identify clusters</li>
+<li>Extract low-dimensional embeddings</li>
+<li>Find significant gene markers</li>
+<li>Visualize clusters and gene expression using spatial coordinates or 2-dim tSNE and UMAP</li>
+</ul>
+<p>To further investigate transcriptomic properties, combining the results from DR.SC and other packages, users can:</p>
+<ul>
+<li>Infer the cell/domain lineages</li>
+<li>Infer RNA velocity if splicing and unsplicing matrix (can obtained from raw fastq data) are available</li>
+<li>Detect conditional spatially variational genes</li>
+<li>Conduct cell-deconvolution</li>
+</ul>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <p>To install the the packages “DR.SC”, firstly, install the ‘remotes’ package. Besides, “DR.SC” depends on the ‘Rcpp’ and ‘RcppArmadillo’ package, which also requires appropriate setting of Rtools and Xcode for Windows and Mac OS/X, respectively.</p>
 <pre class="{rmd}"><code><span class="co"># Method 1: Install it from CRAN</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"DR.SC"</span><span class="op">)</span>
@@ -91,10 +123,20 @@
 <span class="co"># Method 2: Install it from github</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"feiyoung/DR.SC"</span><span class="op">)</span></code></pre>
+</div>
 <div class="section level2">
-<h2 id="setup-on-linux-or-macos-system">Setup on Linux or MacOS system<a class="anchor" aria-label="anchor" href="#setup-on-linux-or-macos-system"></a>
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>For running big data, users can use the following system command to set the C_stack unlimited in case of <code>R Error: C stack usage is too close to the limit</code>.</p>
+<p>For usage examples and guided walkthroughs, check the <code>vignettes</code> directory of the repo.</p>
+<ul>
+<li><a href="https://feiyoung.github.io/DR.SC/articles/DR.SC.Simu.html" class="external-link">Toy example</a></li>
+<li><a href="https://feiyoung.github.io/DR.SC/articles/DR.SC.DLPFC.html" class="external-link">DLPFC data analysis</a></li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="setup-on-linux-system">Setup on Linux system<a class="anchor" aria-label="anchor" href="#setup-on-linux-system"></a>
+</h2>
+<p>For parallel compuation based on Rcpp on Linux, users require to use the following system command to set the C_stack unlimited in case of <code>R Error: C stack usage is too close to the limit</code>.</p>
 <pre class="{linux}"><code>ulimit -s unlimited</code></pre>
 </div>
 </div>
@@ -102,6 +144,12 @@
 <h1 id="demonstration">Demonstration<a class="anchor" aria-label="anchor" href="#demonstration"></a>
 </h1>
 <p>For an example of typical DR.SC usage, please see our <a href="https://feiyoung.github.io/DR.SC/index.html" class="external-link">Package vignette</a> for a demonstration and overview of the functions included in DR.SC.</p>
+</div>
+<div class="section level1">
+<h1 id="news">News<a class="anchor" aria-label="anchor" href="#news"></a>
+</h1>
+<p>DR.SC version 3.0</p>
+<ul><li>Add the approximated PCA to speed up the computation for initial values; see functions <code>DR.SC</code> and <code>DR.SC_fit</code>.</li></ul>
 </div>
 
   </div>
@@ -111,6 +159,8 @@
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://cloud.r-project.org/package=DR.SC" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/feiyoung/DR.SC/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/feiyoung/DR.SC/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
@@ -151,7 +201,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

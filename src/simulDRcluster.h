@@ -24,11 +24,11 @@ struct Objdrsc{
     vec loglik_seq;
 };
 
-Objdrsc drsc(const arma::mat& X, const arma::sp_mat& Adj, arma::ivec& y, mat& Mu0,
-                    cube& Sigma0, arma::mat& W0, arma::vec& Lam_vec0,
-                    arma::vec& alpha, double& beta0, arma::vec& beta_grid,int& maxIter_ICM, 
-                    int& maxIter, double& epsLogLik, bool& verbose, bool& homo,
-                    bool& diagSigmak);
+Objdrsc drsc(const arma::mat& X, const arma::sp_mat& Adj, const arma::ivec& y_int, const mat& Mu_int,
+             const cube& Sigma_int, const arma::mat& W_int, const arma::vec& Lam_vec_int,
+             const arma::vec& alpha, const double& beta_int, const arma::vec& beta_grid, const int& maxIter_ICM, 
+             const int& maxIter, const double& epsLogLik, const bool& verbose, const bool& homo,
+             const bool& diagSigmak);
 
 
 struct Objdrsc_nonspa{

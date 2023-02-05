@@ -237,17 +237,23 @@ void runICM_sp (const arma::mat& X,  arma::ivec& y, const arma::mat& W0, const a
 
 
 
-Objdrsc drsc(const arma::mat& X, const arma::sp_mat& Adj, arma::ivec& y, mat& Mu0,
-                    cube& Sigma0, arma::mat& W0, arma::vec& Lam_vec0,
-                    arma::vec& alpha, double& beta0, arma::vec& beta_grid,int& maxIter_ICM, 
-                    int& maxIter, double& epsLogLik, bool& verbose, bool& homo,
-                    bool& diagSigmak){
+Objdrsc drsc(const arma::mat& X, const arma::sp_mat& Adj, const arma::ivec& y_int, const mat& Mu_int,
+                    const cube& Sigma_int, const arma::mat& W_int, const arma::vec& Lam_vec_int,
+                    const arma::vec& alpha, const double& beta_int, const arma::vec& beta_grid, const int& maxIter_ICM, 
+                    const int& maxIter, const double& epsLogLik, const bool& verbose, const bool& homo,
+                    const bool& diagSigmak){
     
-    int K = Mu0.n_rows;
-    int q = Mu0.n_cols;
+    int K = Mu_int.n_rows;
+    int q = Mu_int.n_cols;
     int n = X.n_rows;
     
-    
+  // Initialization
+  ivec y(y_int);
+  mat Mu0(Mu_int), W0(W_int);
+  cube Sigma0(Sigma_int);
+  vec Lam_vec0(Lam_vec_int);
+  double beta0(beta_int);
+  
   // If p is sufficient large, loglik can not be computed.
   // But this can be solved by some programming tricks.
   vec loglik(maxIter), N(K, fill::zeros);
@@ -372,7 +378,7 @@ Rcpp:: List icmem_heterCpp(const arma::mat& X,const arma::sp_mat& Adj, const arm
   
 
   // basic information
-  int n = X.n_rows, q= W_int.n_cols;
+  int n = X.n_rows, p=X.n_cols, q= W_int.n_cols;
   
     
   // Initialize the  iterative parameters    
@@ -394,47 +400,89 @@ Rcpp:: List icmem_heterCpp(const arma::mat& X,const arma::sp_mat& Adj, const arm
         vec alpha0_tmp = alphaList[i];
         alpha0(i) = alpha0_tmp;     
     }
-  
-    
     mat out_param = zeros<mat>(lengthK, 6);
-    
-    //set parallel structure object
-    par_DRSC parObj(X, Adj, y0,  Mu0, Sigma0, W0, Lam_vec0, 
-                        alpha0, beta0, beta_grid, maxIter_ICM, maxIter, epsLogLik, verbose,
-                        homo, diagSigmak, maxK, minK, out_param);
-
-	const int n_thread = coreNum;
-	std::vector<std::thread> threads(n_thread);
-    
-	for (int i_thread = 0; i_thread < n_thread; i_thread++){
-		threads[i_thread] = std::thread(&par_DRSC::update_by_thread_drsc, &parObj, i_thread);
-	}
-	for (int i = 0; i < n_thread; i++){
-		threads[i].join();
-	}
-
-    List ObjdrscRcpp(maxK-minK+1);
-    
-    out_param = parObj.out_param;
-    
-    for (int k = 0; k<lengthK; k++){
+    if(lengthK==1){ // do not use parallel computation
+      ivec y_int0 = y0.col(0);
+      double beta00 = beta0(0);
+      vec alpha00 = alpha0(0);
+      Objdrsc output =  drsc(X, Adj, y_int0, Mu0(0), Sigma0(0),  W0,
+                             Lam_vec0, alpha00,  beta00,  beta_grid,
+                             maxIter_ICM,  maxIter, epsLogLik, verbose,
+                             homo, diagSigmak);
+      int i = 0;
+      List ObjdrscRcpp(lengthK);
+      ObjdrscRcpp[i] = List::create(
+        Rcpp::Named("cluster") = output.y,
+        Rcpp::Named("hZ") = output.Ezz,
+        Rcpp::Named("beta") = output.beta0,
+        Rcpp::Named("Mu") = output.Mu0,
+        Rcpp::Named("Sigma2") = output.Sigma0,
+        Rcpp::Named("W") =  output.W0,
+        Rcpp::Named("Lam_vec") =  output.Lam_vec0,
+        Rcpp::Named("loglik") =  output.loglik,
+        Rcpp::Named("loglik_seq") =  output.loglik_seq);
+      
+      int K = Mu0(0).n_rows;
+      int pen_const = 1;
+      // calucate AIC and BIC
+      double aic = -2.0* output.loglik + (1+p*(q+1) + K*(q+q*(q+1)/2.0))* 2* log(log(p+n))*pen_const; // modified  bic and aic for high dimension
+      double bic =  -2.0* output.loglik + (1+p*(q+1) + K*(q+q*(q+1)/2.0))* log(n)* log(log(p+n))*pen_const; 
+      
+      
+      // output the matrix of paramters AIC BIC n p and degree of freedom
+      out_param(0, 0) = aic;
+      out_param(0, 1) = bic;
+      out_param(0, 2) = n;
+      out_param(0, 3) = p;
+      out_param(0, 4) = q;
+      out_param(0, 5) = 1+p*(q+1) + K*(q+q*(q+1)/2.0);
+      List resList = List::create(
+        Rcpp::Named("Objdrsc") = ObjdrscRcpp, 
+        Rcpp::Named("out_param") = out_param);
+      
+      return(resList);
+    }else{
+      //set parallel structure object
+      par_DRSC parObj(X, Adj, y0,  Mu0, Sigma0, W0, Lam_vec0, 
+                      alpha0, beta0, beta_grid, maxIter_ICM, maxIter, epsLogLik, verbose,
+                      homo, diagSigmak, maxK, minK, out_param);
+      
+      const int n_thread = coreNum;
+      std::vector<std::thread> threads(n_thread);
+      
+      for (int i_thread = 0; i_thread < n_thread; i_thread++){
+        threads[i_thread] = std::thread(&par_DRSC::update_by_thread_drsc, &parObj, i_thread);
+      }
+      for (int i = 0; i < n_thread; i++){
+        threads[i].join();
+      }
+      
+      List ObjdrscRcpp(maxK-minK+1);
+      
+      out_param = parObj.out_param;
+      
+      for (int k = 0; k<lengthK; k++){
         ObjdrscRcpp[k] = List::create(
-        Rcpp::Named("cluster") = parObj.output[k].y,
-        Rcpp::Named("hZ") = parObj.output[k].Ezz,
-        Rcpp::Named("beta") = parObj.output[k].beta0,
-        Rcpp::Named("Mu") = parObj.output[k].Mu0,
-        Rcpp::Named("Sigma") = parObj.output[k].Sigma0,
-        Rcpp::Named("W") = parObj.output[k].W0,
-        Rcpp::Named("Lam_vec") = parObj.output[k].Lam_vec0,
-        Rcpp::Named("loglik") = parObj.output[k].loglik,
-        Rcpp::Named("loglik_seq") = parObj.output[k].loglik_seq);
+          Rcpp::Named("cluster") = parObj.output[k].y,
+          Rcpp::Named("hZ") = parObj.output[k].Ezz,
+          Rcpp::Named("beta") = parObj.output[k].beta0,
+          Rcpp::Named("Mu") = parObj.output[k].Mu0,
+          Rcpp::Named("Sigma") = parObj.output[k].Sigma0,
+          Rcpp::Named("W") = parObj.output[k].W0,
+          Rcpp::Named("Lam_vec") = parObj.output[k].Lam_vec0,
+          Rcpp::Named("loglik") = parObj.output[k].loglik,
+          Rcpp::Named("loglik_seq") = parObj.output[k].loglik_seq);
+      }
+      
+      List resList = List::create(
+        Rcpp::Named("Objdrsc") = ObjdrscRcpp, 
+        Rcpp::Named("out_param") = out_param);
+      
+      return(resList);
     }
     
-  List resList = List::create(
-    Rcpp::Named("Objdrsc") = ObjdrscRcpp, 
-    Rcpp::Named("out_param") = out_param);
     
-  return(resList);
+    
 }
 
 
@@ -646,9 +694,10 @@ Rcpp:: List EMmPCpp_heter(const arma::mat& X,  Rcpp::List& Pi_int, Rcpp::List& M
     
     
     
-      // basic information
-  int n = X.n_rows, q= W_int.n_cols;
-
+  // basic information
+  int p = X.n_cols;
+  int q = W_int.n_cols;
+  int n = X.n_rows;
     
   // Initialize the iterative parameters   
     int lengthK = maxK - minK + 1;
@@ -657,7 +706,9 @@ Rcpp:: List EMmPCpp_heter(const arma::mat& X,  Rcpp::List& Pi_int, Rcpp::List& M
     field<cube> Sigma0(lengthK);
     mat W0 = W_int;
     vec Lam_vec0 = Lam_vec_int;
-
+    
+    
+    
     for (int i = 0; i < lengthK; i++){
         vec Pi0_tmp = Pi_int(i);
         Pi0(i) = Pi0_tmp;
@@ -666,47 +717,91 @@ Rcpp:: List EMmPCpp_heter(const arma::mat& X,  Rcpp::List& Pi_int, Rcpp::List& M
         cube Sigma0_tmp = Sigma_int(i);
         Sigma0(i) = Sigma0_tmp;
     }
-
     mat out_param = zeros<mat>(lengthK, 6);
-    //set parallel structure object
-    par_DRSC_nonspa parObj(X, Mu0, Sigma0, W0, Lam_vec0, 
-                        Pi0, maxIter, epsLogLik, verbose,
-                        homo, diagSigmak, maxK, minK, out_param);
-
-	const int n_thread = coreNum;
-	std::vector<std::thread> threads(n_thread);
     
-	for (int i_thread = 0; i_thread < n_thread; i_thread++){
-		threads[i_thread] = std::thread(&par_DRSC_nonspa::update_by_thread_drsc, &parObj, i_thread);
-	}
-	for (int i = 0; i < n_thread; i++){
-		threads[i].join();
-	}
-
+    if(lengthK==1){ // do not ues parallel computation
+      Objdrsc_nonspa output =  drsc_nonspa(X, Pi0(0), Mu0(0),  W_int, Sigma0(0), 
+                                    Lam_vec_int, maxIter, epsLogLik, verbose,
+                                    homo, diagSigmak);
+      int i = 0;
+      List Objdrsc_nonspaRcpp(lengthK);
+      Objdrsc_nonspaRcpp[i] = List::create(
+        Rcpp::Named("cluster") = output.y,
+        Rcpp::Named("hZ") = output.Ezz,
+        Rcpp::Named("Pi") = output.Pi0,
+        Rcpp::Named("Mu") = output.Mu0,
+        Rcpp::Named("Sigma2") = output.Sigma0,
+        Rcpp::Named("W") =  output.W0,
+        Rcpp::Named("Lam_vec") =  output.Lam_vec0,
+        Rcpp::Named("loglik") =  output.loglik,
+        Rcpp::Named("loglik_seq") =  output.loglik_seq);
     
-    out_param = parObj.out_param;
-        
-    List Objdrsc_nonspaRcpp(lengthK);
+    int K = Mu0(0).n_rows;
+    int pen_const = 1;
+    // calucate AIC and BIC
+    double aic = -2.0* output.loglik + (1+p*(q+1) + K*(q+q*(q+1)/2.0))* 2* log(log(p+n))*pen_const; // modified  bic and aic for high dimension
+    double bic =  -2.0* output.loglik + (1+p*(q+1) + K*(q+q*(q+1)/2.0))* log(n)* log(log(p+n))*pen_const; 
     
     
-    for (int i = 0; i < lengthK; i++){
-              // output return value
+    // output the matrix of paramters AIC BIC n p and degree of freedom
+    out_param(0, 0) = aic;
+    out_param(0, 1) = bic;
+    out_param(0, 2) = n;
+    out_param(0, 3) = p;
+    out_param(0, 4) = q;
+    out_param(0, 5) = 1+p*(q+1) + K*(q+q*(q+1)/2.0);
+      List resList = List::create(
+        Rcpp::Named("Objdrsc_nonspa") = Objdrsc_nonspaRcpp, 
+        Rcpp::Named("out_param") = out_param);
+      
+      return(resList);
+    }else{
+      //set parallel structure object
+      par_DRSC_nonspa parObj(X, Mu0, Sigma0, W0, Lam_vec0, 
+                             Pi0, maxIter, epsLogLik, verbose,
+                             homo, diagSigmak, maxK, minK, out_param);
+      
+      const int n_thread = coreNum;
+      std::vector<std::thread> threads(n_thread);
+      
+      for (int i_thread = 0; i_thread < n_thread; i_thread++){
+        threads[i_thread] = std::thread(&par_DRSC_nonspa::update_by_thread_drsc, &parObj, i_thread);
+      }
+      for (int i = 0; i < n_thread; i++){
+        threads[i].join();
+      }
+      
+      
+      out_param = parObj.out_param;
+      
+      List Objdrsc_nonspaRcpp(lengthK);
+      
+      
+      for (int i = 0; i < lengthK; i++){
+        // output return value
         Objdrsc_nonspaRcpp[i] = List::create(
-            Rcpp::Named("cluster") = parObj.output[i].y,
-            Rcpp::Named("hZ") = parObj.output[i].Ezz,
-            Rcpp::Named("Pi") = parObj.output[i].Pi0,
-            Rcpp::Named("Mu") = parObj.output[i].Mu0,
-            Rcpp::Named("Sigma2") = parObj.output[i].Sigma0,
-            Rcpp::Named("W") = parObj.output[i].W0,
-            Rcpp::Named("Lam_vec") = parObj.output[i].Lam_vec0,
-            Rcpp::Named("loglik") = parObj.output[i].loglik,
-            Rcpp::Named("loglik_seq") = parObj.output[i].loglik_seq);
+          Rcpp::Named("cluster") = parObj.output[i].y,
+          Rcpp::Named("hZ") = parObj.output[i].Ezz,
+          Rcpp::Named("Pi") = parObj.output[i].Pi0,
+          Rcpp::Named("Mu") = parObj.output[i].Mu0,
+          Rcpp::Named("Sigma2") = parObj.output[i].Sigma0,
+          Rcpp::Named("W") = parObj.output[i].W0,
+          Rcpp::Named("Lam_vec") = parObj.output[i].Lam_vec0,
+          Rcpp::Named("loglik") = parObj.output[i].loglik,
+          Rcpp::Named("loglik_seq") = parObj.output[i].loglik_seq);
+      }
+      List resList = List::create(
+        Rcpp::Named("Objdrsc_nonspa") = Objdrsc_nonspaRcpp, 
+        Rcpp::Named("out_param") = out_param);
+      
+      return(resList);
+      
     }
     
     
-  List resList = List::create(
-    Rcpp::Named("Objdrsc_nonspa") = Objdrsc_nonspaRcpp, 
-    Rcpp::Named("out_param") = out_param);
     
-  return(resList);
+    
+    
+    
+  
 } 
