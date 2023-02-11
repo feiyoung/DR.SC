@@ -13,8 +13,8 @@
 \arguments{
  \item{X}{a  sparse matrix with class \code{dgCMatrix} or \code{matrix}, specify the log-normalization gene expression matrix used for DR-SC model.}
   \item{K}{a positive  integer allowing scalar or vector, specify the number of clusters in model fitting.}
- \item{Adj_sp}{an optional sparse matrix with class \code{dgCMatrix}, specify the adjoint matrix used for DR-SC model. We provide this interface for those users  who would like to define the adjoint matrix by their own.}
-  \item{q}{a positive integer, specify the number of latent features to be extracted, default as 15.}
+ \item{Adj_sp}{an optional sparse matrix with class \code{dgCMatrix}, specify the adjoint matrix used for DR-SC model. We provide this interface for those users  who would like to define the adjacency matrix by their own.}
+  \item{q}{a positive integer, specify the number of latent features to be extracted, default as 15. Usually, the choice of q is a trade-off between model complexity and fit to the data,  and depends on the goals of the analysis and the structure of the data. A higher value will result in a more complex model with a higher number of parameters, which may lead to overfitting and poor generalization performance. On the other hand, a lower value will result in a simpler model with fewer parameters, but may also lead to underfitting and a poorer fit to the data.}
   \item{error.heter}{an optional logical value, whether use the heterogenous error for DR-SC model, default as \code{TRUE}. If \code{error.heter=FALSE}, then the homogenuous error is used for probabilistic PCA model in DR-SC.}
   \item{beta_grid}{an optional vector of positive value, the candidate set of the smoothing parameter to be searched by the grid-search optimization approach.}
    \item{maxIter}{an optional positive value, represents the maximum iterations of EM.}
@@ -46,7 +46,7 @@ In addition, each element of "Objdrsc" is a list with the following comoponents:
 \item{loglik}{pseudo observed log-likelihood.}
 }
 \references{
-Wei Liu, Xu Liao, Yi Yang, Huazhen Lin, Joe Yeong, Xiang Zhou*, Xingjie Shi* and Jin Liu* (2022). Joint dimension reduction and clustering analysis of single-cell RNA-seq and spatial transcriptomics data, Nucleic Acids Research
+\href{https://academic.oup.com/nar/article/50/12/e72/6555431}{Wei Liu, Xu Liao, Yi Yang, Huazhen Lin, Joe Yeong, Xiang Zhou, Xingjie Shi & Jin Liu (2022). Joint dimension reduction and clustering analysis of single-cell RNA-seq and spatial transcriptomics data, Nucleic Acids Research, gkac219.}
 }
 \author{
 Wei Liu

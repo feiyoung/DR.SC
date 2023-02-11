@@ -16,5 +16,5 @@ A sparse matrix containing the neighbourhood
   \link{getAdj_auto}, \link{getAdj}.
 }
 \description{
-an efficient function to find the neighborhood based on the matrix of position and a pre-defined radius.
+an efficient function to find the neighbors based on the matrix of position and a pre-defined radius.
 }

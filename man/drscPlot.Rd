@@ -2,7 +2,7 @@
 \alias{drscPlot}
 \title{tNSE or UMAP plot visualization}
 \description{
-  Intuitive way of visualizing how cell types changes across the spatial locations.
+  Intuitive way of visualizing how cell types changes across the embeddings obatined by DR-SC.
 }
 \usage{
   drscPlot(seu, dims=1:5, visu.method='tSNE',...)

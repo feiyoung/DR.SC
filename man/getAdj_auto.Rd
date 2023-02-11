@@ -17,5 +17,5 @@ A sparse adjacency matrix containing the neighbourhood.
   \link{getAdj}, \link{getAdj_manual}.
 }
 \description{
-an efficient function to find the radius by bi-section method then find neighborhoods based on the matrix of position, which ensures that each spot has about lower.med~upper.med neighborhoods in the sense of median.
+an efficient function to find the radius by bi-section method ,  then find neighbors based on the matrix of position, which ensures that each spot has approximately lower.med~upper.med neighbors in the sense of median.
 }

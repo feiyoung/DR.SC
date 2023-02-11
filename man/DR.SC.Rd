@@ -13,15 +13,14 @@
   \item{seu}{an object of class "Seurat". The details of this object are given under 'Details'.}
   \item{q}{a positive integer, specify the number of latent features to be extracted, default as 15.}
   \item{K}{a positive  integer or integer vector, specify the number of clusters. When \code{K} is a vector, it is automatically selected by MBIC criteria. Users can also use BIC and AIC  to select K or refine model with MBIC by argument \code{pen.const} in the function \link{selectModel}.}
-  \item{platform}{a string, specify the platform of the provided data, default as "Visium". There are more platforms to be chosen, including ("Visuim", "ST", "Other_SRT") and "scRNAseq", where the first group means there are spatial coordinates information in the metadata of seu, named "row" and "col" and a Hidden Markov random field is used to model the unobserved class label using spatial coordinates, and the last one "scRNAseq" means there is no spatial information in object seu and a multinomial model is used to model the unobserved class labels. The platform helps to calculate the adjacency matrix.}
+  \item{platform}{a string, specify the platform of the provided data, default as "Visium". There are more platforms to be chosen, including ("Visuim", "ST", "Other_SRT") and "scRNAseq", where the first group means there are spatial coordinates information in the metadata of seu, named "row" and "col" and a Hidden Markov random field is used to model the unobserved class label using spatial coordinates ("Other_SRT" represents the other SRT platforms except for 'Visium' and 'ST'), and the other group "scRNAseq" means there is no spatial information in object seu and a multinomial model is used to model the unobserved class labels. The platform helps to calculate the adjacency matrix.}
   \item{...}{Other arguments to pass into \link{DR.SC_fit} function.}
 }
 \details{
 seu is an object named \code{Seurat}, thich can easily created by R package \link{Seurat}.
 DR-SC  model can be applied to analyze both single cell RNA sequencing data and spatially resoved transcriptomics (SRT) data. 
 
-If the data is collected by the single cell RNA sequencing techonologies which means there is no spatial information in object seu then a multinomial model is used to model the unobserved class labels. 
-
+If the data are collected by the single cell RNA sequencing techonologies which means there is no spatial information in object seu then a multinomial model is used to model the unobserved class labels. 
 
 
 If the data is collected by the spatial transcriptomics technologies, then there are spatial coordinates information in the metadata of seu, named "row" and "col". DR-SC model uses a Hidden Markov random field to model the spatial coordinates.  \code{DR.SC} supports different platforms of SRT data, such as `Visium`, `ST` and any other platforms `Other_SRT`.
@@ -30,11 +29,11 @@ For lattice grids in ST platform (ST), the interior spot has four neighbors (lef
 
 }
 \value{
-  DR.SC returns a revised  \code{Seurat} object. There are two revisions in the seu. 1. the metadata is added a new column named \code{spatial.drsc.cluster} that represents the clustering results from DR-SC model, and the \code{Idents(seu)} is assigned with \code{spatial.drsc.cluster}. 2. a DimReduc object named \code{dr-sc} is added in the slot \code{reductions}, which represents the features extracted by DR-SC model.
+  DR.SC returns a revised  \code{Seurat} object. There are two revisions in the seu: 1. the metadata is added a new column named \code{spatial.drsc.cluster} that represents the clustering results from DR-SC model, and the \code{Idents(seu)} is assigned with \code{spatial.drsc.cluster}. 2. a DimReduc object named \code{dr-sc} is added in the slot \code{reductions}, which represents the features extracted by DR-SC model.
 
 }
 \references{
- Wei Liu, Xu Liao, Yi Yang, Huazhen Lin, Joe Yeong, Xiang Zhou*, Xingjie Shi* and Jin Liu* (2022). Joint dimension reduction and clustering analysis of single-cell RNA-seq and spatial transcriptomics data, Nucleic Acids Research
+ \href{https://academic.oup.com/nar/article/50/12/e72/6555431}{Wei Liu, Xu Liao, Yi Yang, Huazhen Lin, Joe Yeong, Xiang Zhou, Xingjie Shi & Jin Liu (2022). Joint dimension reduction and clustering analysis of single-cell RNA-seq and spatial transcriptomics data, Nucleic Acids Research, gkac219.}
 }
 \author{
 Wei Liu

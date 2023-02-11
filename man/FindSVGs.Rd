@@ -2,7 +2,7 @@
 \alias{FindSVGs}
 \title{Find spatially variable genes}
 \description{
-  Identifies features that have spatially variation along spots.
+  Identifies features that have spatially variation along spots using SPARK-X.
 }
 \usage{
   FindSVGs(seu, nfeatures=2000, covariates=NULL, num_core=1, verbose=TRUE)
@@ -21,7 +21,7 @@
   return a revised Seurat object by adding three columns named "is.SVGs", "order.SVGs" and "adjusted.pval.SVGs" in the meta.features  of default Assay.
 }
 \references{
-   Zhu, J., Sun, S., Zhou, X.: Spark-x: non-parametric modeling enables scalable and robust detection of spatialexpression patterns for large spatial transcriptomic studies. Genome Biology 22(1), 1–25 (2021)
+   Zhu, J., Sun, S., Zhou, X.: Spark-x: non-parametric modeling enables scalable and robust detection of spatialexpression patterns for large spatial transcriptomic studies. Genome Biology 22(1), 1-25 (2021)
 }
 \note{
   nothing
@@ -30,10 +30,8 @@
   \link{topSVGs}
 }
 \examples{
-  seu <- gendata_RNAExp(height=20, width=20,p=200, K=4)
-  
-  seu <- FindSVGs(seu, nfeatures=100)
+  seu<-gendata_RNAExp(height=20, width=20,p=200, K=4)
+  seu<-FindSVGs(seu, nfeatures=100)
   topSVGs(seu)
 
 }
-\keyword{Input of spatial data}

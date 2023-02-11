@@ -3,7 +3,7 @@
 \alias{getAdj.Seurat}
 \title{Calculate the adjacency matrix given the spatial coordinates}
 \description{
-  Calculate the adjacency matrix for the spatial transcriptomics data measured on 10X Visium or other platforms as a Seurat object.  
+  Calculate the adjacency matrix for the spatial transcriptomics data measured on 10X Visium, ST or other platforms as a Seurat object.  
 }
 \usage{
 
@@ -22,7 +22,7 @@
    Return a \code{dgCMatrix} object recording the information of neighborhoods about each spot.
 }
 \references{
-  None
+  \href{https://academic.oup.com/nar/article/50/12/e72/6555431}{Wei Liu, Xu Liao, Yi Yang, Huazhen Lin, Joe Yeong, Xiang Zhou, Xingjie Shi & Jin Liu (2022). Joint dimension reduction and clustering analysis of single-cell RNA-seq and spatial transcriptomics data, Nucleic Acids Research, gkac219.}
 }
 \author{
   Wei Liu
