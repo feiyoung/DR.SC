@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DR.SC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1</span>
       </span>
     </div>
 
@@ -41,7 +41,13 @@
       <a href="../articles/DR.SC.Simu.html">DR-SC: simulation</a>
     </li>
   </ul></li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/feiyoung/DR.SC/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -72,26 +78,35 @@
     <p>S</p>
 <dl><dt>obj</dt>
 <dd><p>an object with class <code>Seurat</code> by <a href="DR.SC.html">DR.SC</a> or class <code>drscObject</code> by <a href="DR.SC.fit.html">DR.SC_fit</a>.</p></dd>
-<dt>criteria</dt>
+
+  <dt>criteria</dt>
 <dd><p>a string, specify the criteria used for selecting the number of clusters, supporting "MBIC", "BIC" and "AIC".</p></dd>
-<dt>pen.const</dt>
+
+  <dt>pen.const</dt>
 <dd><p>an optional positive value, the adjusted constant used in the MBIC criteria. It usually takes value between 0.1 to 1.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>For S3 method of <code>Seurat</code>, it return a  revised "Seurat" object with updated <code>Idents(seu)</code>, <code>spatial.drsc.cluster</code> in the metadata and DimReduc object named <code>dr-sc</code> in the slot <code>reductions</code>. For S3 method of <code>drscObject</code>, it returns a list with the following components:</p>
+    
+
+<p>For S3 method of <code>Seurat</code>, it return a  revised "Seurat" object with updated <code>Idents(seu)</code>, <code>spatial.drsc.cluster</code> in the metadata and DimReduc object named <code>dr-sc</code> in the slot <code>reductions</code>. For S3 method of <code>drscObject</code>, it returns a list with the following components:</p>
 <dl><dt>bestK</dt>
 <dd><p>the selected number of clusters.</p></dd>
-<dt>cluster</dt>
+
+   <dt>cluster</dt>
 <dd><p>inferred class labels</p></dd>
-<dt>hZ</dt>
+
+   <dt>hZ</dt>
 <dd><p>extracted latent features.</p></dd>
-<dt>icMat</dt>
+
+   <dt>icMat</dt>
 <dd><p>a numeric matrix including the criteria value for each number of clusters K.</p></dd>
+
 </dl></div>
     <div id="references">
     <h2>References</h2>
-    <p>None</p>
+    <p><a href="https://academic.oup.com/nar/article/50/12/e72/6555431" class="external-link">Wei Liu, Xu Liao, Yi Yang, Huazhen Lin, Joe Yeong, Xiang Zhou, Xingjie Shi &amp; Jin Liu (2022). Joint dimension reduction and clustering analysis of single-cell RNA-seq and spatial transcriptomics data, Nucleic Acids Research, gkac219.</a></p>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -122,9 +137,10 @@
 <span class="r-in"><span class="va">drscList</span> <span class="op">&lt;-</span> <span class="fu"><a href="DR.SC.fit.html">DR.SC_fit</a></span><span class="op">(</span><span class="va">X</span>,Adj_sp<span class="op">=</span><span class="va">Adj_sp</span> ,K<span class="op">=</span><span class="fl">4</span>, maxIter<span class="op">=</span><span class="fl">2</span>, verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Fit DR-SC model...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> -------------------Calculate inital values-------------</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Using accurate PCA to obtain initial values</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> -------------------Finish computing inital values------------- </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> -------------------Starting  ICM-EM algortihm-------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> iter = 2, loglik= -1391.404297, dloglik=0.999999 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter = 2, loglik= -981.827503, dloglik=1.000000 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> -------------------Complete!-------------</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> elasped time is :0.04</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Finish DR-SC model fitting</span>
@@ -133,9 +149,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> List of 4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ bestK  : Named num 4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "names")= chr "K"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ cluster: num [1:100] 1 1 1 2 3 4 2 1 1 1 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ hZ     : num [1:100, 1:15] -6.98 -6.56 -7.86 14.02 13.01 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ icMat  : num [1, 1:2] 4 11472</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ cluster: num [1:100] 1 1 1 2 3 3 3 1 1 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ hZ     : num [1:100, 1:15] -7.94 -6.66 -9.91 14.41 11.98 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ icMat  : num [1, 1:2] 4 10653</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "dimnames")=List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ : chr "K"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ : chr [1:2] "K" "IC"</span>
@@ -153,7 +169,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

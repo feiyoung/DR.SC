@@ -2,6 +2,7 @@
 # usethis::use_data(HCC1)
 # Run to build the website
 # pkgdown::build_site()
+# pkgdown::build_reference()
 # build_home()
 # R CMD check --as-cran DR.SC_3.0.tar.gz
 

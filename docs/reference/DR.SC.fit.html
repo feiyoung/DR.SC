@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DR.SC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1</span>
       </span>
     </div>
 
@@ -41,7 +41,13 @@
       <a href="../articles/DR.SC.Simu.html">DR-SC: simulation</a>
     </li>
   </ul></li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/feiyoung/DR.SC/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -63,35 +69,53 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">DR.SC_fit</span><span class="op">(</span><span class="va">X</span>, <span class="va">K</span>, Adj_sp<span class="op">=</span><span class="cn">NULL</span>, q<span class="op">=</span><span class="fl">15</span>,
              error.heter<span class="op">=</span> <span class="cn">TRUE</span>, beta_grid<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">5</span>, by<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span>,
              maxIter<span class="op">=</span><span class="fl">25</span>, epsLogLik<span class="op">=</span><span class="fl">1e-5</span>, verbose<span class="op">=</span><span class="cn">FALSE</span>, maxIter_ICM<span class="op">=</span><span class="fl">6</span>,
-             wpca.int<span class="op">=</span><span class="cn">FALSE</span>, coreNum <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
+             wpca.int<span class="op">=</span><span class="cn">FALSE</span>, int.model<span class="op">=</span><span class="st">"EEE"</span>, approxPCA<span class="op">=</span><span class="cn">FALSE</span>, coreNum <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>X</dt>
 <dd><p>a  sparse matrix with class <code>dgCMatrix</code> or <code>matrix</code>, specify the log-normalization gene expression matrix used for DR-SC model.</p></dd>
-<dt>K</dt>
+
+  <dt>K</dt>
 <dd><p>a positive  integer allowing scalar or vector, specify the number of clusters in model fitting.</p></dd>
-<dt>Adj_sp</dt>
-<dd><p>an optional sparse matrix with class <code>dgCMatrix</code>, specify the adjoint matrix used for DR-SC model. We provide this interface for those users  who would like to define the adjoint matrix by their own.</p></dd>
-<dt>q</dt>
-<dd><p>a positive integer, specify the number of latent features to be extracted, default as 15.</p></dd>
-<dt>error.heter</dt>
+
+ <dt>Adj_sp</dt>
+<dd><p>an optional sparse matrix with class <code>dgCMatrix</code>, specify the adjoint matrix used for DR-SC model. We provide this interface for those users  who would like to define the adjacency matrix by their own.</p></dd>
+
+  <dt>q</dt>
+<dd><p>a positive integer, specify the number of latent features to be extracted, default as 15. Usually, the choice of q is a trade-off between model complexity and fit to the data,  and depends on the goals of the analysis and the structure of the data. A higher value will result in a more complex model with a higher number of parameters, which may lead to overfitting and poor generalization performance. On the other hand, a lower value will result in a simpler model with fewer parameters, but may also lead to underfitting and a poorer fit to the data.</p></dd>
+
+  <dt>error.heter</dt>
 <dd><p>an optional logical value, whether use the heterogenous error for DR-SC model, default as <code>TRUE</code>. If <code>error.heter=FALSE</code>, then the homogenuous error is used for probabilistic PCA model in DR-SC.</p></dd>
-<dt>beta_grid</dt>
+
+  <dt>beta_grid</dt>
 <dd><p>an optional vector of positive value, the candidate set of the smoothing parameter to be searched by the grid-search optimization approach.</p></dd>
-<dt>maxIter</dt>
+
+   <dt>maxIter</dt>
 <dd><p>an optional positive value, represents the maximum iterations of EM.</p></dd>
-<dt>epsLogLik</dt>
+
+  <dt>epsLogLik</dt>
 <dd><p>an optional positive vlaue, tolerance vlaue of relative variation rate of the observed pseudo log-loglikelihood value, defualt as '1e-5'.</p></dd>
-<dt>verbose</dt>
+
+  <dt>verbose</dt>
 <dd><p>an optional logical value, whether output the information of the ICM-EM algorithm.</p></dd>
-<dt>maxIter_ICM</dt>
+
+  <dt>maxIter_ICM</dt>
 <dd><p>an optional positive value, represents the maximum iterations of ICM.</p></dd>
-<dt>wpca.int</dt>
+
+  <dt>wpca.int</dt>
 <dd><p>an optional logical value, means whether use the weighted PCA to obtain the initial values of loadings and other paramters, default as <code>FALSE</code> which means the ordinary PCA  is used.</p></dd>
-<dt>coreNum</dt>
+
+  <dt>int.model</dt>
+<dd><p>an optional string, specify which Gaussian mixture model is used in evaluting the initial values for DR-SC, default as "EEE"; and see Mclust for more models' names.</p></dd>
+
+  <dt>approxPCA</dt>
+<dd><p>an optional logical value, whether use approximated PCA to speed up the computation for initial values.</p></dd>
+
+  <dt>coreNum</dt>
 <dd><p>an optional positive integer, means the number of thread used in parallel computating, default as 5. If the length of K is one, then coreNum will be set as 1 automatically.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -99,34 +123,48 @@
     </div>
     <div id="value">
     <h2>Value</h2>
-    <p>DR.SC_fit returns a <a href="https://rdrr.io/r/base/list.html" class="external-link">list</a> with class "drscObject" with the following three components:</p>
+    
+
+<p>DR.SC_fit returns a <a href="https://rdrr.io/r/base/list.html" class="external-link">list</a> with class "drscObject" with the following three components:</p>
 <dl><dt>Objdrsc</dt>
 <dd><p>a list including the model fitting results, in which the number of elements is same as the length of K.</p></dd>
-<dt>out_param</dt>
+
+  <dt>out_param</dt>
 <dd><p>a numeric matrix used for model selection in MBIC.</p></dd>
-<dt>K_set</dt>
+
+  <dt>K_set</dt>
 <dd><p>a scalar or vector equal to input argument K.</p></dd>
+
+  
 </dl><p>In addition, each element of "Objdrsc" is a list with the following comoponents:</p>
 <dl><dt>cluster</dt>
 <dd><p>inferred class labels</p></dd>
+
 <dt>hZ</dt>
 <dd><p>extracted latent features.</p></dd>
+
 <dt>beta</dt>
 <dd><p>estimated smoothing parameter</p></dd>
+
 <dt>Mu</dt>
 <dd><p>mean vectors of mixtures components.</p></dd>
+
 <dt>Sigma</dt>
 <dd><p>covariance matrix of mixtures components.</p></dd>
+
 <dt>W</dt>
 <dd><p>estimated loading matrix</p></dd>
+
 <dt>Lam_vec</dt>
 <dd><p>estimated variance of errors in probabilistic PCA model</p></dd>
+
 <dt>loglik</dt>
 <dd><p>pseudo observed log-likelihood.</p></dd>
+
 </dl></div>
     <div id="references">
     <h2>References</h2>
-    <p>Wei Liu, Xu Liao, Yi Yang, Huazhen Lin, Joe Yeong, Xiang Zhou*, Xingjie Shi* and Jin Liu* (2022). Joint dimension reduction and clustering analysis of single-cell RNA-seq and spatial transcriptomics data, Nucleic Acids Research</p>
+    <p><a href="https://academic.oup.com/nar/article/50/12/e72/6555431" class="external-link">Wei Liu, Xu Liao, Yi Yang, Huazhen Lin, Joe Yeong, Xiang Zhou, Xingjie Shi &amp; Jin Liu (2022). Joint dimension reduction and clustering analysis of single-cell RNA-seq and spatial transcriptomics data, Nucleic Acids Research, gkac219.</a></p>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -146,9 +184,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## we generate the spatial transcriptomics data with lattice neighborhood, i.e. ST platform.</span></span>
 <span class="r-in"><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="genspatialdata.html">gendata_RNAExp</a></span><span class="op">(</span>height<span class="op">=</span><span class="fl">10</span>, width<span class="op">=</span><span class="fl">10</span>,p<span class="op">=</span><span class="fl">50</span>, K<span class="op">=</span><span class="fl">4</span><span class="op">)</span></span>
 <span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>package 'Seurat' was built under R version 4.1.3</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching SeuratObject</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching sp</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>package ‘Seurat’ was built under R version 4.1.3</span>
 <span class="r-in"><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="va">seu</span>, verbose<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
 <span class="r-in"><span class="co"># choose 40 highly variable features using FindVariableFeatures in Seurat</span></span>
 <span class="r-in"><span class="co"># seu &lt;- FindVariableFeatures(seu, nfeatures = 40)</span></span>
@@ -163,11 +199,12 @@
 <span class="r-in"><span class="va">drscList</span> <span class="op">&lt;-</span> <span class="fu">DR.SC_fit</span><span class="op">(</span><span class="va">X</span>,Adj_sp<span class="op">=</span><span class="va">Adj_sp</span>, K<span class="op">=</span><span class="fl">4</span>, maxIter<span class="op">=</span><span class="fl">2</span>, verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Fit DR-SC model...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> -------------------Calculate inital values-------------</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Using accurate PCA to obtain initial values</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> -------------------Finish computing inital values------------- </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> -------------------Starting  ICM-EM algortihm-------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> iter = 2, loglik= -1507.102055, dloglik=0.999999 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter = 2, loglik= -1293.974640, dloglik=0.999999 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> -------------------Complete!-------------</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> elasped time is :0.08</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> elasped time is :0.06</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Finish DR-SC model fitting</span>
 <span class="r-in"></span>
 </code></pre></div>
@@ -184,7 +221,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

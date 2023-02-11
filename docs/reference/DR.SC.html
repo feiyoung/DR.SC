@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DR.SC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1</span>
       </span>
     </div>
 
@@ -41,7 +41,13 @@
       <a href="../articles/DR.SC.Simu.html">DR-SC: simulation</a>
     </li>
   </ul></li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/feiyoung/DR.SC/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -61,34 +67,47 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for Seurat</span>
-<span class="fu">DR.SC</span><span class="op">(</span><span class="va">seu</span>, <span class="va">K</span>, q<span class="op">=</span><span class="fl">15</span>,  platform<span class="op">=</span> <span class="st">"Visium"</span>,<span class="va">...</span><span class="op">)</span></code></pre></div>
+<span class="fu">DR.SC</span><span class="op">(</span><span class="va">seu</span>, <span class="va">K</span>, q<span class="op">=</span><span class="fl">15</span>,  platform<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'Visium'</span>, <span class="st">"ST"</span>, <span class="st">"Other_SRT"</span>, <span class="st">"scRNAseq"</span><span class="op">)</span>,<span class="va">...</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>seu</dt>
 <dd><p>an object of class "Seurat". The details of this object are given under 'Details'.</p></dd>
-<dt>q</dt>
+
+  <dt>q</dt>
 <dd><p>a positive integer, specify the number of latent features to be extracted, default as 15.</p></dd>
-<dt>K</dt>
+
+  <dt>K</dt>
 <dd><p>a positive  integer or integer vector, specify the number of clusters. When <code>K</code> is a vector, it is automatically selected by MBIC criteria. Users can also use BIC and AIC  to select K or refine model with MBIC by argument <code>pen.const</code> in the function <a href="selectModel.html">selectModel</a>.</p></dd>
-<dt>platform</dt>
-<dd><p>a string, specify the platform of the provided data, default as "Visium". There are more platforms to be chosen, including ("Visuim", "ST", "seqfish", 'merfish', 'slide-seqv2') and "scRNAseq", where the first group means there are spatial coordinates information in the metadata of seu, named "row" and "col" and a Hidden Markov random field is used to model the spatial coordinates, and the last one "scRNAseq" means there is no spatial information in object seu and a multinomial model is used to model the unobserved class labels. The platform helps to calculate the adjacency matrix.</p></dd>
-<dt>...</dt>
+
+  <dt>platform</dt>
+<dd><p>a string, specify the platform of the provided data, default as "Visium". There are more platforms to be chosen, including ("Visuim", "ST", "Other_SRT") and "scRNAseq", where the first group means there are spatial coordinates information in the metadata of seu, named "row" and "col" and a Hidden Markov random field is used to model the unobserved class label using spatial coordinates ("Other_SRT" represents the other SRT platforms except for 'Visium' and 'ST'), and the other group "scRNAseq" means there is no spatial information in object seu and a multinomial model is used to model the unobserved class labels. The platform helps to calculate the adjacency matrix.</p></dd>
+
+  <dt>...</dt>
 <dd><p>Other arguments to pass into <a href="DR.SC.fit.html">DR.SC_fit</a> function.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
     <p>seu is an object named <code>Seurat</code>, thich can easily created by R package <a href="https://satijalab.org/seurat/reference/Seurat-package.html" class="external-link">Seurat</a>.
-If the data is collected by the spatial transcriptomics technologies such as 10X Visium, ST, seqFISH, MERFISH and  Slide-seq, then there are spatial coordinates information in the metadata of seu, named "row" and "col". DR-SC model uses a Hidden Markov random field to model the spatial coordinates.  If the data is collected by the single cell RNA sequencing techonologies which means there is no spatial information in object seu then a multinomial model is used to model the unobserved class labels.</p>
+DR-SC  model can be applied to analyze both single cell RNA sequencing data and spatially resoved transcriptomics (SRT) data.</p>
+<p>If the data are collected by the single cell RNA sequencing techonologies which means there is no spatial information in object seu then a multinomial model is used to model the unobserved class labels.</p>
+
+<p>If the data is collected by the spatial transcriptomics technologies, then there are spatial coordinates information in the metadata of seu, named "row" and "col". DR-SC model uses a Hidden Markov random field to model the spatial coordinates.  <code>DR.SC</code> supports different platforms of SRT data, such as `Visium`, `ST` and any other platforms `Other_SRT`.</p>
+<p>For lattice grids in ST platform (ST), the interior spot has four neighbors (left, right, up and down),the boundary spot has three neighbors, and the spot in the corner has two neighbors. For hexagon grids, such as spatial coordinate in 10X Visium platform (Visium), the interior spot has six neighbors. For the irregular coordinates in other platforms (Other_SRT), Euclidean distance is adopted to decide whether a spot is an neighbor of another spot. For example, if the Euclidean distance between spot A and B is less than a radius, then A is taken as the neighbourhood of B. See function <a href="getAdj.html">getAdj</a> for more details.</p>
     </div>
     <div id="value">
     <h2>Value</h2>
-    <p>DR.SC returns a revised  <code>Seurat</code> object. There are two revisions in the seu. 1. the metadata is added a new column named <code>spatial.drsc.cluster</code> that represents the clustering results from DR-SC model, and the <code>Idents(seu)</code> is assigned with <code>spatial.drsc.cluster</code>. 2. a DimReduc object named <code>dr-sc</code> is added in the slot <code>reductions</code>, which represents the features extracted by DR-SC model.</p>
+    
+
+<p>DR.SC returns a revised  <code>Seurat</code> object. There are two revisions in the seu: 1. the metadata is added a new column named <code>spatial.drsc.cluster</code> that represents the clustering results from DR-SC model, and the <code>Idents(seu)</code> is assigned with <code>spatial.drsc.cluster</code>. 2. a DimReduc object named <code>dr-sc</code> is added in the slot <code>reductions</code>, which represents the features extracted by DR-SC model.</p>
+
+
     </div>
     <div id="references">
     <h2>References</h2>
-    <p>Wei Liu, Xu Liao, Yi Yang, Huazhen Lin, Joe Yeong, Xiang Zhou*, Xingjie Shi* and Jin Liu* (2022). Joint dimension reduction and clustering analysis of single-cell RNA-seq and spatial transcriptomics data, Nucleic Acids Research</p>
+    <p><a href="https://academic.oup.com/nar/article/50/12/e72/6555431" class="external-link">Wei Liu, Xu Liao, Yi Yang, Huazhen Lin, Joe Yeong, Xiang Zhou, Xingjie Shi &amp; Jin Liu (2022). Joint dimension reduction and clustering analysis of single-cell RNA-seq and spatial transcriptomics data, Nucleic Acids Research, gkac219.</a></p>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -123,11 +142,12 @@ If the data is collected by the spatial transcriptomics technologies such as 10X
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Neighbors were identified for 100 out of 100 spots.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Fit DR-SC model...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> -------------------Calculate inital values-------------</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Using accurate PCA to obtain initial values</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> -------------------Finish computing inital values------------- </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> -------------------Starting  ICM-EM algortihm-------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> iter = 2, loglik= -1198.095663, dloglik=0.999999 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iter = 2, loglik= -1167.507473, dloglik=0.999999 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> -------------------Complete!-------------</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> elasped time is :0.04</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> elasped time is :0.05</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Finish DR-SC model fitting</span>
 <span class="r-in"></span>
 </code></pre></div>
@@ -144,7 +164,7 @@ If the data is collected by the spatial transcriptomics technologies such as 10X
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>
