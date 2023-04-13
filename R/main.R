@@ -844,7 +844,8 @@ getAdj_auto <- function(pos, lower.med=4, upper.med=6, radius.upper= NULL){
   idx <- sample(n_spots, min(100, n_spots))
   dis <- dist(pos[idx,])
   if(is.null(radius.upper)){
-    radius.upper <- max(dis)
+    #radius.upper <- max(dis)
+    radius.upper <- sort(dis)[20] ## select the nearest 20 spots.
   }
   radius.lower <- min(dis[dis>0])
   Adj_sp <- getneighborhood_fast(pos, radius=radius.upper)
