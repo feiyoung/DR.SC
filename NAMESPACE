@@ -43,7 +43,7 @@ importFrom(mclust,Mclust, mclustBIC)
 importFrom(Seurat, RidgePlot, VlnPlot, FeaturePlot, DotPlot, DoHeatmap,
            FindVariableFeatures, DefaultAssay,LogNormalize,CreateDimReducObject,
            Idents, RunTSNE,RunUMAP, DimPlot, CreateSeuratObject,ReadMtx,'Idents<-',
-           AddMetaData)
+           AddMetaData, GetAssayData)
 importFrom(S4Vectors, DataFrame)
 # importFrom(doSNOW,registerDoSNOW)
 # importFrom(snow, makeSOCKcluster, stopCluster)

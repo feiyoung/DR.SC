@@ -69,6 +69,11 @@ For an example of typical DR.SC usage, please see our [Package vignette](https:/
 
 
 # News
+
+DR.SC version 3.3(2023-08-02)
+
+* Make it compatible with the Seurat V5!
+
 DR.SC version 3.0
 
 * Add the  approximated PCA to speed up the computation for initial values; see functions `DR.SC` and `DR.SC_fit`.

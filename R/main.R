@@ -4,7 +4,51 @@
 # pkgdown::build_site()
 # pkgdown::build_reference()
 # build_home()
-# R CMD check --as-cran DR.SC_3.0.tar.gz
+# R CMD check --as-cran DR.SC_3.2.tar.gz
+
+
+
+
+.logDiffTime <- function(main = "", t1 = NULL, verbose = TRUE, addHeader = FALSE,
+                         t2 = Sys.time(), units = "mins", header = "*****",
+                         tail = "elapsed.", precision = 3){
+  
+  # main = ""; t1 = NULL; verbose = TRUE; addHeader = FALSE;
+  # t2 = Sys.time(); units = "mins"; header = "###########";
+  # tail = "elapsed."; precision = 3
+  if (verbose) {
+    timeStamp <- tryCatch({
+      dt <- abs(round(difftime(t2, t1, units = units),
+                      precision))
+      if (addHeader) {
+        msg <- sprintf("%s\n%s : %s, %s %s %s\n%s",
+                       header, Sys.time(), main, dt, units, tail,
+                       header)
+      }
+      else {
+        msg <- sprintf("%s : %s, %s %s %s", Sys.time(),
+                       main, dt, units, tail)
+      }
+      if (verbose)
+        message(msg)
+    }, error = function(x) {
+      if (verbose)
+        message("Time Error : ", x)
+    })
+  }
+  
+  return(invisible(0))
+}
+
+
+.logTime <- function(main='', prefix='*****', versoe=TRUE){
+  
+  if(versoe){
+    message(paste0(Sys.time()," : ", prefix," ",  main))
+  }
+  
+  
+}
 
 ### Generate data without spatial dependence.
 gendata_noSp <- function(n=100, p =100, q=15, K = 8,  alpha=10, sigma2=1, seed=1){
@@ -216,7 +260,7 @@ gendata_RNAExp <- function(height=30, width=30, platform="ST", p =100, q=10, K=7
   p <- ncol(X); n <- nrow(X)
   rownames(counts) <- paste0("gene", seq_len(p))
   colnames(counts) <- paste0("spot", seq_len(n))
-  counts <- as.data.frame(exp(counts)-1)
+  counts <- as.matrix(exp(counts)-1)
   ## Make array coordinates - filled rectangle
   
   if(platform=="ST"){
@@ -308,17 +352,23 @@ readscRNAseq <- function(mtx, cells, features, ...){
 
 # Data prepocessing -------------------------------------------------------
 ## use SPARK to choose spatially variable genes
-FindSVGs <- function(seu, nfeatures=2000, covariates=NULL, num_core=1, verbose=TRUE){
+FindSVGs <- function(seu, nfeatures=2000, covariates=NULL, preHVGs=5000,num_core=1, verbose=TRUE){
   
   if (!inherits(seu, "Seurat"))
     stop("method is only for Seurat objects")
   # require(SPARK)
   # require(Seurat)
-  assy <- DefaultAssay(seu)
-  sp_count <- seu[[assy]]@counts
-  if(nrow(sp_count)>5000){
-    seu <- FindVariableFeatures(seu, nfeatures = 5000, verbose=verbose)
-    sp_count <- seu[[assy]]@counts[seu[[assy]]@var.features,]
+  assay <- DefaultAssay(seu)
+  # sp_count <- seu[[assay]]@counts
+  sp_count <- GetAssayData(seu, assay = assay, slot='counts')
+  
+  if(preHVGs<nfeatures){
+    warning("The number of preHVGs is smaller than nfeatures, and replaced by nfeatures!\n")
+    preHVGs <- nfeatures
+  }
+  if(nrow(sp_count)>preHVGs){
+    seu <- FindVariableFeatures(seu, nfeatures = preHVGs, verbose=verbose)
+    sp_count <- seu[[assay]]@counts[seu[[assay]]@var.features,]
   }
   location <- as.data.frame(cbind(seu$row, seu$col))
   if(verbose){
@@ -341,10 +391,23 @@ FindSVGs <- function(seu, nfeatures=2000, covariates=NULL, num_core=1, verbose=T
   is.SVGs[genes] <- TRUE
   adjusted.pval.SVGs[genes] <- sparkX$res_mtest$adjustedPval[order_nfeatures]
   
-  seu[[assy]]@meta.features$is.SVGs <- is.SVGs
-  seu[[assy]]@meta.features$order.SVGs <- order.SVGs
-  seu[[assy]]@meta.features$adjusted.pval.SVGs <- adjusted.pval.SVGs
-  seu[[assy]]@var.features <- genes
+
+  if(class(seu[[assay]])=="Assay5"){
+    seu[[assay]]@meta.data$is.SVGs <- is.SVGs
+    seu[[assay]]@meta.data$order.SVGs <- order.SVGs
+    seu[[assay]]@meta.data$adjusted.pval.SVGs <- adjusted.pval.SVGs
+    var.features <- rep(NA, nrow(seu))
+    names(var.features) <- row.names(seu)
+    var.features[genes] <- genes
+    seu[[assay]]@meta.data$var.features <- unname(var.features)
+  }else{
+    seu[[assay]]@meta.features$is.SVGs <- is.SVGs
+    seu[[assay]]@meta.features$order.SVGs <- order.SVGs
+    seu[[assay]]@meta.features$adjusted.pval.SVGs <- adjusted.pval.SVGs
+    seu[[assay]]@var.features <- genes
+  }
+  
+  
   seu
 }
 
@@ -352,17 +415,60 @@ topSVGs <- function(seu, ntop=5){
   if (!inherits(seu, "Seurat"))
     stop("method is only for Seurat objects")
   if(ntop > nrow(seu)) warning(paste0("Only ", nrow(seu), ' SVGs will be returned since the number of genes is less than ', ntop, '\n'))
-  assy <- DefaultAssay(seu)
-  if(is.null(seu[[assy]]@meta.features$is.SVGs)) 
-    stop("There is no information about SVGs in default Assay. Please use function FindSVGs first!")
+  assay <- DefaultAssay(seu)
   
-  SVGs <- row.names(seu)[seu[[assy]]@meta.features$is.SVGs]
-  order_features <- seu[[assy]]@meta.features$order.SVGs
+  
+  if(class(seu[[assay]]) == "Assay5"){
+    if (is.null(seu[[assay]]@meta.data$is.SVGs)) 
+      stop("There is no information about SVGs in default Assay. Please use function FindSVGs first!")
+    SVGs <- row.names(seu)[seu[[assay]]@meta.data$is.SVGs]
+    order_features <- seu[[assay]]@meta.data$order.SVGs
+  }else{
+    if (is.null(seu[[assay]]@meta.features$is.SVGs)) 
+      stop("There is no information about SVGs in default Assay. Please use function FindSVGs first!")
+    SVGs <- row.names(seu)[seu[[assay]]@meta.features$is.SVGs]
+    order_features <- seu[[assay]]@meta.features$order.SVGs
+  }
+  
   
   idx <- order(order_features[!is.na(order_features)])[1:ntop]
   SVGs[idx]
+ 
   
 }
+
+
+
+# Access data from Seurat object ------------------------------------------
+## To compatible with Seurat V5
+
+get_data_fromSeurat <- function(seu, assay=NULL, slot='counts'){
+  
+  if(is.null(assay)) assay <- DefaultAssay(seu)
+    dat <- GetAssayData(seu, assay = assay, slot= slot)
+    
+  
+  return(dat)
+}
+
+get_varfeature_fromSeurat <- function(seu, assay=NULL){
+  
+  if(is.null(assay)) assay <- DefaultAssay(seu)
+  
+  if(class(seu[[assay]]) == "Assay5"){
+    var.features <- seu[[assay]]@meta.data$var.features
+    var.features <- var.features[!is.na(var.features)] 
+    
+  }else{
+    var.features <- seu[[assay]]@var.features
+  }
+  return(var.features)
+}
+
+
+
+
+
 # Define DR.SC S3 function ------------------------------------------------
 
 
@@ -409,12 +515,13 @@ DR.SC.Seurat <- function(seu, K, q=15,  platform= c('Visium', "ST", "Other_SRT",
   }
  
   
-  assy <- DefaultAssay(seu)
+  assay <- DefaultAssay(seu)
+  var.features <- get_varfeature_fromSeurat(seu, assay)
   
+  dat <- get_data_fromSeurat(seu, assay=assay, slot='data')
   
-  var.features <- seu[[assy]]@var.features
-  
-  X <- Matrix::t(seu[[assy]]@data[var.features, ])
+  X <- Matrix::t(dat[var.features,])
+  rm(dat)
   
   resList <- DR.SC_fit(X,Adj_sp = Adj_sp, q=q, K=K, ...)
   
@@ -425,7 +532,7 @@ DR.SC.Seurat <- function(seu, K, q=15,  platform= c('Visium', "ST", "Other_SRT",
   # seu$spatial.drsc.cluster <- resList$cluster
   # Idents(seu) <- factor(paste0("cluster", seu$spatial.drsc.cluster), levels=paste0('cluster',1:K))
   # seu@tools <- resList[-c(1,2)]
-  seu[[assy]]@misc[['dr-scInf']] <- extractInfModel(resList)
+  seu[[assay]]@misc[['dr-scInf']] <- extractInfModel(resList)
   seu <- selectModel(seu,  criteria = 'MBIC', pen.const=0.5)
   
   return(seu)
@@ -645,9 +752,9 @@ selectModel.Seurat <- function(obj,  criteria = 'MBIC', pen.const=1){
   if (!inherits(obj, "Seurat"))
     stop("selectModel: method is only for Seurat or drscObject object")
   
-  assy <- DefaultAssay(obj)
+  assay <- DefaultAssay(obj)
   
-  reslist <- obj[[assy]]@misc[['dr-scInf']] 
+  reslist <- obj[[assay]]@misc[['dr-scInf']] 
   dfInf <- reslist$KinfMat
   K_set <- reslist$KinfMat[,"K"]
   nK <- length(K_set)
@@ -675,10 +782,10 @@ selectModel.Seurat <- function(obj,  criteria = 'MBIC', pen.const=1){
   hZ <- reslist$hZList[[min_indx]]
   row.names(hZ) <- colnames(obj)
   colnames(hZ) <- paste0('DR-SC', 1: ncol(hZ))
-  obj@reductions$"dr-sc" <- CreateDimReducObject(embeddings = hZ, key='DRSC_', assay=assy)
+  obj@reductions$"dr-sc" <- CreateDimReducObject(embeddings = hZ, key='DRSC_', assay=assay)
   obj$spatial.drsc.cluster <- as.vector(reslist$clusterList[[min_indx]])
   Idents(obj) <- factor(paste0("cluster", obj$spatial.drsc.cluster), levels=paste0('cluster',1: bestK))
-  obj[[assy]]@misc[['icMat']] <- icMat 
+  obj[[assay]]@misc[['icMat']] <- icMat 
   
   return(obj)
 }
@@ -950,9 +1057,12 @@ RunWPCA.Seurat <- function(object, q=15){
   
   if (!inherits(object, "Seurat"))
     stop("method is only for Seurat, dgCMatrix or matrix objects")
-  if(length(object@assays[[DefaultAssay(object)]]@scale.data) == 0)
-    stop("The slot scale.data is empty! Please use ScaleData function first then use RunWPCA!")
-  scale.data <- object@assays[[DefaultAssay(object)]]@scale.data
+  
+  message("If not run ScaleData, please run ScaleData function first then use RunWPCA!")
+  
+  #scale.data <- object@assays[[DefaultAssay(object)]]@scale.data
+  scale.data <- get_data_fromSeurat(object, slot='scale.data')
+  
   hZ <- wpca(t(scale.data), q=q, weighted = T)$PCs
   row.names(hZ) <- colnames(object)
   colnames(hZ) <- paste0('WPCA', 1:q)
