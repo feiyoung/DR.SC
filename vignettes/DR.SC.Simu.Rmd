@@ -39,7 +39,7 @@ seu <- FindVariableFeatures(seu, nfeatures = 400)
 For function `DR.SC`, users can specify the number of clusters $K$ or set `K` to be an integer vector by using modified BIC(MBIC) to determine $K$. First, we try using user-specified number of clusters. Then we show the version chosen by MBIC.
 ```{r  eval = FALSE}
 ### Given K
-seu2 <- DR.SC(seu, K=4, platform = 'ST',  verbose=F)
+seu2 <- DR.SC(seu, q=30, K=4, platform = 'ST',  verbose=F, approxPCA=T)
 ```
 
 After finishing model fitting, we use ajusted rand index (`ARI`) to check the performance of clustering
@@ -62,7 +62,7 @@ drscPlot(seu2, visu.method = 'UMAP')
 
 Use MBIC to choose number of clusters:
 ```{r  eval = FALSE}
-seu2 <- DR.SC(seu, q=10, K=2:6, platform = 'ST', verbose=F)
+seu2 <- DR.SC(seu, q=10, K=2:6, platform = 'ST', verbose=F,approxPCA=T)
 mbicPlot(seu2)
 ```
 
@@ -76,7 +76,7 @@ First, we select the spatilly variable genes using funciton `FindSVGs`.
 seu <- NormalizeData(seu, verbose=F)
 # choose 400 spatially variable features using FindSVGs
 seus <- FindSVGs(seu, nfeatures = 400, verbose = F)
-seu2 <- DR.SC(seus, K=4, platform = 'ST', verbose=F)
+seu2 <- DR.SC(seus, q=4, K=4, platform = 'ST', verbose=F)
 ```
 
 Using ARI to check the performance of clustering
@@ -101,7 +101,7 @@ drscPlot(seu2, visu.method = 'UMAP')
 ### DR-SC can automatically determine the number of clusters
 Use MBIC to choose number of clusters:
 ```{r  eval = FALSE}
-seu2 <- DR.SC(seus, q=10, K=2:6, platform = 'ST',  verbose=F)
+seu2 <- DR.SC(seus, q=4, K=2:6, platform = 'ST',  verbose=F)
 mbicPlot(seu2)
 # or plot BIC or AIC
 # mbicPlot(seu2, criteria = 'BIC')

@@ -392,7 +392,7 @@ FindSVGs <- function(seu, nfeatures=2000, covariates=NULL, preHVGs=5000,num_core
   adjusted.pval.SVGs[genes] <- sparkX$res_mtest$adjustedPval[order_nfeatures]
   
 
-  if(class(seu[[assay]])=="Assay5"){
+  if(inherits(seu[[assay]], "Assay5")){
     seu[[assay]]@meta.data$is.SVGs <- is.SVGs
     seu[[assay]]@meta.data$order.SVGs <- order.SVGs
     seu[[assay]]@meta.data$adjusted.pval.SVGs <- adjusted.pval.SVGs
@@ -418,7 +418,7 @@ topSVGs <- function(seu, ntop=5){
   assay <- DefaultAssay(seu)
   
   
-  if(class(seu[[assay]]) == "Assay5"){
+  if(inherits(seu[[assay]], "Assay5")){
     if (is.null(seu[[assay]]@meta.data$is.SVGs)) 
       stop("There is no information about SVGs in default Assay. Please use function FindSVGs first!")
     SVGs <- row.names(seu)[seu[[assay]]@meta.data$is.SVGs]
@@ -455,7 +455,7 @@ get_varfeature_fromSeurat <- function(seu, assay=NULL){
   
   if(is.null(assay)) assay <- DefaultAssay(seu)
   
-  if(class(seu[[assay]]) == "Assay5"){
+  if(inherits(seu[[assay]], "Assay5")){
     var.features <- seu[[assay]]@meta.data$var.features
     var.features <- var.features[!is.na(var.features)] 
     
@@ -471,8 +471,6 @@ get_varfeature_fromSeurat <- function(seu, assay=NULL){
 
 # Define DR.SC S3 function ------------------------------------------------
 
-
-
 DR.SC_fit <- function(X, K, Adj_sp=NULL, q=15,
                             error.heter= TRUE, beta_grid=seq(0.5, 5, by=0.5),
                             maxIter=25, epsLogLik=1e-5, verbose=FALSE, maxIter_ICM=6,
@@ -487,7 +485,7 @@ DR.SC_fit <- function(X, K, Adj_sp=NULL, q=15,
     X <- X[, sd_zeros !=0]
   }
   if(length(K)==1) coreNum <- 1 
-
+  q <- min(q, ncol(X)-1)
   message("Fit DR-SC model...\n")
   resList <- drsc(X,Adj_sp = Adj_sp, q=q, K=K, error.heter= error.heter, 
                   beta_grid=beta_grid,maxIter=maxIter, epsLogLik=epsLogLik,
@@ -498,7 +496,7 @@ DR.SC_fit <- function(X, K, Adj_sp=NULL, q=15,
   
   return(resList)
 }
-DR.SC <- function(seu, K, q=15,  platform= c('Visium', "ST", "Other_SRT", "scRNAseq"), ...) {
+DR.SC <- function(seu, K, q=50,  platform= c('Visium', "ST", "Other_SRT", "scRNAseq"), ...) {
   UseMethod("DR.SC")
 }
   

@@ -62,7 +62,7 @@ seu@assays$RNA@var.features[1:10]
 We fit the DR-SC model by using the highly variable genes.
 ```{r  eval = FALSE}
 ### Given K
-seu <- DR.SC(seu, K=7, platform = 'Visium', verbose=F)
+seu <- DR.SC(seu, K=7, platform = 'Visium', verbose=T, approxPCA=T)
 ```
 
 ### Visualization
@@ -92,13 +92,14 @@ seus@assays$RNA@var.features[1:10]
 We fit DR-SC model by  using the selected spatially variable genes.
 ```{r  eval = FALSE}
 ### Given K
-seus <- DR.SC(seus, K=7, platform = 'Visium', verbose=T)
+seus <- DR.SC(seus,  K=7, platform = 'Visium', verbose=F, approxPCA=T)
 ```
 
 ### Visualization
 Next, we show the application of DR-SC in visualization. First, we can visualize the  clusters from DR-SC on the spatial coordinates.
 ```{r  eval = FALSE}
 spatialPlotClusters(seus)
+mclust::adjustedRandIndex(seus$spatial.drsc.cluster, seus$annotation)
 ```
 
 

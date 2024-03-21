@@ -70,6 +70,9 @@ For an example of typical DR.SC usage, please see our [Package vignette](https:/
 
 # News
 
+DR.SC version 3.4(2024-03-19)
+* Update the email adress of maintainer.
+
 DR.SC version 3.3(2023-08-02)
 
 * Make it compatible with the Seurat V5!
