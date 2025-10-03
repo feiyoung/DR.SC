@@ -32,7 +32,7 @@
   \link{topSVGs}
 }
 \examples{
-  seu<-gendata_RNAExp(height=20, width=20,p=200, K=4)
+  data(seu)
   seu<-FindSVGs(seu, nfeatures=100)
   topSVGs(seu)
 

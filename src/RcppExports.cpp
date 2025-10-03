@@ -58,37 +58,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// calYenergy2D_sp
-arma::mat calYenergy2D_sp(const arma::ivec& y, const arma::sp_mat& Adj, int K, const arma::vec alpha, const double beta);
-RcppExport SEXP _DR_SC_calYenergy2D_sp(SEXP ySEXP, SEXP AdjSEXP, SEXP KSEXP, SEXP alphaSEXP, SEXP betaSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::ivec& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< const arma::sp_mat& >::type Adj(AdjSEXP);
-    Rcpp::traits::input_parameter< int >::type K(KSEXP);
-    Rcpp::traits::input_parameter< const arma::vec >::type alpha(alphaSEXP);
-    Rcpp::traits::input_parameter< const double >::type beta(betaSEXP);
-    rcpp_result_gen = Rcpp::wrap(calYenergy2D_sp(y, Adj, K, alpha, beta));
-    return rcpp_result_gen;
-END_RCPP
-}
-// obj_beta
-double obj_beta(const arma::ivec& y, const arma::mat& R, const arma::sp_mat& Adj, int K, const arma::vec alpha, const double beta);
-RcppExport SEXP _DR_SC_obj_beta(SEXP ySEXP, SEXP RSEXP, SEXP AdjSEXP, SEXP KSEXP, SEXP alphaSEXP, SEXP betaSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::ivec& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type R(RSEXP);
-    Rcpp::traits::input_parameter< const arma::sp_mat& >::type Adj(AdjSEXP);
-    Rcpp::traits::input_parameter< int >::type K(KSEXP);
-    Rcpp::traits::input_parameter< const arma::vec >::type alpha(alphaSEXP);
-    Rcpp::traits::input_parameter< const double >::type beta(betaSEXP);
-    rcpp_result_gen = Rcpp::wrap(obj_beta(y, R, Adj, K, alpha, beta));
-    return rcpp_result_gen;
-END_RCPP
-}
 // icmem_heterCpp
 Rcpp:: List icmem_heterCpp(const arma::mat& X, const arma::sp_mat& Adj, const arma::imat& y_int, Rcpp::List& Mu_intList, const arma::mat& W_int, Rcpp::List& Sigma_intList, arma::vec& Lam_vec_int, Rcpp::List& alphaList, const arma::vec& beta_int, const arma::vec& beta_grid, const int& maxIter_ICM, const int& maxIter, const double& epsLogLik, const int& verbose, const bool& homo, const bool& diagSigmak, const int maxK, const int minK, const int coreNum);
 RcppExport SEXP _DR_SC_icmem_heterCpp(SEXP XSEXP, SEXP AdjSEXP, SEXP y_intSEXP, SEXP Mu_intListSEXP, SEXP W_intSEXP, SEXP Sigma_intListSEXP, SEXP Lam_vec_intSEXP, SEXP alphaListSEXP, SEXP beta_intSEXP, SEXP beta_gridSEXP, SEXP maxIter_ICMSEXP, SEXP maxIterSEXP, SEXP epsLogLikSEXP, SEXP verboseSEXP, SEXP homoSEXP, SEXP diagSigmakSEXP, SEXP maxKSEXP, SEXP minKSEXP, SEXP coreNumSEXP) {
@@ -173,8 +142,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_DR_SC_sp_means_Rcpp", (DL_FUNC) &_DR_SC_sp_means_Rcpp, 2},
     {"_DR_SC_sp_sums_Rcpp", (DL_FUNC) &_DR_SC_sp_sums_Rcpp, 2},
     {"_DR_SC_getPairDist", (DL_FUNC) &_DR_SC_getPairDist, 1},
-    {"_DR_SC_calYenergy2D_sp", (DL_FUNC) &_DR_SC_calYenergy2D_sp, 5},
-    {"_DR_SC_obj_beta", (DL_FUNC) &_DR_SC_obj_beta, 6},
     {"_DR_SC_icmem_heterCpp", (DL_FUNC) &_DR_SC_icmem_heterCpp, 19},
     {"_DR_SC_EMmPCpp_heter", (DL_FUNC) &_DR_SC_EMmPCpp_heter, 14},
     {"_DR_SC_calculateWeight", (DL_FUNC) &_DR_SC_calculateWeight, 2},

@@ -43,14 +43,6 @@ getPairDist <- function(x) {
     .Call(`_DR_SC_getPairDist`, x)
 }
 
-calYenergy2D_sp <- function(y, Adj, K, alpha, beta) {
-    .Call(`_DR_SC_calYenergy2D_sp`, y, Adj, K, alpha, beta)
-}
-
-obj_beta <- function(y, R, Adj, K, alpha, beta) {
-    .Call(`_DR_SC_obj_beta`, y, R, Adj, K, alpha, beta)
-}
-
 icmem_heterCpp <- function(X, Adj, y_int, Mu_intList, W_int, Sigma_intList, Lam_vec_int, alphaList, beta_int, beta_grid, maxIter_ICM, maxIter, epsLogLik, verbose, homo = FALSE, diagSigmak = FALSE, maxK = 10L, minK = 2L, coreNum = 1L) {
     .Call(`_DR_SC_icmem_heterCpp`, X, Adj, y_int, Mu_intList, W_int, Sigma_intList, Lam_vec_int, alphaList, beta_int, beta_grid, maxIter_ICM, maxIter, epsLogLik, verbose, homo, diagSigmak, maxK, minK, coreNum)
 }

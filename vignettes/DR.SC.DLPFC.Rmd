@@ -4,7 +4,7 @@ author: "Wei Liu"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{DR-SC DLPFC}
+  %\VignetteIndexEntry{DR-SC: DLPFC Data Analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 
 The package can be loaded with the command:
 ```{r  eval = FALSE}
+set.seed(2024)
 library("DR.SC")
 ```
 
@@ -48,14 +49,14 @@ Until now, the data preparation with Seurat object format  is finished, and we c
 
 
 ### Data preprocessing
-This preprocessing includes Log-normalization and feature selection. Here we select highly variable genes for example first. The selected genes' names are saved in "seu@assays$RNA@var.features"
+This preprocessing includes Log-normalization and feature selection. Here we select highly variable genes for example first. The selected genes' names are saved in "VariableFeatures(seu)".
 ```{r  eval = FALSE}
 
 # standard log-normalization
 dlpfc151510 <- NormalizeData(dlpfc151510, verbose = F)
 # choose 500 highly variable features
 seu <- FindVariableFeatures(dlpfc151510, nfeatures = 500, verbose = F)
-seu@assays$RNA@var.features[1:10]
+VariableFeatures(seu)[1:10]
 ```
 
 ## Fit DR-SC model using 500 highly variable features
@@ -67,6 +68,7 @@ seu <- DR.SC(seu, K=7, platform = 'Visium', verbose=T, approxPCA=T)
 
 ### Visualization
 ```{r  eval = FALSE}
+mclust::adjustedRandIndex(seu$spatial.drsc.cluster, seu$annotation)
 spatialPlotClusters(seu)
 ```
 
@@ -86,7 +88,7 @@ In spatially resolved transcriptomics data analysis, we recommend users using th
 ```{r  eval = FALSE}
 # choose 480 spatially variable features
 seus <- FindSVGs(seu, nfeatures = 480)
-seus@assays$RNA@var.features[1:10]
+VariableFeatures(seu)[1:10]
 ```
 
 We fit DR-SC model by  using the selected spatially variable genes.

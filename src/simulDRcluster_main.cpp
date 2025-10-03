@@ -17,7 +17,6 @@
 #include "mt_paral_job.h"
 #include "mt_paral_job2.h"
 
-#define INT_MIN (-INT_MAX - 1)
 
 using namespace Rcpp;
 using namespace arma;
@@ -82,8 +81,7 @@ sp_mat get_spNbs(ivec y, const sp_mat& Adj) {   // ivec是索引型向量
   return spNbs.t(); // return the class label of neighbor matrix, i-th column is the neighbor label of sample i
 }
 
-// [[Rcpp::export]]
-arma::mat calYenergy2D_sp(const arma::ivec& y, const arma::sp_mat& Adj, int K, const arma::vec alpha, const double beta)	{
+arma::mat calYenergy2D_sp2(const arma::ivec& y, const arma::sp_mat& Adj, int K, const arma::vec alpha, const double beta)	{
   // Calculate the value of energy function of y, which is equal to negative logliklihood up to a constant
   int n = y.n_rows;
   arma::sp_mat spNbs_t = get_spNbs(y, Adj); // transform spNbs to iterate by column.
@@ -113,6 +111,50 @@ arma::mat calYenergy2D_sp(const arma::ivec& y, const arma::sp_mat& Adj, int K, c
   return Uy;
   
 }
+
+arma::mat calYenergy2D_sp(const ivec& y, const sp_mat& Adj, int K, const arma::vec alpha, const double beta) {
+  const int n = y.n_rows;
+  arma::mat Uy(n, K);
+  
+  // 1. 创建标签指示矩阵 (n × K)
+  // arma::mat Y_indicator(n, K, arma::fill::zeros);
+  // for(int k=0; k<K; ++k) {
+  //   Y_indicator.col(k) = conv_to<vec>::from(y == (k+1));
+  // }
+  arma::sp_mat Y_indicator(n, K);  // 默认为全零稀疏矩阵
+  for(int k=0; k<K; ++k) {
+    // 找到所有y == (k+1)的位置
+    arma::uvec pos = find(y == (k+1));
+    // 正确设置稀疏矩阵的非零值
+    for(arma::uword i=0; i<pos.n_elem; ++i) {
+      Y_indicator(pos(i), k) = 1.0;  // 直接在(i,k)位置赋值
+    }
+  }
+  
+  // 2. 计算每个样本的邻居数 (n × 1)
+  // arma::vec nn = sum(Adj, 1); // 每行的和即为邻居数
+  arma::vec nn(Adj.n_rows); // calculate the row sum using iterator.
+  sp_mat::const_iterator it = Adj.begin();
+  sp_mat::const_iterator it_end = Adj.end();
+  for(; it != it_end; ++it) {
+    nn(it.row()) += *it;
+  }
+  
+  // 3. 计算相同标签的邻居数 (n × K)
+  arma::mat n_sameS(Adj * Y_indicator);
+  
+  // 4. 批量计算能量
+  Uy = beta * 0.5 * (repmat(nn, 1, K) - n_sameS);
+  Uy.each_row() -= alpha.t();
+  
+  // 5. 标准化
+  arma::mat C_mat = normalise(exp(-Uy), 1, 1);
+  Uy = -log(C_mat);
+  
+  return Uy;
+}
+
+
 // Suppose we know true y, can we estimate beta correctly by maximizing pseudo loglikelihood  
 // //[[Rcpp::export]] 
 // double obj_beta2(const arma::ivec& y, const arma::sp_mat& Adj, int K, const arma::vec alpha, const double beta)	{
@@ -130,7 +172,12 @@ arma::mat calYenergy2D_sp(const arma::ivec& y, const arma::sp_mat& Adj, int K, c
 //   return loglike;
 // }
 
-//[[Rcpp::export]]  
+
+
+
+
+
+
 double obj_beta(const arma::ivec& y, const arma::mat& R, const arma::sp_mat& Adj, int K, const arma::vec alpha, const double beta)	{
   
   mat Uy = calYenergy2D_sp(y, Adj, K, alpha, beta); // Uy was normalized, so there is no need to normalized Uy. 
@@ -257,7 +304,7 @@ Objdrsc drsc(const arma::mat& X, const arma::sp_mat& Adj, const arma::ivec& y_in
   // If p is sufficient large, loglik can not be computed.
   // But this can be solved by some programming tricks.
   vec loglik(maxIter), N(K, fill::zeros);
-  loglik(0) = INT_MIN; // -INFINITY
+  loglik(0) = -1e10; // -INFINITY
   
   // Define the variables that will be used in algorithm
   // variables usded in eavluating R.
@@ -563,7 +610,7 @@ Objdrsc_nonspa drsc_nonspa(const arma::mat& X, const arma::vec& Pi_int, const ar
   // If p is sufficient large, loglik can not be computed.
   // But this can be solved by some programming tricks.
   vec loglik(maxIter);
-  loglik(0) = INT_MIN;
+  loglik(0) = -1e10;
 
   // Define the variables that will be used in algorithm
   // vec mSk(n); double  logdSk; //mat A1(n,K, fill::zeros), Ck(q,q, fill::zeros);

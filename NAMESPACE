@@ -2,7 +2,7 @@ useDynLib(DR.SC, .registration=TRUE)
 importFrom(Rcpp, evalCpp)
 #exportPattern("^[[:alpha:]]+")
 
-export(DR.SC, DR.SC_fit, gendata_RNAExp,  FindSVGs, getAdj, getAdj_manual,
+export(DR.SC, DR.SC_fit,  FindSVGs, getAdj, getAdj_manual,
        getAdj_auto, RunWPCA, topSVGs, selectModel)
 export(spatialPlotClusters, drscPlot, mbicPlot)
 export(read10XVisium,readscRNAseq)
@@ -35,7 +35,7 @@ importFrom(stats,rnorm, rmultinom, cov,cor)
 importFrom("utils", "read.csv", "read.table", "setTxtProgressBar",
              "txtProgressBar")
 importFrom(cowplot, theme_cowplot)
-importFrom(GiRaF,sampler.mrf)
+# importFrom(GiRaF,sampler.mrf)
 importFrom(purrr, discard, keep)
 importFrom(Matrix, sparseMatrix, t)
 importFrom(RColorBrewer, brewer.pal)

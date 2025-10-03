@@ -17,7 +17,7 @@
   \item{...}{Other arguments to pass into \link{DR.SC_fit} function.}
 }
 \details{
-seu is an object named \code{Seurat}, thich can easily created by R package \link{Seurat}.
+seu is an object named \code{Seurat}, thich can easily created by R package Seurat.
 DR-SC  model can be applied to analyze both single cell RNA sequencing data and spatially resoved transcriptomics (SRT) data. 
 
 If the data are collected by the single cell RNA sequencing techonologies which means there is no spatial information in object seu then a multinomial model is used to model the unobserved class labels. 
@@ -47,7 +47,7 @@ nothing
 \examples{
 
 ## we generate the spatial transcriptomics data with lattice neighborhood, i.e. ST platform.
-seu <- gendata_RNAExp(height=10, width=10,p=50, K=4,platform="ST")
+data(seu)
 library(Seurat)
 seu <- NormalizeData(seu, verbose=FALSE)
 # choose 100 highly variable features

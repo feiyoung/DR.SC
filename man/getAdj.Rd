@@ -35,7 +35,7 @@
 }
 \examples{
   ## S3 method for class "Seurat"
-  seu <- gendata_RNAExp(height=20, width=20,p=200, K=4)
+  data(seu)
   Adj_sp <- getAdj(seu, platform = 'ST')
 }
 \concept{Lattice grids}

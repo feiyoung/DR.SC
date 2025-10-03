@@ -70,6 +70,9 @@ For an example of typical DR.SC usage, please see our [Package vignette](https:/
 
 # News
 
+DR.SC version 3.6(2025-10-02)
+* Update calYenergy2D_sp() Cpp function to speed up the speed of DR-SC.
+
 DR.SC version 3.4(2024-03-19)
 * Update the email adress of maintainer.
 

@@ -3,8 +3,11 @@
 # Run to build the website
 # pkgdown::build_site()
 # pkgdown::build_reference()
-# build_home()
-# R CMD check --as-cran DR.SC_3.2.tar.gz
+# pkgdown::build_home()
+# pkgdown::build_article("DR-SC")
+# pkgdown::build_article("DR.SC.Simu")
+# pkgdown::build_article("DR.SC.DLPFC")
+# R CMD check --as-cran DR.SC_3.6.tar.gz
 
 
 
@@ -116,176 +119,176 @@ gendata_noSp <- function(n=100, p =100, q=15, K = 8,  alpha=10, sigma2=1, seed=1
 }
 
 ### Generate data with spatial dependence.
-gendata_sp <- function(height=30, width=30, p =100, q=10, K=7,  G=4, beta=1, sigma2=1, tau=8, seed=1, view=FALSE){
-  # height <- 70
-  # width <- 70
-  # G <- 4
-  # beta <- 1.0
-  # K <- 7
-  # q <- 10
-  # p <- 1000
-  if(q <2) stop("error:gendata_sp::q must be greater than 2!")
-  
-  # require(GiRaF)
-  # require(MASS)
-  n <- height * width # # of cell in each indviduals 
-  
-  
-  ## generate deterministic parameters, fixed after generation
-  # sigma2 <- 1
-  Lambda <- sigma2*abs(rnorm(p, sd=1))
-  W1 <- matrix(rnorm(p*q), p, q)
-  W <- qr.Q(qr(W1))
-  mu <- matrix(0, q,  K)
-  diagmat = array(0, dim = c(q, q, K))
-  if(q > K){
-    q1 <- floor(K/2)
-    for(j in 1:q1){
-      if(j <= (q1/2)) mu[j,j] <- tau
-      if(j > (q1/2)) mu[j,j] <- -tau
-    }
-    mu[(q1+1):q, K] <- -tau
-    
-  }else if(q <= K){
-    for(k in 1:K)
-      mu[,k] <- rep(tau/8 *k, q) #
-  }
-  for(k in 1:K){
-    tmp  <- rep(1, q)
-    if(k <= K/2){
-      tmp[q] <- tau
-    }
-    diag(diagmat[,,k]) <- tmp
-  }
-  
-  
-  Mu <- t(mu)
-  Sigma <- diagmat
-  set.seed(seed)
-  # generate the spatial dependence for state variable y, a hidden Markov RF
-  y <- sampler.mrf(iter = n, sampler = "Gibbs", h = height, w = width, ncolors = K, nei = G, param = beta,
-                   initialise = FALSE, view = view)
-  y <- c(y) + 1
-  
-  Z <- matrix(0, n, q)
-  for(k in 1:K){
-    nk <- sum(y==k)
-    Z[y==k, ] <- MASS::mvrnorm(nk, Mu[k,], Sigma[,,k])
-  }
-  Ez <- colMeans(Z)
-  Mu <- Mu - matrix(Ez, K, q, byrow=T) # center Z
-  X <- Z %*% t(W) + MASS::mvrnorm(n, rep(0,p), diag(Lambda))
-  
-  svd_Sig <- svd(cov(Z))
-  W12 <- W %*% svd_Sig$u %*% diag(sqrt(svd_Sig$d))
-  signal <- sum(svd(W12)$d^2)
-  snr <- sum(svd(W12)$d^2) / (sum(svd(W12)$d^2)+ sum(Lambda))
-  
-  message("SNR=", round(snr,4), '\n')
-  # make position
-  pos <- cbind(rep(1:height, width), rep(1:height, each=width))
-  
-  return(list(X=X, Z=Z, cluster=y, W=W, Mu=Mu, Sigma=Sigma, Lam_vec=Lambda, beta=beta,pos=pos, snr=snr))
-}
-
+# gendata_sp <- function(height=30, width=30, p =100, q=10, K=7,  G=4, beta=1, sigma2=1, tau=8, seed=1, view=FALSE){
+#   # height <- 70
+#   # width <- 70
+#   # G <- 4
+#   # beta <- 1.0
+#   # K <- 7
+#   # q <- 10
+#   # p <- 1000
+#   if(q <2) stop("error:gendata_sp::q must be greater than 2!")
+#   
+#   # require(GiRaF)
+#   # require(MASS)
+#   n <- height * width # # of cell in each indviduals 
+#   
+#   
+#   ## generate deterministic parameters, fixed after generation
+#   # sigma2 <- 1
+#   Lambda <- sigma2*abs(rnorm(p, sd=1))
+#   W1 <- matrix(rnorm(p*q), p, q)
+#   W <- qr.Q(qr(W1))
+#   mu <- matrix(0, q,  K)
+#   diagmat = array(0, dim = c(q, q, K))
+#   if(q > K){
+#     q1 <- floor(K/2)
+#     for(j in 1:q1){
+#       if(j <= (q1/2)) mu[j,j] <- tau
+#       if(j > (q1/2)) mu[j,j] <- -tau
+#     }
+#     mu[(q1+1):q, K] <- -tau
+#     
+#   }else if(q <= K){
+#     for(k in 1:K)
+#       mu[,k] <- rep(tau/8 *k, q) #
+#   }
+#   for(k in 1:K){
+#     tmp  <- rep(1, q)
+#     if(k <= K/2){
+#       tmp[q] <- tau
+#     }
+#     diag(diagmat[,,k]) <- tmp
+#   }
+#   
+#   
+#   Mu <- t(mu)
+#   Sigma <- diagmat
+#   set.seed(seed)
+#   # generate the spatial dependence for state variable y, a hidden Markov RF
+#   y <- sampler.mrf(iter = n, sampler = "Gibbs", h = height, w = width, ncolors = K, nei = G, param = beta,
+#                    initialise = FALSE, view = view)
+#   y <- c(y) + 1
+#   
+#   Z <- matrix(0, n, q)
+#   for(k in 1:K){
+#     nk <- sum(y==k)
+#     Z[y==k, ] <- MASS::mvrnorm(nk, Mu[k,], Sigma[,,k])
+#   }
+#   Ez <- colMeans(Z)
+#   Mu <- Mu - matrix(Ez, K, q, byrow=T) # center Z
+#   X <- Z %*% t(W) + MASS::mvrnorm(n, rep(0,p), diag(Lambda))
+#   
+#   svd_Sig <- svd(cov(Z))
+#   W12 <- W %*% svd_Sig$u %*% diag(sqrt(svd_Sig$d))
+#   signal <- sum(svd(W12)$d^2)
+#   snr <- sum(svd(W12)$d^2) / (sum(svd(W12)$d^2)+ sum(Lambda))
+#   
+#   message("SNR=", round(snr,4), '\n')
+#   # make position
+#   pos <- cbind(rep(1:height, width), rep(1:height, each=width))
+#   
+#   return(list(X=X, Z=Z, cluster=y, W=W, Mu=Mu, Sigma=Sigma, Lam_vec=Lambda, beta=beta,pos=pos, snr=snr))
+# }
+# 
 
 #### Generate Spatial data with ST platform
-gendata_RNAExp <- function(height=30, width=30, platform="ST", p =100, q=10, K=7, 
-                            G=4,sigma2=1, tau=8, seed=1, view=FALSE){
-  
-  if(q <2) stop("error:gendata_sp::q must be greater than 2!")
-  
-  #require(GiRaF)
-  #require(MASS)
-  n <- height * width # # of cell in each indviduals 
-  
-  if(platform=="ST"){
-    beta= 1
-  }else if(platform=='scRNAseq'){
-    beta = 0
-  }
-  ## generate deterministic parameters, fixed after generation
-  
-  # sigma2 <- 1
-  Lambda <- sigma2*abs(rnorm(p, sd=1))
-  W1 <- matrix(rnorm(p*q), p, q)
-  W <- qr.Q(qr(W1))
-  mu <- matrix(0, q,  K)
-  diagmat = array(0, dim = c(q, q, K))
-  if(q > K){
-    q1 <- floor(K/2)
-    for(j in 1:q1){
-      if(j <= (q1/2)) mu[j,j] <- tau
-      if(j > (q1/2)) mu[j,j] <- -tau
-    }
-    mu[(q1+1):q, K] <- -tau
-    
-  }else if(q <= K){
-    for(k in 1:K)
-      mu[,k] <- rep(tau/8 *k, q) #
-  }
-  for(k in 1:K){
-    tmp  <- rep(1, q)
-    if(k <= K/2){
-      tmp[q] <- tau
-    }
-    diag(diagmat[,,k]) <- tmp
-  }
-  
-  
-  Mu <- t(mu)
-  Sigma <- diagmat
-  set.seed(seed)
-  # generate the spatial dependence for state variable y, a hidden Markov RF
-  y <- sampler.mrf(iter = n, sampler = "Gibbs", h = height, w = width, ncolors = K, nei = G, param = beta,
-                   initialise = FALSE, view = view)
-  y <- c(y) + 1
-  
-  Z <- matrix(0, n, q)
-  for(k in 1:K){
-    nk <- sum(y==k)
-    Z[y==k, ] <- MASS::mvrnorm(nk, Mu[k,], Sigma[,,k])
-  }
-  Ez <- colMeans(Z)
-  Mu <- Mu - matrix(Ez, K, q, byrow=T) # center Z
-  X <- Z %*% t(W) + MASS::mvrnorm(n, mu=rep(0,p), Sigma=diag(Lambda))
-  
-  
-  
-  
-  # make position
-  pos <- cbind(rep(1:height, width), rep(1:height, each=width))
-  
-  counts <- t(X) - min(X)
-  p <- ncol(X); n <- nrow(X)
-  rownames(counts) <- paste0("gene", seq_len(p))
-  colnames(counts) <- paste0("spot", seq_len(n))
-  counts <- as.matrix(exp(counts)-1)
-  ## Make array coordinates - filled rectangle
-  
-  if(platform=="ST"){
-    cdata <- list()
-    cdata$row <- pos[,1]
-    cdata$col <- pos[,2]
-    cdata <- as.data.frame(do.call(cbind, cdata))
-    cdata$imagerow <- cdata$row
-    cdata$imagecol <- cdata$col 
-    row.names(cdata) <- colnames(counts)
-    
-    #library(Seurat)
-    ## Make SCE
-    seu <-  CreateSeuratObject(counts= counts, meta.data=cdata) #
-  }else if(platform=='scRNAseq'){
-    # library(Seurat)
-    ## Make SCE
-    seu <-  CreateSeuratObject(counts= counts)
-  }else{
-    stop("gendata_RNAExp: Unsupported platform \"", platform, "\".")
-  }
-  
-  seu$true_clusters <- y
-  return(seu)
-}
+# gendata_RNAExp <- function(height=30, width=30, platform="ST", p =100, q=10, K=7,
+#                             G=4,sigma2=1, tau=8, seed=1, view=FALSE){
+# 
+#   if(q <2) stop("error:gendata_sp::q must be greater than 2!")
+# 
+#   #require(GiRaF)
+#   #require(MASS)
+#   n <- height * width # # of cell in each indviduals
+# 
+#   if(platform=="ST"){
+#     beta= 1
+#   }else if(platform=='scRNAseq'){
+#     beta = 0
+#   }
+#   ## generate deterministic parameters, fixed after generation
+# 
+#   # sigma2 <- 1
+#   Lambda <- sigma2*abs(rnorm(p, sd=1))
+#   W1 <- matrix(rnorm(p*q), p, q)
+#   W <- qr.Q(qr(W1))
+#   mu <- matrix(0, q,  K)
+#   diagmat = array(0, dim = c(q, q, K))
+#   if(q > K){
+#     q1 <- floor(K/2)
+#     for(j in 1:q1){
+#       if(j <= (q1/2)) mu[j,j] <- tau
+#       if(j > (q1/2)) mu[j,j] <- -tau
+#     }
+#     mu[(q1+1):q, K] <- -tau
+# 
+#   }else if(q <= K){
+#     for(k in 1:K)
+#       mu[,k] <- rep(tau/8 *k, q) #
+#   }
+#   for(k in 1:K){
+#     tmp  <- rep(1, q)
+#     if(k <= K/2){
+#       tmp[q] <- tau
+#     }
+#     diag(diagmat[,,k]) <- tmp
+#   }
+# 
+# 
+#   Mu <- t(mu)
+#   Sigma <- diagmat
+#   set.seed(seed)
+#   # generate the spatial dependence for state variable y, a hidden Markov RF
+#   y <- sampler.mrf(iter = n, sampler = "Gibbs", h = height, w = width, ncolors = K, nei = G, param = beta,
+#                    initialise = FALSE, view = view)
+#   y <- c(y) + 1
+# 
+#   Z <- matrix(0, n, q)
+#   for(k in 1:K){
+#     nk <- sum(y==k)
+#     Z[y==k, ] <- MASS::mvrnorm(nk, Mu[k,], Sigma[,,k])
+#   }
+#   Ez <- colMeans(Z)
+#   Mu <- Mu - matrix(Ez, K, q, byrow=T) # center Z
+#   X <- Z %*% t(W) + MASS::mvrnorm(n, mu=rep(0,p), Sigma=diag(Lambda))
+# 
+# 
+# 
+# 
+#   # make position
+#   pos <- cbind(rep(1:height, width), rep(1:height, each=width))
+# 
+#   counts <- t(X) - min(X)
+#   p <- ncol(X); n <- nrow(X)
+#   rownames(counts) <- paste0("gene", seq_len(p))
+#   colnames(counts) <- paste0("spot", seq_len(n))
+#   counts <- as.matrix(exp(counts)-1)
+#   ## Make array coordinates - filled rectangle
+# 
+#   if(platform=="ST"){
+#     cdata <- list()
+#     cdata$row <- pos[,1]
+#     cdata$col <- pos[,2]
+#     cdata <- as.data.frame(do.call(cbind, cdata))
+#     cdata$imagerow <- cdata$row
+#     cdata$imagecol <- cdata$col
+#     row.names(cdata) <- colnames(counts)
+# 
+#     #library(Seurat)
+#     ## Make SCE
+#     seu <-  CreateSeuratObject(counts= counts, meta.data=cdata) #
+#   }else if(platform=='scRNAseq'){
+#     # library(Seurat)
+#     ## Make SCE
+#     seu <-  CreateSeuratObject(counts= counts)
+#   }else{
+#     stop("gendata_RNAExp: Unsupported platform \"", platform, "\".")
+#   }
+# 
+#   seu$true_clusters <- y
+#   return(seu)
+# }
 
 
 # Data reading ------------------------------------------------------------

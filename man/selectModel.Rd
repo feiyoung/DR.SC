@@ -40,7 +40,7 @@
   \link{DR.SC}, \link{DR.SC_fit}.
 }
 \examples{
-seu <- gendata_RNAExp(height=10, width=10,p=50, K=4)
+data(seu)
 library(Seurat)
 seu <- NormalizeData(seu, verbose=FALSE)
 # or choose 40 spatailly variable features using FindSVGs in DR.SC

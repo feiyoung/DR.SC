@@ -11,7 +11,7 @@
  \item{seu}{an object of class "Seurat" obtained by \link{DR.SC}.}
  \item{dims}{a positive integer to specify the number of latent features for visualiztion.}
  \item{visu.method}{a string including 'tSNE' or "UMAP".}
- \item{...}{Other arguments passing to \link{DimPlot} function.}
+ \item{...}{Other arguments passing to \link[Seurat]{DimPlot} function.}
 }
 \details{
   Nothing
@@ -33,7 +33,7 @@ nothing
 }
 \examples{
 ## we generate the spatial transcriptomics data with lattice neighborhood, i.e. ST platform.
-seu <- gendata_RNAExp(height=10, width=10,p=50, K=4)
+data(seu)
 library(Seurat)
 seu <- NormalizeData(seu)
 # choose spatially variable features

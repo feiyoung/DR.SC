@@ -41,7 +41,7 @@ covariance matrices. Journal of Econometrics, 200(1):59–78.
 \examples{
 \dontrun{
   library(Seurat)
-  seu <- gendata_RNAExp(height=20, width=20,p=100, K=4)
+  data(seu)
   ## log-normalization
   seu <- NormalizeData(seu)
   ##

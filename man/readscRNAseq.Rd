@@ -11,7 +11,7 @@
   \item{mtx}{a string, ame or remote URL of the mtx file}
   \item{cells}{a string, Name or remote URL of the cells/barcodes file}
   \item{features}{a string, Name or remote URL of the features/genes file}
-  \item{...}{the arguments passing to \link{ReadMtx}}
+  \item{...}{the arguments passing to \link[Seurat]{ReadMtx}}
 }
 \details{
   Nothing
