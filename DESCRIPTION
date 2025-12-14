@@ -1,8 +1,8 @@
 Type: Package
 Package: DR.SC
 Title: Joint Dimension Reduction and Spatial Clustering
-Version: 3.6
-Date: 2025-10-02
+Version: 3.7
+Date: 2025-12-14
 Authors@R: 
     c(person(given = "Wei",
              family = "Liu",
@@ -49,7 +49,7 @@ VignetteBuilder:
     knitr
 Encoding: UTF-8
 NeedsCompilation: yes
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.2
 URL: https://github.com/feiyoung/DR.SC
 BugReports: https://github.com/feiyoung/DR.SC/issues
 LazyData: true

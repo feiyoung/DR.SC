@@ -68,10 +68,10 @@ seu <- NormalizeData(seu, verbose=FALSE)
 seu <- FindSVGs(seu, nfeatures = 40, verbose=FALSE)
 # users define the adjacency matrix
 Adj_sp <- getAdj(seu, platform = 'ST')
-if(class(seu@assays$RNA)=="Assay5"){
+if(inherits(seu@assays$RNA, "Assay5") ){
  var.features <- seu@assays$RNA@meta.data$var.features
  var.features  <- var.features[!is.na(var.features )]
- dat <- GetAssayData(seu, assay = "RNA", slot='data')
+ dat <- GetAssayData(seu, assay = "RNA", layer='data')
  X <- Matrix::t(dat[var.features,])
 }else{
  var.features <- seu@assays$RNA@var.features

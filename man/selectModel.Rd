@@ -47,7 +47,7 @@ seu <- NormalizeData(seu, verbose=FALSE)
 seu <- FindSVGs(seu, nfeatures = 40, verbose=FALSE)
 # users define the adjacency matrix
 Adj_sp <- getAdj(seu, platform = 'ST')
-dat <- GetAssayData(seu, assay = "RNA", slot='data')
+dat <- GetAssayData(seu, assay = "RNA", layer='data')
 X <- Matrix::t(dat)
 # maxIter = 2 is only used for illustration, and user can use default.
 drscList <- DR.SC_fit(X,Adj_sp=Adj_sp ,K=4, maxIter=2, verbose=TRUE)

@@ -7,7 +7,7 @@
 # pkgdown::build_article("DR-SC")
 # pkgdown::build_article("DR.SC.Simu")
 # pkgdown::build_article("DR.SC.DLPFC")
-# R CMD check --as-cran DR.SC_3.6.tar.gz
+# R CMD check --as-cran DR.SC_3.7.tar.gz
 
 
 
@@ -363,7 +363,7 @@ FindSVGs <- function(seu, nfeatures=2000, covariates=NULL, preHVGs=5000,num_core
   # require(Seurat)
   assay <- DefaultAssay(seu)
   # sp_count <- seu[[assay]]@counts
-  sp_count <- GetAssayData(seu, assay = assay, slot='counts')
+  sp_count <- GetAssayData(seu, assay = assay, layer='counts')
   
   if(preHVGs<nfeatures){
     warning("The number of preHVGs is smaller than nfeatures, and replaced by nfeatures!\n")
@@ -448,7 +448,7 @@ topSVGs <- function(seu, ntop=5){
 get_data_fromSeurat <- function(seu, assay=NULL, slot='counts'){
   
   if(is.null(assay)) assay <- DefaultAssay(seu)
-    dat <- GetAssayData(seu, assay = assay, slot= slot)
+    dat <- GetAssayData(seu, assay = assay, layer= slot)
     
   
   return(dat)
